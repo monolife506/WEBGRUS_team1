@@ -9,17 +9,19 @@ import RegisterPage from "./component/RegisterPage";
 function App() {
   return (
     <>
-      <Navbar />
-      <div style={{ minHeight: "calc(100vh-80px)", paddingTop: "10px" }}>
-        <BrowserRouter>
+      <BrowserRouter>
+        <Navbar />
+        <div
+          style={{ minHeight: "calc(100vh-80px)", padding: "20px 0 20px 0" }}
+        >
           <Switch>
             <Route exact path='/' component={Main} />
             <Route exact path='/Login' component={LoginPage} />
             <Route exact path='/Register' component={RegisterPage} />
           </Switch>
-        </BrowserRouter>
-      </div>
-      <Footer />
+        </div>
+        <Footer />
+      </BrowserRouter>
     </>
   );
 }
