@@ -2,9 +2,9 @@ API 문서
 =======
 
 폴더 내부에서 API에 대한 자세한 정보를 확인할 수 있습니다.
-`{userid}` 유저의 ID입니다.
-`{postid}`는 MongoDB의 ObjectDB를 그대로 사용합니다.
-`{commentid}`는 post의 comment array에서의 index입니다.
+- `{userid}` 유저의 ID입니다.
+- `{postid}`는 MongoDB의 ObjectDB를 그대로 사용합니다.
+- `{commentid}`는 post의 comment array에서의 index입니다.
 
 인증이 필요하지 않은 API
 --------------------
@@ -22,7 +22,6 @@ API 문서
 - `GET /user/{userid}` : id가 `{userid}`인 유저의 정보 표시
 - `PUT /user/{userid}` : id가 `{userid}`인 유저의 정보 업데이트
 - `DELETE /user/{userid}` : id가 `{userid}`인 유저의 정보 삭제
-
 - `POST /user/following/{userid}` : id가 `{userid}`인 유저를 팔로우한다. 
 - `DELETE /user/following/{userid}` : id가 `{userid}`인 유저를 팔로우에서 해제한다. 
 
