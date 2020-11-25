@@ -5,6 +5,7 @@ import Footer from "./component/Footer";
 import Main from "./component/Main";
 import LoginPage from "./component/LoginPage";
 import RegisterPage from "./component/RegisterPage";
+import Mypage from "./component/Mypage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route exact path='/' component={Main} />
             <Route exact path='/Login' component={LoginPage} />
             <Route exact path='/Register' component={RegisterPage} />
+            <Route exact path='/Mypage' component={Mypage} />
           </Switch>
         </div>
         <Footer />

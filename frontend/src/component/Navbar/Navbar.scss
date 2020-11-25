@@ -1,5 +1,4 @@
 .nav {
-    
   ul {
     display: flex;
   }
@@ -11,12 +10,17 @@
     text-decoration: unset;
     font-size: 15px;
     color: black;
-    
   }
   a:hover {
     font-weight: 900;
   }
-  .homename{
-    margin-left:20px
-}
+  .homename {
+    margin-left: 20px;
+  }
+  button {
+    all: unset;
+  }
+  button:hover {
+    font-weight: 900;
+  }
 }
