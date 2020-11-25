@@ -1,30 +1,15 @@
-import React from "react";
-import Avatar from "@material-ui/core/Avatar";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
-// function Copyright() {
-//   return (
-//     <Typography variant='body2' color='textSecondary' align='center'>
-//       {"Copyright © "}
-//       <Link color='inherit' href='https://material-ui.com/'>
-//         Your Website
-//       </Link>{" "}
-//       {new Date().getFullYear()}
-//       {"."}
-//     </Typography>
-//   );
-//}
+import { useDispatch } from "react-redux";
+import { loginUser } from "../_actions/userAction";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,47 +31,69 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn(props) {
+  const dispatch = useDispatch();
+
   const classes = useStyles();
+
+  const [Id, setId] = useState("");
+  const [Password, setPassword] = useState("");
+
+  const onId = (e) => {
+    setId(e.currentTarget.value);
+  };
+  const onPassword = (e) => {
+    setPassword(e.currentTarget.value);
+  };
+  const onSubmit = (e) => {
+    e.preventDefault();
+    let body = {
+      userid: Id,
+      password: Password,
+    };
+    //액션
+    dispatch(loginUser(body)).then((response) => {
+      //로그인 성공시 홈으로 이동
+      if (response.payload.loginSuccess) {
+        props.history.push("/");
+      } else {
+        alert(response.payload.message);
+      }
+    });
+  };
 
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
         <Typography component='h1' variant='h5'>
           로그인
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={onSubmit}>
           <TextField
             variant='outlined'
             margin='normal'
             required
             fullWidth
-            id='email'
-            label='이메일'
-            name='email'
-            autoComplete='email'
+            id='id'
+            label='아이디'
+            name={Id}
+            autoComplete='id'
             autoFocus
+            onChange={onId}
           />
           <TextField
             variant='outlined'
             margin='normal'
             required
             fullWidth
-            name='password'
+            name={Password}
             label='비밀번호'
             type='password'
             id='password'
             autoComplete='current-password'
+            onChange={onPassword}
           />
-          {/* 체크박스 */}
-          {/* <FormControlLabel
-            control={<Checkbox value='remember' color='primary' />}
-            label='Remember me'
-          /> */}
           <Button
             type='submit'
             fullWidth
@@ -110,9 +117,6 @@ export default function SignIn() {
           </Grid>
         </form>
       </div>
-      {/* <Box mt={8}>
-        <Copyright />
-      </Box> */}
     </Container>
   );
 }

@@ -1,30 +1,15 @@
-import React from "react";
-import Avatar from "@material-ui/core/Avatar";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
-// function Copyright() {
-//   return (
-//     <Typography variant='body2' color='textSecondary' align='center'>
-//       {"Copyright © "}
-//       <Link color='inherit' href='https://material-ui.com/'>
-//         Your Website
-//       </Link>{" "}
-//       {new Date().getFullYear()}
-//       {"."}
-//     </Typography>
-//   );
-// }
+import { useDispatch } from "react-redux";
+import { registerUser } from "../_actions/userAction";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,10 +17,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -46,31 +27,104 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function SignUp(props) {
+  const dispatch = useDispatch();
+
   const classes = useStyles();
+
+  const [Firstname, setFirstname] = useState("");
+  const [Lastname, setLastname] = useState("");
+  const [Id, setId] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
+  const [Passwordcheck, setPasswordcheck] = useState("");
+  const [Passwordchecking, setPasswordchecking] = useState(true);
+
+  const onFirstname = (e) => {
+    setFirstname(e.target.value);
+  };
+  const onLastname = (e) => {
+    setLastname(e.target.value);
+  };
+  const onId = (e) => {
+    setId(e.target.value);
+  };
+  const onEmail = (e) => {
+    setEmail(e.target.value);
+  };
+  const onPassword = (e) => {
+    setPassword(e.target.value);
+  };
+  const onPasswordcheck = async (e) => {
+    await setPasswordcheck(e.target.value);
+    if (e.target.value !== Password) setPasswordchecking(false);
+    else setPasswordchecking(true);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    let body = {
+      firstname: Firstname,
+      lastname: Lastname,
+      userid: Id,
+      email: Email,
+      password: Password,
+    };
+    //액션
+    dispatch(registerUser(body)).then((res) => {
+      if (res.payload.success) {
+        props.history.push("/login");
+      } else {
+        alert(res.payload.err);
+      }
+    });
+  };
 
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
         <Typography component='h1' variant='h5'>
           회원가입
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={onSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
                 autoComplete='fname'
-                name='name'
+                name={Firstname}
                 variant='outlined'
                 required
                 fullWidth
-                id='name'
+                id='firstname'
                 label='이름'
                 autoFocus
+                onChange={onFirstname}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                autoComplete='fname'
+                name={Lastname}
+                variant='outlined'
+                required
+                fullWidth
+                id='lastname'
+                label='성'
+                autoFocus
+                onChange={onLastname}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant='outlined'
+                required
+                fullWidth
+                id='id'
+                name={Id}
+                label='아이디'
+                autoComplete='id'
+                onChange={onId}
               />
             </Grid>
             <Grid item xs={12}>
@@ -79,9 +133,11 @@ export default function SignUp() {
                 required
                 fullWidth
                 id='email'
-                name='email'
+                type='email'
+                name={Email}
                 label='이메일'
                 autoComplete='email'
+                onChange={onEmail}
               />
             </Grid>
             <Grid item xs={12}>
@@ -89,20 +145,29 @@ export default function SignUp() {
                 variant='outlined'
                 required
                 fullWidth
-                name='password'
+                name={Password}
                 type='password'
                 id='password'
                 label='비밀번호'
                 autoComplete='current-password'
+                onChange={onPassword}
               />
             </Grid>
-            {/* 동의 체크박스 */}
-            {/* <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value='allowExtraEmails' color='primary' />}
-                label='I want to receive inspiration, marketing promotions and updates via email.'
+            <Grid item xs={12}>
+              <TextField
+                error={!Passwordchecking}
+                helperText={!Passwordchecking?"비밀번호와 일치하지 않습니다.":""}
+                variant='outlined'
+                required
+                fullWidth
+                name={Passwordcheck}
+                type='password'
+                id='passwordcheck'
+                label='비밀번호 확인'
+                autoComplete='current-password'
+                onChange={onPasswordcheck}
               />
-            </Grid> */}
+            </Grid>
           </Grid>
           <Button
             type='submit'
@@ -122,9 +187,6 @@ export default function SignUp() {
           </Grid>
         </form>
       </div>
-      {/* <Box mt={5}>
-        <Copyright />
-      </Box> */}
     </Container>
   );
 }
