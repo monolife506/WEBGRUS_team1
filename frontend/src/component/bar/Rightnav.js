@@ -1,33 +1,26 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import "./Navbar.scss";
-import { SERVER_API } from "../../_actions/config";
+import "./bar.scss";
+import Menubar from "./menubar";
 
-function Rightnav(props) {
+function Rightnav() {
   // id가 있으면 로그인 된걸로 간주
-  const userlogined = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
 
-  const onLogout = () => {
-    axios.post(`${SERVER_API}/auth/logout`).then((res) => {
-      if (res.status === 200) {
-        props.history.push("/login");
-      } else {
-        alert("로그아웃에 실패했습니다.");
-      }
-    });
-  };
-
-  if (userlogined) {
+  if (user.userData && user.userData.isAuth) {
     return (
       <div className='nav'>
         <ul>
           <li>
-            <Link to={{ pathname: "/mypage" }}>마이페이지</Link>
+            <div>
+              <Link to={{ pathname: "/newpost" }}>디자인올리기</Link>
+            </div>
           </li>
           <li>
-            <button onClick={onLogout}>로그아웃</button>
+            <div>
+              <Menubar />
+            </div>
           </li>
         </ul>
       </div>

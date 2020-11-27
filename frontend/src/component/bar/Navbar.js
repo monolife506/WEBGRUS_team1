@@ -1,7 +1,7 @@
 import React from "react";
 import Left from "./Leftnav";
 import Right from "./Rightnav";
-import './Navbar.scss'
+import './bar.scss'
 
 function Navbar() {
   return (
