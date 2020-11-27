@@ -1,11 +1,13 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Navbar from "./component/Navbar/Navbar";
+import Navbar from "./component/bar/Navbar";
 import Footer from "./component/Footer";
 import Main from "./component/Main";
 import LoginPage from "./component/LoginPage";
 import RegisterPage from "./component/RegisterPage";
 import Mypage from "./component/Mypage";
+import Newpost from "./component/fileUpload/Newpost";
+import Auth from './hoc/auth'
 
 function App() {
   return (
@@ -16,10 +18,11 @@ function App() {
           style={{ minHeight: "calc(100vh-80px)", padding: "20px 0 20px 0" }}
         >
           <Switch>
-            <Route exact path='/' component={Main} />
-            <Route exact path='/Login' component={LoginPage} />
-            <Route exact path='/Register' component={RegisterPage} />
-            <Route exact path='/Mypage' component={Mypage} />
+            <Route exact path='/' component={Auth(Main,null)} />
+            <Route exact path='/login' component={Auth(LoginPage,false)} />
+            <Route exact path='/register' component={Auth(RegisterPage,false)} />
+            <Route exact path='/mypage' component={Auth(Mypage,true)} />
+            <Route exact path='/newpost' component={Auth(Newpost,true)} />
           </Switch>
         </div>
         <Footer />
