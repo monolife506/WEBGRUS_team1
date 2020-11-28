@@ -16,7 +16,7 @@ API 문서
 인증이 필요한 API
 --------------
 
-# 계정
+### 계정
 
 - `POST /auth/logout` : 로그아웃
 - `GET /user/{userid}` : id가 `{userid}`인 유저의 정보 표시
@@ -25,13 +25,13 @@ API 문서
 - `POST /user/following/{userid}` : id가 `{userid}`인 유저를 팔로우한다. 
 - `DELETE /user/following/{userid}` : id가 `{userid}`인 유저를 팔로우에서 해제한다. 
 
-# 글 작성자
+### 글 작성자
 
 - `POST /post` : 글 생성
 - `PUT /post/{postid}` : id가 `{postid}`인 글 업데이트
 - `DELETE /post/{postid}` : id가 `{postid}`인 글 삭제
 
-# 글 열람
+### 글 열람
 
 - `POST /post/{postid}/like`: id가 `{postid}`인 글에 좋아요 추가
 - `DELETE /post/{postid}/like`: id가 `{postid}`인 글에 좋아요 제거

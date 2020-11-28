@@ -1,5 +1,6 @@
-import mongoose, { model } from 'mongoose';
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const { model } = mongoose;
 
 const CommentSchema = new Schema({
     index: { type: Number, min: 0, required: true, unique: true },
