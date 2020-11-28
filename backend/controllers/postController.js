@@ -16,6 +16,10 @@ function getPost(req, res, next) {
 }
 
 /*
+GET /posts/
+*/
+
+/*
 POST /posts
 새 글 추가하기
 TODO: 계정 인증 추가하기
@@ -23,6 +27,13 @@ TODO: 계정 인증 추가하기
 
 function makePost(req, res, next) {
     var post = new Post();
+
+    post.title = req.body.title;
+    // post.owner = curuser
+    post.description = req.body.description;
+    post.tags = req.body.tags;
+    post.photos = req.body.photos;
+
     post.save((err) => {
         if (err) return res.status(500).json({ error: err });
         res.status(201).json({ error: undefined });
