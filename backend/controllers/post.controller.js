@@ -1,5 +1,5 @@
 const { get } = require("mongoose");
-var Post = require("../models/postModel");
+var Post = require("../models/post.model/");
 
 /*
 GET /posts/:id
@@ -8,16 +8,12 @@ GET /posts/:id
 
 function getPost(req, res, next) {
     var postID = req.params.id;
-    Post.findOne({ _id: postID }, (err, post) => {
+    Post.findOne({ _id: postID }, (err, resp) => {
         if (err) return res.status(500).json({ error: err });
-        if (!post) return res.status(404).json({ error: "post not found" });
-        res.status(200).send(post)
+        if (!resp) return res.status(404).json({ error: "post not found" });
+        res.status(200).send(resp)
     })
 }
-
-/*
-GET /posts/
-*/
 
 /*
 POST /posts
@@ -29,7 +25,7 @@ function makePost(req, res, next) {
     var post = new Post();
 
     post.title = req.body.title;
-    // post.owner = curuser
+    // post.owner = getcurUser()
     post.description = req.body.description;
     post.tags = req.body.tags;
     post.photos = req.body.photos;

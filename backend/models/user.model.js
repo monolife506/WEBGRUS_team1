@@ -20,7 +20,7 @@ const FollowingSchema = new Schema({
 const UserSchema = new Schema({
     username: UsernameSchema,
     userid: { type: String, index: true, unique: true, required: true },
-    email: { type: String, unique: true, required: true },
+    useremail: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     follower: FollowerSchema,
     following: FollowingSchema,
