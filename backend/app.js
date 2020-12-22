@@ -1,12 +1,19 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var db = require('./utils/db.utils');
-var auth = require('./utils/db.utils');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-var app = express();
+// DB connection
+const db = require('./utils/db.utils');
+db.init();
+
+// Passport (auth)
+const auth = require('./utils/auth.utils');
+auth.init();
+
+// Launching app
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -14,9 +21,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // handlers
-var userRouter = require('./routes/user.route');
-var authRouter = require('./routes/auth.route');
-var postRouter = require('./routes/post.route');
+const userRouter = require('./routes/user.route');
+const authRouter = require('./routes/auth.route');
+const postRouter = require('./routes/post.route');
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
@@ -34,7 +41,7 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error', { error: err });
 });
 
 module.exports = app;

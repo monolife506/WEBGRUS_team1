@@ -1,8 +1,8 @@
 const { get } = require("mongoose");
-var Post = require("../models/post.model/");
+var Post = require("../models/post.model");
 
 /*
-GET /posts/:id
+GET /api/posts/:id
 글 하나의 정보를 받음
 */
 
@@ -16,7 +16,7 @@ function getPost(req, res, next) {
 }
 
 /*
-POST /posts
+POST /api/posts
 새 글 추가하기
 TODO: 계정 인증 추가하기
 */

@@ -1,24 +1,21 @@
-var User = require('mongoose').model('User');
+const User = require('../models/user.model');
 
 /*
-POST /user
+POST /api/users
 새로운 유저 생성
 */
 
-function createUser(req, res, next) {
-    const user = new User(req.body);
-
-    const respond = () => {
-        res.json({ error: undefined });
+async function createUser(req, res, next) {
+    try {
+        console.log("Request to createUser:");
+        console.log(req.body);
+        const user = new User(req.body);
+        await user.save();
+        return res.json({ user, "isCreated": true });
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json({ "isCreated": false });
     }
-
-    const onError = (err) => {
-        res.status(409).json({ error: err })
-    }
-
-    user.save()
-        .then(respond)
-        .catch(onError)
 }
 
 module.exports.createUser = createUser;

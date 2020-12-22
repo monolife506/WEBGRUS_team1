@@ -1,11 +1,13 @@
 const passport = require('passport');
+const passportLocal = require('passport-local');
 const passportJWT = require('passport-jwt');
-const bcrypt = require('bcrypt');
 
-const LocalStrategy = require('passport-local').LocalStrategy;
+const LocalStrategy = passportLocal.Strategy;
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
+
 const userModel = require('../models/user.model');
+const bcrypt = require('bcrypt');
 
 const localStrategyOptions = {
     useridField: "userid",
@@ -13,37 +15,38 @@ const localStrategyOptions = {
 };
 
 // db에 저장된 id와 비밀번호 대조
-const localVerify = (userid, password, done) => {
-    let user, pwdCheck;
+async function localVerify(userid, password, done) {
     try {
-        user = await userModel.findOne({ userid });
+        const user = await userModel.findOne({ userid: userid });
         if (!user) return done(null, false); // ID 존재 확인
-        pwdCheck = await bcrypt.compare(password, user.password);
+        const pwdCheck = await bcrypt.compare(password, user.password);
         if (!pwdCheck) return done(null, false); // 비밀번호 확인
+        return done(null, user);
     } catch (err) {
+        console.log(err);
         done(err)
     }
-    return done(null, user);
 };
 
 const jwtStrategyOptions = {
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'secret'
+    secretOrKey: 'secret' // secret string, change this to global const later
 };
 
 // JWT 확인
 async function jwtVerify(payload, done) {
-    let user;
     try {
-        user = await userModel.findOne({ userid: payload.userid })
+        const user = await userModel.findOne({ userid: payload.userid })
         if (!user) return done(null, false);
+        return done(null, user);
     }
     catch (err) {
+        console.log(err);
         return done(err);
     }
-    return done(null, user);
 };
 
-passport.use(new JWTStrategy(jwtStrategyOptions, jwtVerify));
-passport.use(new LocalStrategy(localStrategyOptions, localVerify));
-passport.initialize();
+module.exports.init = () => {
+    passport.use(new LocalStrategy(localStrategyOptions, localVerify));
+    passport.use(new JWTStrategy(jwtStrategyOptions, jwtVerify));
+}
