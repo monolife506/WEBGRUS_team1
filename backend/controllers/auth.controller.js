@@ -9,20 +9,16 @@ POST /api/auth/login
 로그인 - JWT 발급
 */
 
-async function createAuth(req, res, next) {
-    try {
-        // local 방식으로 인증
-        const user = await passport.authenticate('local', { session: false });
-        if (!user) return res.status(400).json({ token: undefined });
-        // local 방식으로 로그인 성공 시 토큰 생성
-        await req.login(user, { session: false });
-        token = jwt.sign({ userid: user.userid }, 'secret', { expiresIn: "24h" });
-        return res.json({ token });
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(400).json({ token: undefined });
-    }
+function createAuth(req, res, next) {
+    passport.authenticate('local', { session: false }, (err, user) => {
+        if (err) next(err);
+        if (!user) return res.status(400).json({ token: 'undefined' });
+        req.login(user, { session: false }, (err) => {
+            if (err) next(err);
+            const token = jwt.sign({ userid: user.userid }, 'secret', { expiresIn: '1h' });
+            return res.json({ token });
+        });
+    })(req, res, next);
 }
 
 /*
