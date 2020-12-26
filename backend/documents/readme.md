@@ -9,32 +9,36 @@ API 문서
 인증이 필요하지 않은 API
 --------------------
 
-- `POST /auth/login` : 로그인
-- `POST /user` : 회원가입 (새로운 유저 생성)
-- `GET /post/{postid}` : 특정 글의 정보 표시
+- `POST /api/auth/login` : 로그인
+- `POST /api/users` : 회원가입 (새로운 유저 생성)
+- `GET /api/post/{postid}` : 특정 글의 정보 표시
 
 인증이 필요한 API
 --------------
 
+### 테스트
+
+- `POST /api/auth/check` : 현재 토큰 검증 (테스트용)
+
 ### 계정
 
-- `POST /auth/logout` : 로그아웃
-- `GET /user/{userid}` : id가 `{userid}`인 유저의 정보 표시
-- `PUT /user/{userid}` : id가 `{userid}`인 유저의 정보 업데이트
-- `DELETE /user/{userid}` : id가 `{userid}`인 유저의 정보 삭제
-- `POST /user/following/{userid}` : id가 `{userid}`인 유저를 팔로우한다. 
-- `DELETE /user/following/{userid}` : id가 `{userid}`인 유저를 팔로우에서 해제한다. 
+- `POST /api/auth/logout` : 로그아웃
+- `GET /api/user/{userid}` : id가 `{userid}`인 유저의 정보 표시
+- `PUT /api/user/{userid}` : id가 `{userid}`인 유저의 정보 업데이트
+- `DELETE /api/user/{userid}` : id가 `{userid}`인 유저의 정보 삭제
+- `POST /api/user/following/{userid}` : id가 `{userid}`인 유저를 팔로우한다. 
+- `DELETE /api/user/following/{userid}` : id가 `{userid}`인 유저를 팔로우에서 해제한다. 
 
 ### 글 작성자
 
-- `POST /post` : 글 생성
-- `PUT /post/{postid}` : id가 `{postid}`인 글 업데이트
-- `DELETE /post/{postid}` : id가 `{postid}`인 글 삭제
+- `POST /api/post` : 글 생성
+- `PUT /api/post/{postid}` : id가 `{postid}`인 글 업데이트
+- `DELETE /api/post/{postid}` : id가 `{postid}`인 글 삭제
 
 ### 글 열람
 
-- `POST /post/{postid}/like`: id가 `{postid}`인 글에 좋아요 추가
-- `DELETE /post/{postid}/like`: id가 `{postid}`인 글에 좋아요 제거
-- `POST /post/{postid}/comment`: id가 `{postid}`인 글에 댓글 추가
-- `PUT /post/{postid}/comment`: id가 `{postid}`인 글에 id가 `{commentid}`인 댓글 수정
-- `DELETE /post/{postid}/comment/{commentid}`: id가 `{postid}`인 글에 id가 `{commentid}`인 댓글 제거
+- `POST /api/post/{postid}/like`: id가 `{postid}`인 글에 좋아요 추가
+- `DELETE /api/post/{postid}/like`: id가 `{postid}`인 글에 좋아요 제거
+- `POST /api/post/{postid}/comment`: id가 `{postid}`인 글에 댓글 추가
+- `PUT /api/post/{postid}/comment`: id가 `{postid}`인 글에 id가 `{commentid}`인 댓글 수정
+- `DELETE /api/post/{postid}/comment/{commentid}`: id가 `{postid}`인 글에 id가 `{commentid}`인 댓글 제거

@@ -16,7 +16,6 @@ const localStrategyOptions = {
 
 // db에 저장된 id와 비밀번호 대조 (local verify)
 async function localVerify(userid, password, done) {
-    console.log("localVerify");
     try {
         // ID 존재 확인
         const user = await userModel.findOne({ userid: userid });
@@ -38,7 +37,6 @@ const jwtStrategyOptions = {
 
 // 현재 JWT token의 유효성 확인 (jwt verify)
 async function jwtVerify(payload, done) {
-    console.log("jwtVerify");
     try {
         // jwt token에 명시된 유저와 일치하는 유저가 존재하는지 확인
         const user = await userModel.findOne({ userid: payload.userid });

@@ -30,5 +30,16 @@ function deleteAuth(req, res, next) {
     req.logout();
 }
 
+/*
+POST /api/auth/check
+현재 발급받은 토큰의 유효성 검증 (passport.authenticate 예시)
+토큰이 없거나 만료된 토큰이면 status code 401, 아니면 200 return
+*/
+
+function checkAuth(req, res, next) {
+    res.send();
+}
+
 module.exports.createAuth = createAuth;
 module.exports.deleteAuth = deleteAuth;
+module.exports.checkAuth = checkAuth;
