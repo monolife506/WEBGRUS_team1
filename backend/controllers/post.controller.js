@@ -1,40 +1,79 @@
-const { get } = require("mongoose");
-var Post = require("../models/post.model");
+const { token } = require("morgan");
+const Post = require("../models/post.model");
+const authUtils = require("../utils/auth.utils");
 
 /*
-GET /api/posts/:id
+GET /api/posts/content/:id
 글 하나의 정보를 받음
 */
 
-function getPost(req, res, next) {
-    var postID = req.params.id;
-    Post.findOne({ _id: postID }, (err, resp) => {
-        if (err) return res.status(500).json({ error: err });
-        if (!resp) return res.status(404).json({ error: "post not found" });
-        res.status(200).send(resp)
-    })
+async function getPost(req, res, next) {
+    try {
+        const postID = req.params.id;
+        const resp = await Post.findOne({ _id: postID, isDeleted: false });
+        if (!resp) return res.status(404);
+        return res.status(200).json(resp);
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json(err);
+    }
+}
+
+/*
+GET /api/posts/users/:userid
+특정 작성자가 작성한 글들의 정보를 받음
+*/
+
+async function getPostByUser(req, res, next) {
+    try {
+        const postOwner = req.params.userid;
+        const resp = await Post.find({ owner: postOwner, isDeleted: false });
+        if (!resp) return res.status(404);
+        return res.status(200).json(resp);
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json(err);
+    }
+}
+
+/*
+GET /api/posts/all
+모든 글들의 정보를 받음
+*/
+
+async function getAllPost(req, res, next) {
+    try {
+        const resp = await Post.find({ isDeleted: false });
+        if (!resp) return res.status(404);
+        return res.status(200).json(resp);
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json(err);
+    }
 }
 
 /*
 POST /api/posts
 새 글 추가하기
-TODO: 계정 인증 추가하기
 */
 
-function makePost(req, res, next) {
-    var post = new Post();
+async function makePost(req, res, next) {
+    try {
+        req.body.files = req.files;
+        req.body.owner = req.user.userid;
 
-    post.title = req.body.title;
-    // post.owner = getcurUser()
-    post.description = req.body.description;
-    post.tags = req.body.tags;
-    post.photos = req.body.photos;
-
-    post.save((err) => {
-        if (err) return res.status(500).json({ error: err });
-        res.status(201).json({ error: undefined });
-    })
+        console.log("Request to makePost:");
+        console.log(req.body);
+        const post = new Post(req.body);
+        await post.save();
+        return res.status(200).json({});
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json(err);
+    }
 }
 
 module.exports.getPost = getPost;
+module.exports.getPostByUser = getPostByUser;
+module.exports.getAllPost = getAllPost;
 module.exports.makePost = makePost;
