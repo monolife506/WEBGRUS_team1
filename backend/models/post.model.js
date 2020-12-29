@@ -10,18 +10,24 @@ const CommentSchema = new Schema({
     content: { type: String, required: true },
 });
 
+const FileSchema = new Schema({
+    originalname: { type: String, required: true },
+    filename: { type: String, required: true },
+});
+
 const PostSchema = new Schema({
     title: { type: String, required: true },
     owner: { type: String, required: true },
-    description: String,
+    description: { type: String, default: "" },
     posttime: { type: Date, default: Date.now },
     modifytime: { type: Date, default: Date.now },
     tags: [String],
-    photos: [String],
+    files: [FileSchema],
     viewcnt: { type: Number, min: 0, default: 0 },
     likecnt: { type: Number, min: 0, default: 0 },
     commentcnt: { type: Number, min: 0, default: 0 },
     comments: [CommentSchema],
+    isDeleted: { type: Boolean, default: false }
 });
 
 module.exports = model('Post', PostSchema);
