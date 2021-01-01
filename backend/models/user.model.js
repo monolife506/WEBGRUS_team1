@@ -27,13 +27,14 @@ const UserSchema = new Schema({
     following: FollowingSchema,
 });
 
-UserSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
+UserSchema.pre('save', async (next) => {
     try {
+        if (!this.isModified('password')) return next();
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
         return next();
     } catch (err) {
+        console.log(err);
         return next(err);
     }
 })

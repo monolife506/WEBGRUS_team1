@@ -15,7 +15,7 @@ function createAuth(req, res, next) {
         if (!user) return res.status(400).json({ token: 'undefined' });
         req.login(user, { session: false }, (err) => {
             if (err) next(err);
-            const token = jwt.sign({ userid: user.userid }, 'secret', { expiresIn: '1h' });
+            const token = jwt.sign({ userid: user.userid }, 'secret', { expiresIn: '24h' });
             return res.json({ token });
         });
     })(req, res, next);

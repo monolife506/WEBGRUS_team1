@@ -1,3 +1,4 @@
+const fs = require('fs');
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const { model } = mongoose;
@@ -27,7 +28,45 @@ const PostSchema = new Schema({
     likecnt: { type: Number, min: 0, default: 0 },
     commentcnt: { type: Number, min: 0, default: 0 },
     comments: [CommentSchema],
-    isDeleted: { type: Boolean, default: false }
 });
+
+PostSchema.pre('update', async (next) => {
+    try {
+        // TODO: 글 수정시 파일 변경 구현
+        const modifiedFiles = this.getUpdate().$set.files;
+        if (modifiedFiles) {
+
+        }
+
+        this.modifytime = Date.now;
+        return next();
+    } catch (err) {
+        console.log(err);
+        return next(err);
+    }
+})
+
+PostSchema.pre('deleteOne', async (next) => {
+    try {
+        this.files.forEach((file) => {
+            const fileName = '../uploads/' + file.originalname;
+            fs.unlink(fileName);
+        })
+        return next();
+    } catch (err) {
+        console.log(err);
+        return next(err);
+    }
+})
+
+CommentSchema.pre('update', (next) => {
+    try {
+        this.modifytime = Date.now;
+        return next();
+    } catch (err) {
+        console.log(err);
+        return next(err);
+    }
+})
 
 module.exports = model('Post', PostSchema);

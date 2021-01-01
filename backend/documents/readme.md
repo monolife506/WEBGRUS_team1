@@ -44,4 +44,4 @@ API 문서
 - `DELETE /api/posts/{postid}/likes`: id가 `{postid}`인 글에 좋아요 제거
 - `POST /api/posts/{postid}/comments`: id가 `{postid}`인 글에 댓글 추가
 - `PUT /api/posts/{postid}/comments`: id가 `{postid}`인 글에 id가 `{commentid}`인 댓글 수정
-- `DELETE /api/posts/{postid}/comments/{commentid}`: id가 `{postid}`인 글에 id가 `{commentid}`인 댓글 제거
+- `DELETE /api/posts/{postid}/comments/{commentidx}`: id가 `{postid}`인 글에 인덱스가 `{commentidx}`인 댓글 제거
