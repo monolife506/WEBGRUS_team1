@@ -14,6 +14,7 @@ API 문서
 
 - `GET /api/posts/content/{postid}` : 특정 글의 정보 표시
 - `GET /api/posts/users/{userid}` : 작성자가 `{userid}`인 유저가 작성한 글 표시
+- `GET /api/posts/favorites/{userid}` : `{userid}`가 좋아요 표시한 모든 글 표시
 - `GET /api/posts/all` : 모든 글의 정보 표시
 
 인증이 필요한 API

@@ -9,6 +9,7 @@ const CommentSchema = new Schema({
     posttime: { type: Date, default: Date.now },
     modifytime: { type: Date, default: Date.now },
     content: { type: String, required: true },
+    isdeleted: { type: Boolean, default: false },
 });
 
 const FileSchema = new Schema({
@@ -52,16 +53,6 @@ PostSchema.pre('deleteOne', async (next) => {
             const fileName = '../uploads/' + file.originalname;
             fs.unlink(fileName);
         })
-        return next();
-    } catch (err) {
-        console.log(err);
-        return next(err);
-    }
-})
-
-CommentSchema.pre('update', (next) => {
-    try {
-        this.modifytime = Date.now;
         return next();
     } catch (err) {
         console.log(err);

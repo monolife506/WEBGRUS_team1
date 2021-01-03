@@ -1,4 +1,5 @@
 const Post = require("../models/post.model");
+const User = require("../models/user.model");
 
 /*
 POST /api/posts
@@ -47,6 +48,30 @@ async function readPostByUser(req, res, next) {
     try {
         const resp = await Post.find({ owner: req.params.userid });
         if (!resp) return res.status(404);
+        return res.status(200).json(resp);
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json(err);
+    }
+}
+
+/*
+GET /api/posts/favorites/:userid
+특정 유저가 선호하는 글들을 표시함
+*/
+
+async function readPostByFavorites(req, res, next) {
+    try {
+        const user = await User.find(({ userid: req.params.userid }, 'favorites'));
+        if (!user) return res.status(404);
+
+        const resp = [];
+        user.favorites.forEach(postid => {
+            const post = await Post.findOne({ _id: postid });
+            if (!post) return res.status(404);
+            resp.push(post);
+        });
+
         return res.status(200).json(resp);
     } catch (err) {
         console.log(err);

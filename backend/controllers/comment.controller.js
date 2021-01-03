@@ -12,10 +12,8 @@ async function createComment(req, res, next) {
         console.log("Request to createComment:");
         console.log(req.body);
 
-        await Post.findByIdAndUpdate(
-            req.params.postid,
-            { $push: { comments: req.body }, $inc: commentcnt }
-        );
+        const post = await Post.findById(req.params.postid);
+        await post.comments.push(req.body);
         return res.status(200);
     } catch (err) {
         console.log(err);
@@ -31,8 +29,10 @@ jwt 토큰 요구
 
 async function updateComment(req, res, next) {
     try {
+        req.body.modifytime = Date.now;
         console.log("Request to updateComment:");
         console.log(req.body);
+
 
         return res.status(200);
     } catch (err) {
@@ -49,9 +49,6 @@ jwt 토큰 요구
 
 async function deleteComment(req, res, next) {
     try {
-        console.log("Request to deleteComment:");
-        console.log(req.body);
-
 
         return res.status(200);
     } catch (err) {

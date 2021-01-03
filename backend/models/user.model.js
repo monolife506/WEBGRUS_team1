@@ -25,6 +25,7 @@ const UserSchema = new Schema({
     password: { type: String, required: true },
     follower: FollowerSchema,
     following: FollowingSchema,
+    favorites: [String],
 });
 
 UserSchema.pre('save', async (next) => {

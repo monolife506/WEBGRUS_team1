@@ -55,10 +55,11 @@
 
 - `GET /api/posts/content/{postid}` : 특정 글의 정보 표시
 - `GET /api/posts/users/{userid}` : 작성자가 `{userid}`인 유저가 작성한 글 표시
+- `GET /api/posts/favorites/{userid}` : `{userid}`가 좋아요 표시한 모든 글 표시
 - `GET /api/posts/all` : 모든 글의 정보 표시
 
 jwt 토큰 발급 여부에 상관 없이 위 세개의 uri에 접근하여 위 형식대로 주어진 게시글의 정보를 확인할 수 있다.
-여러개의 글의 정보를 확인하는 경우 (`/users`, `/all`) array 형태로 return한다.
+여러개의 글의 정보를 확인하는 경우 (`/users`, `/favorites`, `/all`) array 형태로 return한다.
 
 ## 3. 글 수정하기 (구현되지 않음)
 
@@ -67,10 +68,9 @@ jwt 토큰 발급 여부에 상관 없이 위 세개의 uri에 접근하여 위 
 위 uri로 글의 title, description, photos, tag를 수정한다. modifytime은 자동으로 갱신된다.
 이때 jwt 토큰으로 현재 유저와 글의 작성자가 같은지 확인하는 과정을 거친다.
 
-## 4. 글 삭제하기 (구현되지 않음)
+## 4. 글 삭제하기 
 
 `DELETE /api/posts/{postid}`
 
 위 uri로 특정 글을 지운다.
-실제로 DB상에서 정보를 삭제하지는 않고, 주어진 글의 `isDeleted`를 `true`로 한다.
-그러면 글 열람 시에 현재 글에 대한 정보가 표시되지 않는다.
+파일도 자동으로 모두 지워진다.
