@@ -4,6 +4,8 @@ import Dropzone from "react-dropzone";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import { withRouter } from "react-router-dom";
+import { SERVER_API } from "../_actions/config";
+import axios from "axios";
 // import Chip from "@material-ui/core/Chip";
 // import Autocomplete from "@material-ui/lab/Autocomplete";
 
@@ -11,13 +13,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { fileUpload } from "../_actions/postAction";
 
 function Newpost(props) {
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const [Files, setFiles] = useState([]);
   const [Thumbnails, setThumbnails] = useState([]);
   const [Title, setTitle] = useState("");
   const [Description, setDescription] = useState("");
+
+  useEffect(() => {
+    //썸네일 주소 삭제
+    return () => {
+      window.URL.revokeObjectURL(Thumbnails);
+    };
+  }, []);
 
   const onTitle = (e) => {
     setTitle(e.target.value);
@@ -34,7 +43,6 @@ function Newpost(props) {
     } else {
       setFiles(files);
       setThumbnails(files.map((file) => URL.createObjectURL(file)));
-      console.log(Thumbnails);
     }
   };
 
@@ -60,19 +68,26 @@ function Newpost(props) {
     </div>
   ));
 
-  //파일들 백으로 보내기
+  //파일들 서버로 보내기
   const OnFileUpload = (e) => {
     e.preventDefault();
-    const body = {
-      title: Title,
-      owner: user.userData.userid,
-      description: Description,
-      photos: Files,
+
+    const formdata = new FormData();
+    for (let i = 0; i < Files.length; i++) {
+      formdata.append("photos", Files[i]);
+    }
+    // formdata.append("title", Title);
+    // formdata.append("description", Description);
+    // formdata.append("user", user.userData);
+    
+    // 여러 데이터폼 보낸다는 표시
+    const config = {
+      headers: { "Content-Type": "multipart/form-data" },
     };
-    console.log(body);
-    dispatch(fileUpload(body)).then((response) => {
+
+    dispatch(fileUpload(formdata, config)).then((response) => {
       //업로드 성공시 업로드된 페이지로 이동
-      if (response.payload.uploadSuccess) {
+      if (response.success) {
         props.history.push("/mypage");
       } else {
         alert("업로드에 실패했습니다.");
