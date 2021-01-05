@@ -1,8 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 const userController = require('../controllers/user.controller');
 
-// 컨트롤러로 라우팅
 router.post("/", userController.createUser);
+
+router.put(
+    "/favorites/:postid",
+    passport.authenticate('jwt', { session: false }),
+    userController.toggleFavorite
+)
+router.get(
+    "/favorites/:postid",
+    passport.authenticate('jwt', { session: false }),
+    userController.checkFavorite
+)
 
 module.exports = router;
