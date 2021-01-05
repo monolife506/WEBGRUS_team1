@@ -13,8 +13,9 @@ async function createComment(req, res, next) {
         console.log(req.body);
 
         const post = await Post.findById(req.params.postid);
-        await post.comments.push(req.body);
-        return res.status(200);
+        if (!post) res.status(200).json({ done: false });
+        await post.updateOne({ $push: { comments: req.body }, $inc: { commentcnt: 1 } });
+        return res.status(200).json({ done: true });
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
@@ -22,19 +23,20 @@ async function createComment(req, res, next) {
 }
 
 /*
-PUT /api/posts/:postid/comments/commentidx
-id가 postid인 글에사 idx가 commentidx인 댓글 수정
+PUT /api/posts/:postid/comments/:commentid
+id가 postid인 글에사 id가 commentid인 댓글 수정
 jwt 토큰 요구
 */
 
 async function updateComment(req, res, next) {
     try {
-        req.body.modifytime = Date.now;
         console.log("Request to updateComment:");
         console.log(req.body);
 
+        const post = await Post.findOne({ _id: req.params.postid, 'comments._id': req.params.commentid });
+        if (!post) res.status(404).json({ done: false });
 
-        return res.status(200);
+        return res.status(200).json({ done: true });
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
@@ -43,14 +45,13 @@ async function updateComment(req, res, next) {
 
 /*
 DELETE /api/posts/:postid/comments
-id가 postid인 글에 idx번째 댓글 지우기
+id가 postid인 글에사 id가 commentid인 댓글 지우기
 jwt 토큰 요구
 */
 
 async function deleteComment(req, res, next) {
     try {
-
-        return res.status(200);
+        return res.status(200).json({ done: true });
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
