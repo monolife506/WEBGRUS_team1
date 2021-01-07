@@ -31,12 +31,16 @@ const PostSchema = new Schema({
     comments: [CommentSchema],
 });
 
-PostSchema.pre('deleteOne', async function (next) {
+PostSchema.pre('deleteOne', { document: true }, async function (next) {
     try {
-        this.files.forEach((file) => {
-            const fileName = '../uploads/' + file.originalname;
-            fs.unlink(fileName);
-        })
+        for (let index = 0; index < this.files.length; index++) {
+            const fileName = 'uploads/' + this.files[index].filename;
+            console.log(fileName);
+            fs.unlink(fileName, (err) => {
+                console.log(err);
+                return next(err);
+            });
+        }
         return next();
     } catch (err) {
         console.log(err);

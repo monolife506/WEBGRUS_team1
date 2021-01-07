@@ -14,7 +14,13 @@ router.post(
 );
 router.get(
     "/content/:postid",
-    postController.readPost
+    function (req, res, next) {
+        passport.authenticate('jwt', function (err, user) {
+            if (err) return next(err);
+            if (!user) postController.readPostAnonymous(req, res, next);
+            postController.readPost(req, res, next);
+        })(req, res, next);
+    }
 );
 router.get("/users/:userid", postController.readPostByUser);
 router.get("/favorites/:userid", postController.readPostsByFavorites);

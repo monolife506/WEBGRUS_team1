@@ -34,10 +34,11 @@ async function readPost(req, res, next) {
         const resp = await Post.findById(req.params.postid);
         if (!resp) return res.status(404);
 
+        console.log("login");
         const user = await User.findOne({ userid: req.user.userid, watched: req.params.postid });
         if (!user) {
-            await user.updateOne({ $push: { watched: req.params.postid } });
-            await post.updateOne({ $inc: { viewcnt: 1 } });
+            await User.findOneAndUpdate({ userid: req.user.userid }, { $push: { watched: req.params.postid } });
+            await Post.findByIdAndUpdate(req.params.postid, { $inc: { viewcnt: 1 } });
         }
         return res.status(200).json(resp);
     } catch (err) {
@@ -50,6 +51,7 @@ async function readPostAnonymous(req, res, next) {
     try {
         const resp = await Post.findOne({ _id: req.params.postid });
         if (!resp) return res.status(404);
+        console.log("Anonymous");
         return res.status(200).json(resp);
     } catch (err) {
         console.log(err);
@@ -128,7 +130,7 @@ jwt 토큰 요구
 
 async function deletePost(req, res, next) {
     try {
-        const resp = await Post.findOne({ _id: req.params.postid }, 'owner');
+        const resp = await Post.findById(req.params.postid);
         if (!resp) return res.status(404);
         if (resp.owner != req.user.userid) return res.status(401);
         await resp.deleteOne();
@@ -141,6 +143,7 @@ async function deletePost(req, res, next) {
 
 module.exports.createPost = createPost;
 module.exports.readPost = readPost;
+module.exports.readPostAnonymous = readPostAnonymous;
 module.exports.readPostByUser = readPostByUser;
 module.exports.readPostsByFavorites = readPostsByFavorites;
 module.exports.readAllPost = readAllPost;
