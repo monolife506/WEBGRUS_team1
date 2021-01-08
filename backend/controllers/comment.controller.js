@@ -30,12 +30,12 @@ jwt 토큰 요구
 
 async function updateComment(req, res, next) {
     try {
-        console.log("Request to updateComment:");
-        console.log(req.body);
+        req.body.modifytime = Date.now;
 
         const post = await Post.findOne({ _id: req.params.postid, 'comments._id': req.params.commentid });
         if (!post) res.status(404).json({ done: false });
-
+        if (post.owner != req.user.userid) return res.status(401).json({ done: false });
+        await post.updateOne(req.body);
         return res.status(200).json({ done: true });
     } catch (err) {
         console.log(err);
@@ -51,6 +51,10 @@ jwt 토큰 요구
 
 async function deleteComment(req, res, next) {
     try {
+        const post = await Post.findOne({ _id: req.params.postid, 'comments._id': req.params.commentid });
+        if (!post) res.status(404).json({ done: false });
+        if (post.owner != req.user.userid) return res.status(401).json({ done: false });
+        await post.deleteOne();
         return res.status(200).json({ done: true });
     } catch (err) {
         console.log(err);
