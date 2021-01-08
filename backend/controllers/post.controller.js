@@ -122,6 +122,29 @@ id가 postid인 글 수정
 jwt 토큰 요구
 */
 
+async function updatePost(req, res, next) {
+    try {
+        const resp = await Post.findById(req.params.postid);
+        if (!resp) return res.status(404);
+        if (resp.owner != req.user.userid) return res.status(401);
+        if (!req.body.deletedFiles) {
+            for (let index = 0; index < req.body.deletedFiles.length; index++) {
+                const fileName = 'uploads/' + req.body.deletedFiles[index];
+                console.log(fileName);
+                fs.unlink(fileName, (err) => {
+                    console.log(err);
+                    return next(err);
+                });
+            }
+        }
+        await resp.updateOne(req.body);
+        return res.status(200).json({ done: true });
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json(err);
+    }
+}
+
 /*
 DELETE /api/posts/:postid
 id가 postid인 글 제거
@@ -147,6 +170,7 @@ module.exports.readPostAnonymous = readPostAnonymous;
 module.exports.readPostByUser = readPostByUser;
 module.exports.readPostsByFavorites = readPostsByFavorites;
 module.exports.readAllPost = readAllPost;
+module.exports.updatePost = updatePost;
 module.exports.deletePost = deletePost;
 
 

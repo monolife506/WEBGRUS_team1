@@ -6,7 +6,7 @@
 `POST /api/users`
 
 다음과 같은 json 형식으로 전송하면 DB에 계정 정보가 추가된다.
-형식이 다를 경우에는 status code 400을 return한다.
+형식이 다르거나 오류가 발생한 경우에는 status code 400을 return한다.
 
 ```
 {
@@ -14,9 +14,9 @@
         "firstname": "first",
         "lastname": "last"
     },
-    "userid": "newid",
-    "useremail": "owo@newemail.com",
-    "password": "qwerty"
+    "userid": "sampleid",
+    "useremail": "example@email.com",
+    "password": "password"
 }
 ```
 

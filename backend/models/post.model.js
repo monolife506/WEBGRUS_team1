@@ -31,6 +31,16 @@ const PostSchema = new Schema({
     comments: [CommentSchema],
 });
 
+PostSchema.pre('updateOne', { document: true }, async function (next) {
+    try {
+        this.modifytime = Date.now;
+        return next();
+    } catch (err) {
+        console.log(err);
+        return next(err);
+    }
+})
+
 PostSchema.pre('deleteOne', { document: true }, async function (next) {
     try {
         for (let index = 0; index < this.files.length; index++) {

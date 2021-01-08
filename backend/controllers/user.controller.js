@@ -33,7 +33,7 @@ jwt 토큰 필요
 */
 
 /*
-PUT /api/users/favorites
+PUT /api/users/favorites/:postid
 id가 postid인 글을 현재 유저의 favorite list에 추가
 이미 그 글이 favorite list에 존재한다면 제거
 jwt 토큰 필요
