@@ -3,7 +3,7 @@ import { SERVER_API } from "./config";
 
 //action type
 export const UPLOAD_FILE = "upload_file";
-export const GET_MYPOSTS = "get_myposts";
+export const GET_USERPOSTS = "get_userposts";
 export const GET_POSTDETAIL = "get_postdetail";
 export const GET_ALLPOST = "get_allpost";
 export const POST_MODIFY = "post_modify";
@@ -26,17 +26,17 @@ export function fileUpload(formdata, config) {
 }
 
 // 해당 유저의 포스트 정보받기
-export function getMyposts(userid) {
+export function getUserposts(userid) {
   const request = axios
     .get(`${SERVER_API}/api/users/${userid}`)
     .then((res) => res.data);
   return {
-    type: GET_MYPOSTS,
+    type: GET_USERPOSTS,
     payload: request,
   };
 }
 
-//해당 포스트의 정보받기
+//해당 포스트의 디테일 정보받기
 export function getPostDetail(param) {
   const request = axios
     .get(`${SERVER_API}/api/posts/content/${param.postid}`)
