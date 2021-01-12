@@ -44,7 +44,7 @@ async function updateComment(req, res, next) {
 }
 
 /*
-DELETE /api/posts/:postid/comments
+DELETE /api/posts/:postid/comments/:commentid
 id가 postid인 글에사 id가 commentid인 댓글 지우기
 jwt 토큰 요구
 */
