@@ -44,5 +44,5 @@ API 문서
 - `GET /api/users/favorites/:postid`: id가 `{postid}`인 글의 좋아요 여부 확인
 
 - `POST /api/posts/{postid}/comments`: id가 `{postid}`인 글에 댓글 추가
-- `PUT /api/posts/{postid}/comments`: id가 `{postid}`인 글에 id가 `{commentid}`인 댓글 수정 (미구현)
-- `DELETE /api/posts/{postid}/comments/{commentidx}`: id가 `{postid}`인 글에 인덱스가 `{commentidx}`인 댓글 제거 (미구현)
+- `PUT /api/posts/{postid}/comments/{commentid}`: id가 `{postid}`인 글에 id가 `{commentid}`인 댓글 수정 (미구현)
+- `DELETE /api/posts/{postid}/comments/{commentid}`: id가 `{postid}`인 글에 인덱스가 `{commentid}`인 댓글 제거 (미구현)
