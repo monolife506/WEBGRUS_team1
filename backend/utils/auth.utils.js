@@ -32,15 +32,17 @@ async function localVerify(userid, password, done) {
 
 const jwtStrategyOptions = {
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'secret' // secret string, change this to global const later
+    secretOrKey: 'secret', // secret string, change this to global const later
+    passReqToCallback: true
 };
 
 // 현재 JWT token의 유효성 확인 (jwt verify)
-async function jwtVerify(payload, done) {
+async function jwtVerify(req, payload, done) {
     try {
         // jwt token에 명시된 유저와 일치하는 유저가 존재하는지 확인
         const user = await userModel.findOne({ userid: payload.userid });
         if (!user) return done(null, false);
+        req.user = user;
         return done(null, user);
     }
     catch (err) {
