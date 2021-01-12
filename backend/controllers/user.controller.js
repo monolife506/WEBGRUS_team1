@@ -75,6 +75,35 @@ async function checkFavorite(req, res, next) {
     }
 }
 
+/*
+PUT /api/users/following/{userid}
+특정한 유저의 팔로우 상태 토글하기
+jwt 토큰 요구
+*/
+
+async function toggleFollowing(req, res, next) {
+    try {
+        const userFollowing = await User.findOne({ userid: req.params.userid });
+        if (!userFollowing)
+            return res.status(404).json({ 'status': 'error' });
+
+        const user = await User.findOne({ userid: req.user.userid, followings: req.params.userid });
+        if (!user) {
+            await User.findOneAndUpdate({ userid: req.user.userid }, { $push: { followings: req.params.userid }, $inc: { followingcnt: 1 } });
+            await userFollowing.updateOne({ $push: { followers: req.user.userid }, $inc: { followercnt: 1 } });
+            return res.status(200).json({ 'status': 'add' });
+        } else {
+            await user.updateOne({ $pull: { followings: req.params.userid }, $inc: { followingcnt: -1 } });
+            await userFollowing.updateOne({ $pull: { followers: req.user.userid }, $inc: { followercnt: -1 } });
+            return res.status(200).json({ 'status': 'del' });
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json(err);
+    }
+}
+
 module.exports.createUser = createUser;
 module.exports.toggleFavorite = toggleFavorite;
 module.exports.checkFavorite = checkFavorite;
+module.exports.toggleFollowing = toggleFollowing;

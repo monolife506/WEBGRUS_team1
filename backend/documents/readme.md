@@ -29,8 +29,7 @@ API 문서
 - `GET /api/users/{userid}` : id가 `{userid}`인 유저의 정보 표시
 - `PUT /api/users/{userid}` : id가 `{userid}`인 유저의 정보 업데이트 (미구현)
 - `DELETE /api/users/{userid}` : id가 `{userid}`인 유저의 정보 삭제 (미구현)
-- `POST /api/users/following/{userid}` : id가 `{userid}`인 유저를 팔로우한다. (미구현)
-- `DELETE /api/users/following/{userid}` : id가 `{userid}`인 유저를 팔로우에서 해제한다. (미구현)
+- `PUT /api/users/following/{userid}` : id가 `{userid}`인 유저에 대해 팔로우 상태를 토글한다.
 
 ### 글 작성자
 
@@ -44,5 +43,5 @@ API 문서
 - `GET /api/users/favorites/:postid`: id가 `{postid}`인 글의 좋아요 여부 확인
 
 - `POST /api/posts/{postid}/comments`: id가 `{postid}`인 글에 댓글 추가
-- `PUT /api/posts/{postid}/comments/{commentid}`: id가 `{postid}`인 글에 id가 `{commentid}`인 댓글 수정 (미구현)
-- `DELETE /api/posts/{postid}/comments/{commentid}`: id가 `{postid}`인 글에 인덱스가 `{commentid}`인 댓글 제거 (미구현)
+- `PUT /api/posts/{postid}/comments/{commentid}`: id가 `{postid}`인 글에 id가 `{commentid}`인 댓글 수정
+- `DELETE /api/posts/{postid}/comments/{commentid}`: id가 `{postid}`인 글에 인덱스가 `{commentid}`인 댓글 제거

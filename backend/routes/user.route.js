@@ -16,4 +16,10 @@ router.get(
     userController.checkFavorite
 )
 
+router.put(
+    "/following/:userid",
+    passport.authenticate('jwt', { session: false }),
+    userController.toggleFollowing
+)
+
 module.exports = router;
