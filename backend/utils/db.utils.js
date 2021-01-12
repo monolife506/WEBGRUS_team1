@@ -6,7 +6,7 @@ module.exports.init = () => {
     db.once('open', () => { console.log("Connected to mongodb server") });
 
     mongoose.connect(
-        'mongodb://root:webgrus01@14.35.13.88:27017/webgrus?authSource=admin',
+        'mongodb://root:webgrus01@mongodb.aymnas.tk/webgrus?authSource=admin',
         { useNewUrlParser: true, useUnifiedTopology: true },
         (err) => {
             if (err) {
