@@ -156,6 +156,8 @@ async function deletePost(req, res, next) {
         const resp = await Post.findById(req.params.postid);
         if (!resp) return res.status(404);
         if (resp.owner != req.user.userid) return res.status(401);
+
+        await User.updateMany({ favorites: req.user.userid }, { $pull: { favorites: req.user.userid } });
         await resp.deleteOne();
         return res.status(200).json({ done: true });
     } catch (err) {
