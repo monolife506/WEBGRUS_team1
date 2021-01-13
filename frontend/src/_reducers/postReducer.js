@@ -1,17 +1,22 @@
 //상태값 변경: 원래있던 state와 action 합치기
 import {
-  UPLOAD_FILE,
+  UPLOAD_SUCCESS,
+  UPLOAD_FAILURE,
   GET_POSTDETAIL,
   GET_USERPOSTS,
   GET_ALLPOST,
   POST_MODIFY,
   POST_DELETE,
-} from "../_actions/postAction";
+} from "../_actions/types";
 
 export default function (state = {}, action) {
   switch (action.type) {
-    case UPLOAD_FILE:
+    case UPLOAD_SUCCESS:
       return { ...state, uploadSuccess: action.payload };
+      break;
+
+    case UPLOAD_FAILURE:
+      return { ...state, err: action.payload };
       break;
 
     case GET_USERPOSTS:
