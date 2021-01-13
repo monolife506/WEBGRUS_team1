@@ -4,8 +4,7 @@ import Dropzone from "react-dropzone";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import { withRouter } from "react-router-dom";
-import { SERVER_API } from "../_actions/config";
-import axios from "axios";
+
 // import Chip from "@material-ui/core/Chip";
 // import Autocomplete from "@material-ui/lab/Autocomplete";
 
@@ -13,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fileUpload } from "../_actions/postAction";
 
 function Newpost(props) {
-  const user = useSelector((state) => state.user);
+  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const [Files, setFiles] = useState([]);
@@ -76,18 +75,13 @@ function Newpost(props) {
     for (let i = 0; i < Files.length; i++) {
       formdata.append("photos", Files[i]);
     }
-    // formdata.append("title", Title);
-    // formdata.append("description", Description);
-    // formdata.append("user", user.userData);
-    
-    // 여러 데이터폼 보낸다는 표시
-    const config = {
-      headers: { "Content-Type": "multipart/form-data" },
-    };
+    formdata.append("title", Title);
+    formdata.append("description", Description);
 
-    dispatch(fileUpload(formdata, config)).then((response) => {
+    dispatch(fileUpload(formdata)).then((res) => {
       //업로드 성공시 업로드된 페이지로 이동
-      if (response.success) {
+      console.log(res);
+      if (res.success) {
         props.history.push("/mypage");
       } else {
         alert("업로드에 실패했습니다.");

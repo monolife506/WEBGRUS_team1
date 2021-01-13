@@ -7,9 +7,10 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { registerUser } from "../_actions/authAction";
 
-import { useDispatch } from "react-redux";
-import { registerUser } from "../_actions/userAction";
+import { useHistory } from "react-router-dom";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,8 +28,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp(props) {
-  const dispatch = useDispatch();
+function SignUp(props) {
+  const history = useHistory();
+  const auth = props.auth;
 
   const classes = useStyles();
 
@@ -61,21 +63,31 @@ export default function SignUp(props) {
     else setPasswordchecking(true);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     let body = {
+      // username: {
+      //
+      //   lastname: Lastname,
+      // },
       firstname: Firstname,
-      lastname: Lastname,
       userid: Id,
-      email: Email,
+      useremail: Email,
       password: Password,
     };
+
     //액션
-    dispatch(registerUser(body)).then((res) => {
-      if (res.payload.success) {
-        props.history.push("/login");
+    await props.registerUser(body).then((res) => {
+      if (res) {
+        history.push("/login");
       } else {
-        alert(res.payload.err);
+        alert("회원가입에 실패했습니다");
+        setFirstname("");
+        setLastname("");
+        setId("");
+        setEmail("");
+        setPassword("");
+        setPasswordcheck("");
       }
     });
   };
@@ -92,7 +104,7 @@ export default function SignUp(props) {
             <Grid item xs={6}>
               <TextField
                 autoComplete='fname'
-                name={Firstname}
+                value={Firstname}
                 variant='outlined'
                 required
                 fullWidth
@@ -105,7 +117,7 @@ export default function SignUp(props) {
             <Grid item xs={6}>
               <TextField
                 autoComplete='fname'
-                name={Lastname}
+                value={Lastname}
                 variant='outlined'
                 required
                 fullWidth
@@ -121,7 +133,7 @@ export default function SignUp(props) {
                 required
                 fullWidth
                 id='id'
-                name={Id}
+                value={Id}
                 label='아이디'
                 autoComplete='id'
                 onChange={onId}
@@ -134,7 +146,7 @@ export default function SignUp(props) {
                 fullWidth
                 id='email'
                 type='email'
-                name={Email}
+                value={Email}
                 label='이메일'
                 autoComplete='email'
                 onChange={onEmail}
@@ -145,7 +157,7 @@ export default function SignUp(props) {
                 variant='outlined'
                 required
                 fullWidth
-                name={Password}
+                value={Password}
                 type='password'
                 id='password'
                 label='비밀번호'
@@ -156,11 +168,13 @@ export default function SignUp(props) {
             <Grid item xs={12}>
               <TextField
                 error={!Passwordchecking}
-                helperText={!Passwordchecking?"비밀번호와 일치하지 않습니다.":""}
+                helperText={
+                  !Passwordchecking ? "비밀번호와 일치하지 않습니다." : ""
+                }
                 variant='outlined'
                 required
                 fullWidth
-                name={Passwordcheck}
+                value={Passwordcheck}
                 type='password'
                 id='passwordcheck'
                 label='비밀번호 확인'
@@ -190,3 +204,9 @@ export default function SignUp(props) {
     </Container>
   );
 }
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, { registerUser })(SignUp);
