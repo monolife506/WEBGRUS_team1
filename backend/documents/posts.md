@@ -16,7 +16,8 @@
 1. description: 글에 대한 설명
 2. tags: 글을 찾을 때 사용할 태그, array 형태로 나타낸다.
 
-저장된 사진들은 backend 프로젝트의 `uploads` 폴더에 무작위적인 제목으로 저장된다.
+저장된 사진들은 backend 프로젝트의 `public/images` 폴더에 무작위적인 제목으로 저장된다.
+이때 사진에 대한 접근은 `GET /images/:filename`으로 접근할 수 있다.
 그리고 DB상에는 다음과 같은 형식으로 글이 저장된다.
 
 ```
