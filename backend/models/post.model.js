@@ -44,7 +44,7 @@ PostSchema.pre('updateOne', { document: true }, async function (next) {
 PostSchema.pre('deleteOne', { document: true }, async function (next) {
     try {
         for (let index = 0; index < this.files.length; index++) {
-            const fileName = 'uploads/' + this.files[index].filename;
+            const fileName = 'public/images/' + this.files[index].filename;
             console.log(fileName);
             fs.unlink(fileName, (err) => {
                 console.log(err);

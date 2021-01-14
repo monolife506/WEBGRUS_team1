@@ -129,7 +129,7 @@ async function updatePost(req, res, next) {
         if (resp.owner != req.user.userid) return res.status(401);
         if (!req.body.deletedFiles) {
             for (let index = 0; index < req.body.deletedFiles.length; index++) {
-                const fileName = 'uploads/' + req.body.deletedFiles[index];
+                const fileName = 'public/images/' + req.body.deletedFiles[index];
                 console.log(fileName);
                 fs.unlink(fileName, (err) => {
                     console.log(err);
