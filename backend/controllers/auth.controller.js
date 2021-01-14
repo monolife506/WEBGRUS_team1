@@ -22,15 +22,6 @@ function createAuth(req, res, next) {
 }
 
 /*
-POST /api/auth/logout
-로그아웃 - JWT 데이터 제거
-*/
-
-function deleteAuth(req, res, next) {
-    req.logout();
-}
-
-/*
 POST /api/auth/check
 현재 발급받은 토큰의 유효성 검증 (passport.authenticate 예시)
 토큰이 없거나 만료된 토큰이면 status code 401, 아니면 200 return

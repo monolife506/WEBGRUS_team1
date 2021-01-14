@@ -21,16 +21,31 @@ async function createUser(req, res, next) {
 }
 
 /*
-PUT /api/users/
-현재 유저의 정보 수정
+PUT /api/users/:userid
+현재 유저의 정보 수정 
 jwt 토큰 필요
 */
 
 /*
-DELETE /api/users/
+DELETE /api/users/:userid
 현재 유저의 정보 삭제
 jwt 토큰 필요
 */
+
+async function deleteUser(req, res, next) {
+    try {
+        const user = await User.findOne({ userid: req.params.userid });
+        if (!user) return res.status(404).json({ done: false });
+        if (user.owner != user.userid) return res.status(401).json({ done: false });
+
+        await User.updateMany({ followings: req.params.userid }, { $pull: { followings: req.params.userid }, $inc: { followingcnt: -1 } });
+        await user.deleteOne();
+        return res.status(200).json(user);
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json(err);
+    }
+}
 
 /*
 PUT /api/users/favorites/:postid
@@ -104,6 +119,7 @@ async function toggleFollowing(req, res, next) {
 }
 
 module.exports.createUser = createUser;
+module.exports.deleteUser = deleteUser;
 module.exports.toggleFavorite = toggleFavorite;
 module.exports.checkFavorite = checkFavorite;
 module.exports.toggleFollowing = toggleFollowing;

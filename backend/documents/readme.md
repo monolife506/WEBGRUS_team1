@@ -25,10 +25,9 @@ API 문서
 
 ### 계정
 
-- `POST /api/auth/logout` : 로그아웃
 - `GET /api/users/{userid}` : id가 `{userid}`인 유저의 정보 표시
 - `PUT /api/users/{userid}` : id가 `{userid}`인 유저의 정보 업데이트 (미구현)
-- `DELETE /api/users/{userid}` : id가 `{userid}`인 유저의 정보 삭제 (미구현)
+- `DELETE /api/users/{userid}` : id가 `{userid}`인 유저의 정보 삭제
 - `PUT /api/users/following/{userid}` : id가 `{userid}`인 유저에 대해 팔로우 상태를 토글한다.
 
 ### 글 작성자

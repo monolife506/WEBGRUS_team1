@@ -154,8 +154,8 @@ jwt 토큰 요구
 async function deletePost(req, res, next) {
     try {
         const resp = await Post.findById(req.params.postid);
-        if (!resp) return res.status(404);
-        if (resp.owner != req.user.userid) return res.status(401);
+        if (!resp) return res.status(404).json({ done: false });
+        if (resp.owner != req.user.userid) return res.status(401).json({ done: false });
 
         await User.updateMany({ favorites: req.user.userid }, { $pull: { favorites: req.user.userid } });
         await resp.deleteOne();

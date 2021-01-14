@@ -47,3 +47,7 @@ router.post( // HTTP method에 따라 함수가 달라짐
     authController.checkAuth // controller function
 );
 ```
+
+## 로그아웃
+
+프론트엔드에서 Bearer Token의 내용을 삭제하여 로그아웃을 구현할 수 있다.
