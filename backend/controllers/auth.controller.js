@@ -32,5 +32,4 @@ function checkAuth(req, res, next) {
 }
 
 module.exports.createAuth = createAuth;
-module.exports.deleteAuth = deleteAuth;
 module.exports.checkAuth = checkAuth;
