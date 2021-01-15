@@ -28,7 +28,7 @@ POST /api/auth/check
 */
 
 function checkAuth(req, res, next) {
-    return req.user.userid;
+    return res.status(200).json({ userid: req.user.userid });
 }
 
 module.exports.createAuth = createAuth;

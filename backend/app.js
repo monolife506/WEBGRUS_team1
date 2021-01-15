@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const logger = require('morgan');
 const passport = require('passport');
 
@@ -21,24 +22,9 @@ app.use(passport.initialize());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cors({ origin: "*" }));
 app.use(express.static('public'));
-
-// CORS Setting
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-
-  // authorized headers for preflight requests
-  // https://developer.mozilla.org/en-US/docs/Glossary/preflight_request
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-
-  app.options('*', (req, res) => {
-    // allowed XHR methods  
-    res.header('Access-Control-Allow-Methods', 'GET, PATCH, PUT, POST, DELETE, OPTIONS');
-    res.send();
-  });
-});
+app.use(cookieParser());
 
 // init
 db.init();
