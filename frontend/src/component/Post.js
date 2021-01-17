@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { SERVER_API } from "../_actions/config";
 
 import Comment from "@material-ui/icons/Comment";
 import Visibility from "@material-ui/icons/Visibility";
 import FavoriteComponent from "../component/FavoriteComponent";
-import CommentComponent from "../component/CommentComponent";
 
 function Post({ post }) {
-  const postid = post.postid;
-
-  const [CommentToggle, setCommentToggle] = useState(false);
   const [CommentNum, setCommentNum] = useState(post.commentcnt);
   const [ViewNum, setViewNum] = useState(post.viewcnt);
+  const [Tags, setTags] = useState([]);
+
+  const postid = post._id;
+  const posttime = post.posttime;
+  const year = posttime.substring(0, 4);
+  const month = posttime.substring(5, 7);
+  const date = posttime.substring(8, 10);
 
   return (
     <div>
@@ -23,11 +26,11 @@ function Post({ post }) {
           padding: "5px",
         }}
       >
-        <a href={`${SERVER_API}/userDetail/${post.owner}`}>{post.owner}</a>
-        <a href={`${SERVER_API}/postDetail/${post.owner}/${postid}`}>
+        <a href={`/userDetail/${post.owner}`}>{post.owner}</a>
+        <a href={`/postDetail/${postid}`}>
           {/* 제일 첫번째 사진 보여주기 */}
           <img
-            src={`${SERVER_API}/${post.photos[0].path}`}
+            src={`${SERVER_API}/images/${post.files[0].filename}`}
             style={{ width: 290, height: 290 }}
           />
         </a>
@@ -39,11 +42,18 @@ function Post({ post }) {
             whiteSpace: "nowrap",
           }}
         >
-          <a href={`${SERVER_API}/postDetail/${post.owner}/${postid}`}>
+          <a href={`/postDetail/${postid}`}>
             <div>{post.title}</div>
           </a>
           <div>{post.description}</div>
-          <div>Date: {post.posttime}</div>
+          <div>
+            {Tags.map((tag) => (
+              <div key={tag}>#{tag}</div>
+            ))}
+          </div>
+          <div>
+            Date: {year}. {month}. {date}.
+          </div>
           <div
             style={{
               width: "60%",
@@ -56,24 +66,12 @@ function Post({ post }) {
               <Visibility /> {ViewNum}
             </div>
 
-            <div
-              // 댓글 창 열고 닫히기
-              onClick={() => {
-                CommentToggle === false && CommentNum > 0
-                  ? setCommentToggle(true)
-                  : setCommentToggle(false);
-              }}
-            >
+            <div>
               <Comment />
               {CommentNum}
             </div>
           </div>
         </div>
-        <CommentComponent
-          postid={postid}
-          comments={post.comments}
-          CommentToggle={CommentToggle}
-        />
       </div>
     </div>
   );
