@@ -7,7 +7,7 @@
 
 ## 구성
 
-#### 네비게이션 바
+### 네비게이션 바
 
 component/bar/Navbar.js
 
@@ -30,7 +30,7 @@ component/menubar.js
 
 - 클릭시 마이페이지, 로그아웃 버튼 띄움
 
-#### 푸터
+### 푸터
 
 component/bar/Footer.js
 
@@ -39,7 +39,7 @@ component/bar/Footer.js
 
 ## 페이지 소개
 
-#### 1. 메인페이지
+### 1. 메인페이지
 
 routes/Main.js
 
@@ -56,7 +56,7 @@ component/Post.js
 - 로그인 한 사람만 좋아요 누르기 가능
 - 좋아요 컴포넌트 : component/FavoriteComponent.js
 
-#### 2. 게시물 업로드 페이지
+### 2. 게시물 업로드 페이지
 
 routes/Newpost.js
 
@@ -65,7 +65,7 @@ routes/Newpost.js
   - 제목, 작품설명, 태그, 이미지 업로드 가능
   - 이미지 업로드 기능은 react-dropzone 사용함
 
-#### 3. 마이페이지
+### 3. 마이페이지
 
 routes/Mypage.js
 
@@ -75,7 +75,7 @@ routes/Mypage.js
 - 컴포넌트:
   - 각각의 게시물 컴포넌트 : component/Post.js (메인페이지에서 부른 컴포넌트와 동일)
 
-#### 4. 파일 상세보기 페이지
+### 4. 파일 상세보기 페이지
 
 routes/PostDetail.js
 
@@ -98,7 +98,7 @@ component/CommentComponent.js
 - PostDetail.js에 보여질 댓글 구성 (댓글 입력창, 달린 댓글들)
 - 댓글 입력은 로그인 돼있을 경우만 가능
 
-#### 5. 유저 상세보기 페이지
+### 5. 유저 상세보기 페이지
 
 routes/UserDetail.js
 
@@ -111,7 +111,7 @@ routes/UserDetail.js
   - 각각의 게시물 컴포넌트 : component/Post.js (메인페이지에서 부른 컴포넌트와 동일)
   - 작성자 팔로우 컴포넌트 : component/FollowComponent.js (파일 상세보기 페이지에서 부른 컴포넌트와 동일)
 
-#### 6. 게시물 수정 페이지
+### 6. 게시물 수정 페이지
 
 routes/PostModify.js
 
@@ -119,9 +119,9 @@ routes/PostModify.js
 - 기능:
   - 게시물의 제목, 작품설명, 태그, 이미지 변경 가능 (게시물 업로드 페이지와 비슷)
 
-#### 7. 검색 페이지 (미구현)
+### 7. 검색 페이지 (미구현)
 
-#### 8. 로그인 페이지
+### 8. 로그인 페이지
 
 routes/LoginPage.js
 
@@ -129,7 +129,7 @@ routes/LoginPage.js
 - 기능:
   - 로그인 기능 (아이디와 비밀번호 필수 입력)
 
-#### 9. 회원가입 페이지
+### 9. 회원가입 페이지
 
 routes/RegisterPage.js
 
