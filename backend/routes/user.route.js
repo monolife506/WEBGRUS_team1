@@ -26,5 +26,10 @@ router.put(
     passport.authenticate('jwt', { session: false }),
     userController.toggleFollowing
 )
+router.get(
+    "/following/:userid",
+    passport.authenticate('jwt', { session: false }),
+    userController.checkFollowing
+)
 
 module.exports = router;

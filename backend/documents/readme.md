@@ -15,6 +15,7 @@ API 문서
 - `GET /api/posts/users/{userid}` : 작성자가 `{userid}`인 유저가 작성한 글 표시
 - `GET /api/posts/favorites/{userid}` : `{userid}`가 좋아요 표시한 모든 글 표시
 - `GET /api/posts/all` : 모든 글의 정보 표시
+- `GET /api/posts/search/:query` : query에 일치하는 글의 정보 표시 (post.md 참조)
 
 인증이 필요한 API
 --------------
@@ -28,7 +29,9 @@ API 문서
 - `GET /api/users/{userid}` : id가 `{userid}`인 유저의 정보 표시
 - `PUT /api/users/{userid}` : id가 `{userid}`인 유저의 정보 업데이트 (미구현)
 - `DELETE /api/users/{userid}` : id가 `{userid}`인 유저의 정보 삭제
-- `PUT /api/users/following/{userid}` : id가 `{userid}`인 유저에 대해 팔로우 상태를 토글한다.
+- `PUT /api/users/following/{userid}` : id가 `{userid}`인 유저에 대해 팔로우 상태 토글
+- `GET /api/users/following/{userid}` : id가 `{userid}`인 유저에 대해 현재 유저의 팔로우 상태 확인
+
 
 ### 글 작성자
 

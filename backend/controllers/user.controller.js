@@ -1,5 +1,6 @@
 const User = require('../models/user.model');
 const Post = require('../models/post.model');
+const { framework } = require('passport');
 
 /*
 POST /api/users/
@@ -8,9 +9,6 @@ POST /api/users/
 
 async function createUser(req, res, next) {
     try {
-        console.log("Request to createUser:");
-        console.log(req.body);
-
         const user = new User(req.body);
         await user.save();
         return res.status(200).json(user);
@@ -34,16 +32,17 @@ jwt 토큰 필요
 
 async function deleteUser(req, res, next) {
     try {
-        const user = await User.findOne({ userid: req.params.userid });
-        if (!user) return res.status(404).json({ done: false });
-        if (user.owner != user.userid) return res.status(401).json({ done: false });
+        const userId = req.params.userid;
+        const user = await User.findOne({ userid: userId });
+        if (!user) return res.status(404).json({ error: "Users not found", done: false });
+        if (user.owner != user.userid) return res.status(401).json({ error: "Unauthorized", done: false });
 
-        await User.updateMany({ followings: req.params.userid }, { $pull: { followings: req.params.userid }, $inc: { followingcnt: -1 } });
+        await User.updateMany({ followings: userId }, { $pull: { followings: userId }, $inc: { followingcnt: -1 } });
         await user.deleteOne();
         return res.status(200).json(user);
     } catch (err) {
         console.log(err);
-        return res.status(400).json(err);
+        return res.status(400).json({ error: err, done: false });
     }
 }
 
@@ -56,20 +55,24 @@ jwt 토큰 필요
 
 async function toggleFavorite(req, res, next) {
     try {
-        const post = await Post.findById(req.params.postid);
-        const user = await User.findOne({ userid: req.user.userid, favorites: req.params.postid });
+        const postId = req.params.postid;
+        const userId = req.user.userid;
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ error: "Posts not found", done: false });
+
+        const user = await User.findOne({ userid: userId, favorites: postId });
         if (!user) {
-            await User.findOneAndUpdate({ userid: req.user.userid }, { $push: { favorites: req.params.postid } });
+            await User.findOneAndUpdate({ userid: userId }, { $push: { favorites: postId } });
             await post.updateOne({ $inc: { likecnt: 1 } });
-            return res.status(200).json({ 'status': 'add' });
+            return res.status(200).json({ status: 'add', done: true });
         } else {
-            await user.updateOne({ $pull: { favorites: req.params.postid } });
+            await user.updateOne({ $pull: { favorites: postId } });
             await post.updateOne({ $inc: { likecnt: -1 } });
-            return res.status(200).json({ 'status': 'del' });
+            return res.status(200).json({ status: 'del', done: true });
         }
     } catch (err) {
         console.log(err);
-        return res.status(400).json(err);
+        return res.status(400).json({ error: err, done: false });
     }
 }
 
@@ -81,9 +84,10 @@ jwt 토큰 필요
 
 async function checkFavorite(req, res, next) {
     try {
-        const user = await User.findOne({ userid: req.user.userid, favorites: req.params.postid });
-        if (!user) return res.status(200).json({ 'post': req.params.postid, 'favorite': false });
-        else return res.status(200).json({ 'post': req.params.postid, 'favorite': true });
+        const postId = req.params.postid;
+        const user = await User.findOne({ userid: req.user.userid, favorites: postId });
+        if (!user) return res.status(200).json({ 'post': postId, 'favorite': false });
+        else return res.status(200).json({ 'post': postId, 'favorite': true });
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
@@ -98,20 +102,40 @@ jwt 토큰 요구
 
 async function toggleFollowing(req, res, next) {
     try {
-        const userFollowing = await User.findOne({ userid: req.params.userid });
-        if (!userFollowing)
-            return res.status(404).json({ 'status': 'error' });
+        const curUserId = req.user.userid;
+        const followingUserId = req.params.userid;
+        const followingUser = await User.findOne({ userid: followingUserId });
+        if (!followingUser)
+            return res.status(404).json({ error: "Users not found", done: false });
 
-        const user = await User.findOne({ userid: req.user.userid, followings: req.params.userid });
+        const user = await User.findOne({ userid: curUserId, followings: followingUserId });
         if (!user) {
-            await User.findOneAndUpdate({ userid: req.user.userid }, { $push: { followings: req.params.userid }, $inc: { followingcnt: 1 } });
-            await userFollowing.updateOne({ $push: { followers: req.user.userid }, $inc: { followercnt: 1 } });
-            return res.status(200).json({ 'status': 'add' });
+            await User.findOneAndUpdate({ userid: curUserId }, { $push: { followings: followingUserId }, $inc: { followingcnt: 1 } });
+            await followingUser.updateOne({ $push: { followers: curUserId }, $inc: { followercnt: 1 } });
+            return res.status(200).json({ 'status': 'add', done: true });
         } else {
-            await user.updateOne({ $pull: { followings: req.params.userid }, $inc: { followingcnt: -1 } });
-            await userFollowing.updateOne({ $pull: { followers: req.user.userid }, $inc: { followercnt: -1 } });
-            return res.status(200).json({ 'status': 'del' });
+            await user.updateOne({ $pull: { followings: followingUserId }, $inc: { followingcnt: -1 } });
+            await followingUser.updateOne({ $pull: { followers: curUserId }, $inc: { followercnt: -1 } });
+            return res.status(200).json({ 'status': 'del', done: true });
         }
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json({ error: err, done: false });
+    }
+}
+
+/*
+GET /api/users/following/{userid}
+특정한 유저의 팔로우 상태 확인하기
+jwt 토큰 요구
+*/
+
+async function checkFollowing(req, res, next) {
+    try {
+        const followingUserId = req.params.postid;
+        const user = await User.findOne({ userid: req.user.userid, followings: followingUserId });
+        if (!user) return res.status(200).json({ 'user': followingUserId, 'favorite': false });
+        else return res.status(200).json({ 'user': followingUserId, 'favorite': true });
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
@@ -123,3 +147,4 @@ module.exports.deleteUser = deleteUser;
 module.exports.toggleFavorite = toggleFavorite;
 module.exports.checkFavorite = checkFavorite;
 module.exports.toggleFollowing = toggleFollowing;
+module.exports.checkFollowing = checkFollowing;
