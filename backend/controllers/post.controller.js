@@ -125,8 +125,8 @@ jwt 토큰 요구
 async function updatePost(req, res, next) {
     try {
         const resp = await Post.findById(req.params.postid);
-        if (!resp) return res.status(404);
-        if (resp.owner != req.user.userid) return res.status(401);
+        if (!resp) return res.status(404).json({ done: false });
+        if (resp.owner != req.user.userid) return res.status(401).json({ done: false });
         if (!req.body.deletedFiles) {
             for (let index = 0; index < req.body.deletedFiles.length; index++) {
                 const fileName = 'public/images/' + req.body.deletedFiles[index];
@@ -137,6 +137,7 @@ async function updatePost(req, res, next) {
                 });
             }
         }
+
         await resp.updateOne(req.body);
         return res.status(200).json({ done: true });
     } catch (err) {

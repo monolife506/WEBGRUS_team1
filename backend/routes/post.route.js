@@ -26,14 +26,14 @@ router.get("/users/:userid", postController.readPostByUser);
 router.get("/favorites/:userid", postController.readPostsByFavorites);
 router.get("/all", postController.readAllPost);
 router.put(
-    "/:userid",
+    "/:postid",
     passport.authenticate('jwt', { session: false }),
+    fileUtils.uploadFile,
     postController.updatePost
 )
 router.delete(
     "/:postid",
     passport.authenticate('jwt', { session: false }),
-    fileUtils.uploadFile,
     postController.deletePost
 )
 
