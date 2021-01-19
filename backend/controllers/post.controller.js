@@ -123,7 +123,7 @@ async function readPostsBySearch(req, res, next) {
                 posts = await Post.find({ description: { $regex: query, $options: 'i' } });
                 break;
             case 'all':
-                posts = await Post.find().or([{ description: { $regex: query, $options: 'i' } }, title: { $regex: query, $options: 'i' }]);
+                posts = await Post.find().or([{ description: { $regex: query, $options: 'i' } }, { title: { $regex: query, $options: 'i' } }]);
                 break;
             case 'owner':
                 posts = await Post.find({ owner: { $regex: query, $options: 'i' } });
