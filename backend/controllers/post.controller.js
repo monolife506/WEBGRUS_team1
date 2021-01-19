@@ -11,15 +11,13 @@ async function createPost(req, res, next) {
     try {
         req.body.files = req.files;
         req.body.owner = req.user.userid;
-        console.log("Request to createPost:");
-        console.log(req.body);
 
         const post = new Post(req.body);
         await post.save();
         return res.status(200).json({ done: true });
     } catch (err) {
         console.log(err);
-        return res.status(400).json(err);
+        return res.status(400).json({ error: err, done: false });
     }
 }
 
@@ -31,16 +29,19 @@ id가 postid인 글의 정보를 받음
 
 async function readPost(req, res, next) {
     try {
-        const resp = await Post.findById(req.params.postid);
-        if (!resp) return res.status(404);
+        const curUser = req.user.userid;
+        const postId = req.params.postid;
 
-        console.log("login");
-        const user = await User.findOne({ userid: req.user.userid, watched: req.params.postid });
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ error: "Posts not found" });
+
+        const user = await User.findOne({ userid: curUser, watched: postId });
         if (!user) {
-            await User.findOneAndUpdate({ userid: req.user.userid }, { $push: { watched: req.params.postid } });
-            await Post.findByIdAndUpdate(req.params.postid, { $inc: { viewcnt: 1 } });
+            await User.findOneAndUpdate({ userid: curUser }, { $push: { watched: postId } });
+            await Post.findByIdAndUpdate(postId, { $inc: { viewcnt: 1 } });
         }
-        return res.status(200).json(resp);
+
+        return res.status(200).json(post);
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
@@ -49,10 +50,9 @@ async function readPost(req, res, next) {
 
 async function readPostAnonymous(req, res, next) {
     try {
-        const resp = await Post.findOne({ _id: req.params.postid });
-        if (!resp) return res.status(404);
-        console.log("Anonymous");
-        return res.status(200).json(resp);
+        const post = await Post.findById(req.params.postid);
+        if (!post) return res.status(404).json({ error: "Posts not found" });
+        return res.status(200).json(post);
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
@@ -66,9 +66,9 @@ id가 userid인 사용자가 작성한 글들의 정보를 받음
 
 async function readPostByUser(req, res, next) {
     try {
-        const resp = await Post.find({ owner: req.params.userid });
-        if (!resp) return res.status(404);
-        return res.status(200).json(resp);
+        const posts = await Post.find({ owner: req.params.userid });
+        if (!posts) return res.status(404).json({ error: "Posts not found" });
+        return res.status(200).json(posts);
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
@@ -83,17 +83,57 @@ GET /api/posts/favorites/:userid
 async function readPostsByFavorites(req, res, next) {
     try {
         const user = await User.findOne(({ userid: req.params.userid }));
-        if (!user) return res.status(404);
+        if (!user) return res.status(404).json({ error: "Users not found" });
 
-        const resp = [];
-        for (let index = 0; index < user.favorites.length; index++) {
-            const postid = user.favorites[index];
+        const posts = [];
+        for (const postid of user.favorites) {
             let post = await Post.findById(postid);
-            if (!post) return res.status(404);
-            resp.push(post);
+            if (!post) return res.status(404).json({ error: "Posts not found" });
+            posts.push(post);
         }
 
-        return res.status(200).json(resp);
+        return res.status(200).json(posts);
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json(err);
+    }
+}
+
+/*
+GET /api/posts/search/:query
+query를 포함하는 글들의 정보를 받음
+
+URI Query의 mode로 검색의 조건을 결정한다. (GET FORM의 mode)
+mode=title // 제목에 따른 검색
+mode=content // 내용에 따른 검색
+mode=all // 제목과 내용에 따른 검색
+mode=owner // 글 작성자에 따른 검색 
+
+mode가 아래의 4가지 중 하나로 명시되지 않은 경우, mode=title로 간주한다.
+*/
+
+async function readPostsBySearch(req, res, next) {
+    try {
+        const query = req.params.query;
+        const mode = req.query.mode;
+        const posts = [];
+
+        switch (mode) {
+            case 'content':
+                posts = await Post.find({ description: { $regex: query, $options: 'i' } });
+                break;
+            case 'all':
+                posts = await Post.find().or([{ description: { $regex: query, $options: 'i' } }, title: { $regex: query, $options: 'i' }]);
+                break;
+            case 'owner':
+                posts = await Post.find({ owner: { $regex: query, $options: 'i' } });
+                break;
+            default: // case 'title'
+                posts = await Post.find({ title: { $regex: query, $options: 'i' } });
+                break;
+        }
+
+        return res.status(200).json(posts);
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
@@ -107,9 +147,9 @@ GET /api/posts/all
 
 async function readAllPost(req, res, next) {
     try {
-        const resp = await Post.find({});
-        if (!resp) return res.status(404);
-        return res.status(200).json(resp);
+        const posts = await Post.find({});
+        if (!posts) return res.status(404).json({ error: "Posts not found" });
+        return res.status(200).json(posts);
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
@@ -124,25 +164,26 @@ jwt 토큰 요구
 
 async function updatePost(req, res, next) {
     try {
-        const resp = await Post.findById(req.params.postid);
-        if (!resp) return res.status(404).json({ done: false });
-        if (resp.owner != req.user.userid) return res.status(401).json({ done: false });
-        if (!req.body.deletedFiles) {
-            for (let index = 0; index < req.body.deletedFiles.length; index++) {
-                const fileName = 'public/images/' + req.body.deletedFiles[index];
-                console.log(fileName);
-                fs.unlink(fileName, (err) => {
+        const post = await Post.findById(req.params.postid);
+        if (!post) return res.status(404).json({ error: "Posts not found", done: false });
+        if (post.owner != req.user.userid) return res.status(401).json({ error: "Unauthorized", done: false });
+
+        const deletedFiles = req.body.deletedFiles;
+        if (!deletedFiles) {
+            for (const fileName of deletedFiles) {
+                let dir = 'public/images/' + fileName;
+                fs.unlink(dir, (err) => {
                     console.log(err);
                     return next(err);
                 });
             }
         }
 
-        await resp.updateOne(req.body);
+        await post.updateOne(req.body);
         return res.status(200).json({ done: true });
     } catch (err) {
         console.log(err);
-        return res.status(400).json(err);
+        return res.status(400).json({ error: err, done: false });
     }
 }
 
@@ -154,26 +195,32 @@ jwt 토큰 요구
 
 async function deletePost(req, res, next) {
     try {
-        const resp = await Post.findById(req.params.postid);
-        if (!resp) return res.status(404).json({ done: false });
-        if (resp.owner != req.user.userid) return res.status(401).json({ done: false });
+        const postID = req.params.postid;
+        const curUser = req.user.userid;
+        const post = await Post.findById(postID);
+        if (!post) return res.status(404).json({ error: "Posts not found", done: false });
+        if (post.owner != curUser) return res.status(401).json({ error: "Unauthorized", done: false });
 
-        await User.updateMany({ favorites: req.user.userid }, { $pull: { favorites: req.user.userid } });
-        await resp.deleteOne();
+        await User.updateMany({ favorites: postID }, { $pull: { favorites: curUser } });
+        await post.deleteOne();
         return res.status(200).json({ done: true });
     } catch (err) {
         console.log(err);
-        return res.status(400).json(err);
+        return res.status(400).json({ error: err, done: false });
     }
 }
 
 module.exports.createPost = createPost;
+
 module.exports.readPost = readPost;
 module.exports.readPostAnonymous = readPostAnonymous;
 module.exports.readPostByUser = readPostByUser;
 module.exports.readPostsByFavorites = readPostsByFavorites;
 module.exports.readAllPost = readAllPost;
+module.exports.readPostsBySearch = readPostsBySearch;
+
 module.exports.updatePost = updatePost;
+
 module.exports.deletePost = deletePost;
 
 

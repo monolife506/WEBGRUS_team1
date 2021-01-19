@@ -11,7 +11,6 @@ const CommentSchema = new Schema({
     content: { type: String, required: true },
 });
 
-
 const FileSchema = new Schema({
     originalname: { type: String, required: true },
     filename: { type: String, required: true },

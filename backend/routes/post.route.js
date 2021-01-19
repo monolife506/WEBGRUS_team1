@@ -12,6 +12,7 @@ router.post(
     fileUtils.uploadFile, // 사진 업로드 (최대 30개)
     postController.createPost // DB상에 글의 정보 추가
 );
+
 router.get(
     "/content/:postid",
     function (req, res, next) {
@@ -25,12 +26,15 @@ router.get(
 router.get("/users/:userid", postController.readPostByUser);
 router.get("/favorites/:userid", postController.readPostsByFavorites);
 router.get("/all", postController.readAllPost);
+router.get("/search/:query", postController.readPostsBySearch);
+
 router.put(
     "/:postid",
     passport.authenticate('jwt', { session: false }),
     fileUtils.uploadFile,
     postController.updatePost
 )
+
 router.delete(
     "/:postid",
     passport.authenticate('jwt', { session: false }),
