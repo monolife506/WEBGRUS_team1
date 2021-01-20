@@ -4,7 +4,6 @@ const { Schema } = mongoose;
 const { model } = mongoose;
 
 const CommentSchema = new Schema({
-    index: { type: Number },
     owner: { type: String, required: true },
     posttime: { type: Date, default: Date.now },
     modifytime: { type: Date, default: Date.now },

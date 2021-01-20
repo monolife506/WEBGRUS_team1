@@ -14,7 +14,7 @@ async function createPost(req, res, next) {
 
         const post = new Post(req.body);
         await post.save();
-        return res.status(200).json({ done: true });
+        return res.status(200).json({ post: post.toJSON(), done: true });
     } catch (err) {
         console.log(err);
         return res.status(400).json({ error: err, done: false });
@@ -133,7 +133,7 @@ async function readPostsBySearch(req, res, next) {
                 break;
         }
 
-        return res.status(200).json(posts);
+        return res.status(200).json({ posts: posts, mode: mode });
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
@@ -180,7 +180,7 @@ async function updatePost(req, res, next) {
         }
 
         await post.updateOne(req.body);
-        return res.status(200).json({ done: true });
+        return res.status(200).json({ post: post.toJSON(), done: true });
     } catch (err) {
         console.log(err);
         return res.status(400).json({ error: err, done: false });
