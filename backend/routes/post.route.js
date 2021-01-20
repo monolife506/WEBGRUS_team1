@@ -19,7 +19,7 @@ router.get(
         passport.authenticate('jwt', function (err, user) {
             if (err) return next(err);
             if (!user) postController.readPostAnonymous(req, res, next);
-            postController.readPost(req, res, next);
+            else postController.readPost(req, res, next);
         })(req, res, next);
     }
 );

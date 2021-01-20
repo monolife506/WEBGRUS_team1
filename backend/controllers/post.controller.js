@@ -14,7 +14,7 @@ async function createPost(req, res, next) {
 
         const post = new Post(req.body);
         await post.save();
-        return res.status(200).json({ post: post.toJSON(), done: true });
+        return res.status(200).json({ post: post, done: true });
     } catch (err) {
         console.log(err);
         return res.status(400).json({ error: err, done: false });
@@ -164,7 +164,9 @@ jwt 토큰 요구
 
 async function updatePost(req, res, next) {
     try {
-        const post = await Post.findById(req.params.postid);
+        const postId = req.params.postid;
+
+        let post = await Post.findById(postId);
         if (!post) return res.status(404).json({ error: "Posts not found", done: false });
         if (post.owner != req.user.userid) return res.status(401).json({ error: "Unauthorized", done: false });
 
@@ -180,7 +182,8 @@ async function updatePost(req, res, next) {
         }
 
         await post.updateOne(req.body);
-        return res.status(200).json({ post: post.toJSON(), done: true });
+        post = await Post.findById(postId);
+        return res.status(200).json({ post: post, done: true });
     } catch (err) {
         console.log(err);
         return res.status(400).json({ error: err, done: false });
@@ -197,6 +200,7 @@ async function deletePost(req, res, next) {
     try {
         const postID = req.params.postid;
         const curUser = req.user.userid;
+
         const post = await Post.findById(postID);
         if (!post) return res.status(404).json({ error: "Posts not found", done: false });
         if (post.owner != curUser) return res.status(401).json({ error: "Unauthorized", done: false });
