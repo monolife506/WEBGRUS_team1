@@ -12,7 +12,8 @@ async function createPost(req, res, next) {
         req.body.files = req.files;
         req.body.owner = req.user.userid;
 
-        const post = new Post(req.body);
+        const { title, owner, description, tags, files } = req.body;
+        const post = new Post({ title: title, owner: owner, description: description, tags: tags, files: files });
         await post.save();
         return res.status(200).json({ post: post, done: true });
     } catch (err) {
@@ -171,17 +172,22 @@ async function updatePost(req, res, next) {
         if (post.owner != req.user.userid) return res.status(401).json({ error: "Unauthorized", done: false });
 
         const deletedFiles = req.body.deletedFiles;
-        if (!deletedFiles) {
+        if (deletedFiles) {
             for (const fileName of deletedFiles) {
                 let dir = 'public/images/' + fileName;
-                fs.unlink(dir, (err) => {
-                    console.log(err);
-                    return next(err);
-                });
+                fs.unlink(dir, (err) => { console.log(err); });
+                await post.updateOne({ $pull: { files: { filename: fileName } } });
             }
         }
 
-        await post.updateOne(req.body);
+        const newFiles = req.body.files;
+        if (newFiles) {
+            for (const obj of newFiles)
+                await post.updateOne({ $push: { files: obj } });
+        }
+
+        const { title, description, tags } = req.body;
+        await post.updateOne({ title: title, description: description, tags: tags });
         post = await Post.findById(postId);
         return res.status(200).json({ post: post, done: true });
     } catch (err) {

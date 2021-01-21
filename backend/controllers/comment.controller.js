@@ -14,7 +14,8 @@ async function createComment(req, res, next) {
         let post = await Post.findById(postId);
         if (!post) res.status(404).json({ error: "Posts not found", done: false });
 
-        await post.updateOne({ $push: { comments: req.body }, $inc: { commentcnt: 1 } });
+        const { owner, content } = req.body;
+        await post.updateOne({ $push: { comments: { owner: owner, content: content } }, $inc: { commentcnt: 1 } });
         post = await Post.findById(postId);
         return res.status(200).json({ comment: post.comments.slice(-1)[0], done: true });
     } catch (err) {
