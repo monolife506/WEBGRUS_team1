@@ -49,6 +49,7 @@ PostSchema.pre('deleteOne', { document: true }, async function (next) {
                 return next(err);
             });
         }
+
         return next();
     } catch (err) {
         console.log(err);

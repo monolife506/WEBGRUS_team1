@@ -1,3 +1,4 @@
+const fs = require('fs');
 const Post = require("../models/post.model");
 const User = require("../models/user.model");
 
@@ -175,12 +176,15 @@ async function updatePost(req, res, next) {
         if (deletedFiles) {
             for (const fileName of deletedFiles) {
                 let dir = 'public/images/' + fileName;
-                fs.unlink(dir, (err) => { console.log(err); });
+                fs.unlink(dir, (err) => {
+                    console.log(err);
+                });
+
                 await post.updateOne({ $pull: { files: { filename: fileName } } });
             }
         }
 
-        const newFiles = req.body.files;
+        const newFiles = req.files;
         if (newFiles) {
             for (const obj of newFiles)
                 await post.updateOne({ $push: { files: obj } });
