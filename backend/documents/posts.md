@@ -67,13 +67,14 @@ jwt 토큰 발급 여부에 상관 없이 위 세개의 uri에 접근하여 위 
 `GET /api/posts/search/:query`
 
 위 uri로 query를 포함하는 글들의 정보를 받아올 수 있다.
-URI Query의 mode로 검색의 조건을 결정한다. (GET FORM의 mode)
+URI의 mode라는 param으로 검색의 조건을 결정한다. (GET FORM의 mode)
 mode가 아래의 4가지 중 하나로 명시되지 않은 경우, `mode=title`로 간주한다.
 
 - `mode=title` : 제목에 따른 검색
 - `mode=content` : 내용에 따른 검색
 - `mode=all` : 제목과 내용에 따른 검색
 - `mode=owner` : 글 작성자에 따른 검색 
+- `mode=tags` : 태그에 따른 검색
 
 ## 3. 글 수정하기
 

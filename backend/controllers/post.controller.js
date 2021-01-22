@@ -146,7 +146,7 @@ async function readPostsBySearch(req, res, next) {
             case 'owner':
                 posts = await Post.find({ owner: { $regex: query, $options: 'i' } });
                 break;
-            case 'tag':
+            case 'tags':
                 posts = await Post.find({ tags: query });
                 break;
             default: // case 'title'
