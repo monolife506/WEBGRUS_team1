@@ -29,6 +29,7 @@ id가 postid인 글의 정보를 받음
 로그인된 상태인 경우 조회수를 갱신한다.
 */
 
+// 로그인된 유저
 async function readPost(req, res, next) {
     try {
         const curUser = req.user.userid;
@@ -50,6 +51,7 @@ async function readPost(req, res, next) {
     }
 }
 
+// 로그인되지 않은 유저 (익명)
 async function readPostAnonymous(req, res, next) {
     try {
         const post = await Post.findById(req.params.postid);
@@ -60,6 +62,19 @@ async function readPostAnonymous(req, res, next) {
         return res.status(400).json(err);
     }
 }
+
+/*
+아래의 GET 메서드들은 여러개의 글을 표시하며,
+다음과 같은 param 항목을 가질 수 있음
+
+page: 현재 보여주는 페이지, 한 페이지는 글을 30개 표시
+기본값은 0 (첫 페이지)이며, 존재하지 않는 페이지를 나타내는 경우 오류 return
+
+sort: 정렬 기준, 이에 따라 여러개의 글을 정렬하여 표시
+- sort=times: 가장 최근에 만들어진 글부터 정렬 (기본값)
+- sort=views: 조회수가 가장 많은 글부터 정렬
+- sort=likes: 좋아요 수가 가장 많은 글부터 정렬
+*/
 
 /*
 GET /api/posts/users/:userid
@@ -105,20 +120,21 @@ async function readPostsByFavorites(req, res, next) {
 GET /api/posts/search/:query
 query를 포함하는 글들의 정보를 받음
 
-URI Query의 mode로 검색의 조건을 결정한다. (GET FORM의 mode)
+URI의 param으로 검색의 조건을 결정한다. (GET FORM의 mode)
 mode=title // 제목에 따른 검색
 mode=content // 내용에 따른 검색
 mode=all // 제목과 내용에 따른 검색
 mode=owner // 글 작성자에 따른 검색 
+mode=tags // 글의 태그에 따른 검색
 
-mode가 아래의 4가지 중 하나로 명시되지 않은 경우, mode=title로 간주한다.
+mode가 아래의 4가지 중 하나로 명시되지 않은 경우, mode=title로 간주
 */
 
 async function readPostsBySearch(req, res, next) {
     try {
         const query = req.params.query;
         const mode = req.query.mode;
-        const posts = [];
+        let posts = [];
 
         switch (mode) {
             case 'content':
@@ -129,6 +145,9 @@ async function readPostsBySearch(req, res, next) {
                 break;
             case 'owner':
                 posts = await Post.find({ owner: { $regex: query, $options: 'i' } });
+                break;
+            case 'tag':
+                posts = await Post.find({ tags: query });
                 break;
             default: // case 'title'
                 posts = await Post.find({ title: { $regex: query, $options: 'i' } });
@@ -176,10 +195,7 @@ async function updatePost(req, res, next) {
         if (deletedFiles) {
             for (const fileName of deletedFiles) {
                 let dir = 'public/images/' + fileName;
-                fs.unlink(dir, (err) => {
-                    console.log(err);
-                });
-
+                fs.unlink(dir, (err) => { console.log(err); });
                 await post.updateOne({ $pull: { files: { filename: fileName } } });
             }
         }

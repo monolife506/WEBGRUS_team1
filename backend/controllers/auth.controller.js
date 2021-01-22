@@ -16,13 +16,13 @@ function createAuth(req, res, next) {
         req.login(user, { session: false }, (err) => {
             if (err) next(err);
             const token = jwt.sign({ userid: user.userid }, 'secret', { expiresIn: '1h' });
-            return res.json({ token });
+            return res.json({ userid: user.userid, token: token });
         });
     })(req, res, next);
 }
 
 /*
-POST /api/auth/check
+GET /api/auth/check
 현재 발급받은 토큰의 유효성 검증 (passport.authenticate 예시)
 토큰이 없거나 만료된 토큰이면 status code 401, 아니면 200 return
 */

@@ -22,7 +22,7 @@ API 문서
 
 ### 테스트
 
-- `POST /api/auth/check` : 현재 토큰 검증 (테스트용)
+- `GET /api/auth/check` : 현재 토큰 검증 (테스트용)
 
 ### 계정
 
