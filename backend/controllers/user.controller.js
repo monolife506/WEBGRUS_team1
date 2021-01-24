@@ -132,7 +132,7 @@ jwt 토큰 요구
 
 async function checkFollowing(req, res, next) {
     try {
-        const followingUserId = req.params.postid;
+        const followingUserId = req.params.userid;
         const user = await User.findOne({ userid: req.user.userid, followings: followingUserId });
         if (!user) return res.status(200).json({ 'user': followingUserId, 'favorite': false });
         else return res.status(200).json({ 'user': followingUserId, 'favorite': true });
