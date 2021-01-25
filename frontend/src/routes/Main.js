@@ -3,7 +3,6 @@ import Post from "../component/Post";
 import { getAllpost } from "../_actions/postAction";
 import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import SearchComponent from "../component/SearchComponent";
 
 function Main(props) {
   const dispatch = useDispatch();
@@ -17,16 +16,18 @@ function Main(props) {
     });
   }, []);
 
-
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       {!props.post.allpost ? (
         <div style={{ height: "100vh" }}></div>
       ) : (
-        <div>
-        <SearchComponent/>
         <div
-          style={{ width: "80vw", display: "flex", justifyContent: "center" }}
+          style={{
+            width: "80vw",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "flex-start",
+          }}
         >
           {Posts
             ? Posts.map((post) => (
@@ -55,7 +56,6 @@ function Main(props) {
               ))
             : ""}
         </div>
-      </div>
       )}
     </div>
   );
