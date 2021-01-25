@@ -20,9 +20,13 @@ function SearchComponent() {
   };
 
   const onSearchClick = () => {
-    history.push(`/search?mode=${Mode}&q=${Query}`);
-    setQuery("");
-    setMode("title");
+    if (Query) {
+      history.push(`/search?mode=${Mode}&q=${Query}`);
+      setQuery("");
+      setMode("title");
+    }else{
+      alert('검색어를 입력하세요')
+    }
   };
 
   return (
