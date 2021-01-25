@@ -51,18 +51,21 @@ function CommentComponent(props) {
 
     //로그인 돼있을 때만 가능
     if (auth.isAuth) {
-      const body = { content: CommentValue };
-      console.log("댓글 올리기 실행");
-      dispatch(updateComment({ postid, body }))
-        .then((res) => {
-          props.updateCommentArray(res.payload.comment);
-          setCommentValue("");
-          console.log("댓글올리기 성공");
-        })
-        .catch((err) => {
-          // alert("댓글 입력에 실패했습니다");
-          console.log(err);
-        });
+      //댓글에 무언가 입력했을 때 가능
+      if (CommentValue) {
+        const body = { content: CommentValue };
+        console.log("댓글 올리기 실행");
+        dispatch(updateComment({ postid, body }))
+          .then((res) => {
+            props.updateCommentArray(res.payload.comment);
+            setCommentValue("");
+            console.log("댓글올리기 성공");
+          })
+          .catch((err) => {
+            // alert("댓글 입력에 실패했습니다");
+            console.log(err);
+          });
+      }
     } else {
       alert("로그인 후 이용하실 수 있습니다");
     }
