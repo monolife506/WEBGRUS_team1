@@ -65,6 +65,8 @@ function CommentComponent(props) {
             // alert("댓글 입력에 실패했습니다");
             console.log(err);
           });
+      }else{
+        alert('내용을 입력하세요')
       }
     } else {
       alert("로그인 후 이용하실 수 있습니다");
