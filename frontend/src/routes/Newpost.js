@@ -41,9 +41,12 @@ function Newpost(props) {
     setCurrentTag(e.target.value);
   };
 
+  const onTagKeyPress = (e) => {
+    if (e.key === "Enter") onTagClick();
+  };
+
   //태그 추가하기
-  const onTagClick = (e) => {
-    e.preventDefault();
+  const onTagClick = () => {
     if (CurrentTag) {
       if (Tags.length > 9) {
         alert("태그는 10개까지 입력하실 수 있습니다.");
@@ -108,9 +111,9 @@ function Newpost(props) {
 
       if (Description) formdata.append("description", Description);
       if (Tags.length > 0) {
-        Tags.forEach((tag)=>{
-          formdata.append("tags", tag)
-        })
+        Tags.forEach((tag) => {
+          formdata.append("tags", tag);
+        });
       }
 
       dispatch(fileUpload(formdata)).then((res) => {
@@ -121,6 +124,20 @@ function Newpost(props) {
           alert("업로드에 실패했습니다.");
         }
       });
+    }
+  };
+
+  let DoubleSubmit = true;
+
+  //중복 제출 방지
+  const BlockDoubleSubmit = (e) => {
+    //첫 제출
+    if (DoubleSubmit) {
+      OnFileUpload(e);
+      DoubleSubmit = false;
+    } else {
+      alert("제출 중 입니다");
+      return false;
     }
   };
 
@@ -166,6 +183,7 @@ function Newpost(props) {
           label='태그'
           variant='outlined'
           onChange={onCurrentTag}
+          onKeyPress={onTagKeyPress}
         />
         <Button
           type='button'
@@ -243,7 +261,12 @@ function Newpost(props) {
       >
         {ThumbnailView}
       </div>
-      <Button variant='contained' color='primary' onClick={OnFileUpload}>
+      <Button
+        type='submit'
+        variant='contained'
+        color='primary'
+        onClick={BlockDoubleSubmit}
+      >
         올리기
       </Button>
     </div>
