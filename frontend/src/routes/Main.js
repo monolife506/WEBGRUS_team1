@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import Post from "../component/Post";
 import { getAllpost } from "../_actions/postAction";
 import { connect, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+
+import Loading from "../component/Loading";
 
 function Main(props) {
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const [Posts, setPosts] = useState([]);
 
@@ -16,11 +16,9 @@ function Main(props) {
     });
   }, []);
 
-  return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      {!props.post.allpost ? (
-        <div style={{ height: "100vh" }}></div>
-      ) : (
+  if (props.post.allpost) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <div
           style={{
             width: "80vw",
@@ -56,9 +54,11 @@ function Main(props) {
               ))
             : ""}
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  } else {
+    <Loading />;
+  }
 }
 
 const mapStateToProps = (state) => ({
