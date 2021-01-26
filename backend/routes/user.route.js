@@ -4,8 +4,13 @@ const passport = require('passport');
 const userController = require('../controllers/user.controller');
 
 router.post("/", userController.createUser);
+router.put(
+    "/",
+    passport.authenticate('jwt', { session: false }),
+    userController.updateUser
+)
 router.delete(
-    "/:userid",
+    "/",
     passport.authenticate('jwt', { session: false }),
     userController.deleteUser
 )

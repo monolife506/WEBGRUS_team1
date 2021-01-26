@@ -1,45 +1,69 @@
 const User = require('../models/user.model');
 const Post = require('../models/post.model');
-const { framework } = require('passport');
 
 /*
-POST /api/users/
+POST /api/users
 새로운 유저 생성
 */
 
 async function createUser(req, res, next) {
     try {
-        const user = new User(req.body);
+        const { userid, useremail, password } = req.body;
+        const user = new User({ userid: userid, useremail: useremail, password: password });
         await user.save();
-        return res.status(200).json(user);
+        return res.status(200).json({ user: user, done: true });
     } catch (err) {
         console.log(err);
-        return res.status(400).json(err);
+        return res.status(400).json({ error: err, done: false });
     }
 }
 
 /*
-PUT /api/users/:userid
-현재 유저의 정보 수정 
+PUT /api/users
+현재 유저의 정보 수정 (이메일, 비밀번호만 변경할 수 있음)
+oldpassword로 비밀번호를 한번 더 확인함
 jwt 토큰 필요
 */
 
+async function updateUser(req, res, next) {
+    try {
+        const curUser = req.user.userid;
+        const { useremail, password, oldpassword } = req.body;
+
+        let user = await User.findOne({ userid: curUser });
+        if (!user) res.status(404).json({ error: "Users not found", done: false });
+
+        const checkPassword = await bcrypt.compare(user.password, oldpassword)
+        if (!checkPassword) res.status(404).json({ error: "Wrong password", done: false });
+
+        await user.updateOne({ useremail: useremail, password: password });
+        post = await User.findOne({ userid: curUser });
+        return res.status(200).json({ user: user, done: true });
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json({ error: err, done: false });
+    }
+}
+
 /*
-DELETE /api/users/:userid
+DELETE /api/users
 현재 유저의 정보 삭제
 jwt 토큰 필요
 */
 
 async function deleteUser(req, res, next) {
     try {
-        const userId = req.params.userid;
-        const user = await User.findOne({ userid: userId });
+        const curUser = req.user.userid;
+        const { password } = req.body;
+        const user = await User.findOne({ userid: curUser });
         if (!user) return res.status(404).json({ error: "Users not found", done: false });
-        if (user.owner != user.userid) return res.status(401).json({ error: "Unauthorized", done: false });
 
-        await User.updateMany({ followings: userId }, { $pull: { followings: userId }, $inc: { followingcnt: -1 } });
+        const checkPassword = await bcrypt.compare(user.password, password)
+        if (!checkPassword) res.status(404).json({ error: "Wrong password", done: false });
+
+        await User.updateMany({ followings: curUser }, { $pull: { followings: curUser }, $inc: { followingcnt: -1 } });
         await user.deleteOne();
-        return res.status(200).json(user);
+        return res.status(200).json({ done: true });
     } catch (err) {
         console.log(err);
         return res.status(400).json({ error: err, done: false });
@@ -95,7 +119,7 @@ async function checkFavorite(req, res, next) {
 }
 
 /*
-PUT /api/users/following/{userid}
+PUT /api/users/following/:userid
 특정한 유저의 팔로우 상태 토글하기
 jwt 토큰 요구
 */
@@ -125,7 +149,7 @@ async function toggleFollowing(req, res, next) {
 }
 
 /*
-GET /api/users/following/{userid}
+GET /api/users/following/:userid
 특정한 유저의 팔로우 상태 확인하기
 jwt 토큰 요구
 */
@@ -134,8 +158,8 @@ async function checkFollowing(req, res, next) {
     try {
         const followingUserId = req.params.userid;
         const user = await User.findOne({ userid: req.user.userid, followings: followingUserId });
-        if (!user) return res.status(200).json({ 'user': followingUserId, 'favorite': false });
-        else return res.status(200).json({ 'user': followingUserId, 'favorite': true });
+        if (!user) return res.status(200).json({ 'user': followingUserId, 'following': false });
+        else return res.status(200).json({ 'user': followingUserId, 'following': true });
     } catch (err) {
         console.log(err);
         return res.status(400).json(err);
@@ -143,6 +167,7 @@ async function checkFollowing(req, res, next) {
 }
 
 module.exports.createUser = createUser;
+module.exports.updateUser = updateUser;
 module.exports.deleteUser = deleteUser;
 module.exports.toggleFavorite = toggleFavorite;
 module.exports.checkFavorite = checkFavorite;

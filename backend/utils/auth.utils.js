@@ -20,6 +20,7 @@ async function localVerify(userid, password, done) {
         // ID 존재 확인
         const user = await userModel.findOne({ userid: userid });
         if (!user) return done(null, false, { message: '잘못된 ID' });
+
         // 비밀번호 확인
         const pwdCheck = await bcrypt.compare(password, user.password);
         if (!pwdCheck) return done(null, false, { message: '잘못된 비밀번호' });
