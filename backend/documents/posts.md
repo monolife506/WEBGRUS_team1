@@ -22,33 +22,30 @@
 
 ```
 {
-    _id: ObjectId('5feb24d71aa82f91c36a4c4c'),
-    description: '', // 설명
-    tags: [], // 태그
-    viewcnt: 0, // 열람 횟수
-    likecnt: 0, // 좋아요 횟수 
-    commentcnt: 0, // 댓글 횟수 
-    isDeleted: false, // 이 글이 삭제된 상태인지 확인
-    title: 'hi!', // 제목
-
-    // 포함된 파일들의 정보가 담긴 array
-    files: [
-        {
-            _id: ObjectId('5feb24d71aa82f91c36a4c4d'),
-            originalname: '19119_en_1.jpg', // 파일을 업로드할 때의 본래 이름
-            filename: 'b702c63677332908d348357d7fffd243' // 서버에 저장된 파일명
-        },
-        {
-            _id: ObjectId('5feb24d71aa82f91c36a4c4e'),
-            originalname: '19950_en_1.jpg',
-            filename: '0ffa6a4be48765bf1cdd11715be6205c'
-        }
-    ],
-    owner: 'testid', // 작성자, 현재 토큰을 발급한 유저명이 나타난다.
-    posttime: ISODate('2020-12-29T12:45:11.555Z'), // 작성 시간, 자동으로 수정된다.
-    modifytime: ISODate('2020-12-29T12:45:11.556Z'), // 수정 시간, 자동으로 수정된다.
-    comments: [], // 댓글들의 정보가 담긴 배열
-    __v: 0
+    "description": "제니에요", // 설명
+    "tags": ["젠"], // 태그
+    "viewcnt": 1, // 조회수
+    "likecnt": 0, // 좋아요 개수
+    "likeusers": [], // 좋아요 한 유저의 id들
+    "commentcnt": 1, // 댓글의 개수
+    "_id": "6009614dd83bcc0013bcf0ff",
+    "title": "젠", // 제목
+    "files": [{ // 저장된 사진들
+        "_id": "6009614dd83bcc0013bcf100",
+        "originalname": "제니.jpg",
+        "filename": "4d3ba6e1e38548069f8107d191de0d7a"
+    }],
+    "owner": "hj2525", // 작성자 
+    "posttime": "2021-01-21T11:11:09.957Z", // 작성 시간
+    "modifytime": "2021-01-21T11:11:09.957Z", // 마지막 수정 시간
+    "comments": [{ // 댓글들
+        "_id": "60098028d83bcc0013bcf112",
+        "content": "하이", // 댓글의 내용
+        "owner": "hj2626", // 댓글 작성자
+        "posttime": "2021-01-21T13:22:48.495Z", // 댓글 작성 시작
+        "modifytime": "2021-01-21T13:22:48.495Z" // 댓글 마지막 수정 시간
+    }],
+    "__v": 0
 }
 ```
 
