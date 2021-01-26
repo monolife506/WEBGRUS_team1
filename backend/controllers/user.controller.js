@@ -87,11 +87,11 @@ async function toggleFavorite(req, res, next) {
         const user = await User.findOne({ userid: userId, favorites: postId });
         if (!user) {
             await User.findOneAndUpdate({ userid: userId }, { $push: { favorites: postId } });
-            await post.updateOne({ $inc: { likecnt: 1 } });
+            await post.updateOne({ $inc: { likecnt: 1 }, $push: { likeusers: userId } });
             return res.status(200).json({ status: 'add', done: true });
         } else {
             await user.updateOne({ $pull: { favorites: postId } });
-            await post.updateOne({ $inc: { likecnt: -1 } });
+            await post.updateOne({ $inc: { likecnt: -1 }, $pull: { likeusers: userId } });
             return res.status(200).json({ status: 'del', done: true });
         }
     } catch (err) {

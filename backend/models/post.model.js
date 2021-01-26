@@ -25,6 +25,7 @@ const PostSchema = new Schema({
     files: [FileSchema],
     viewcnt: { type: Number, min: 0, default: 0 },
     likecnt: { type: Number, min: 0, default: 0 },
+    likeusers: [String],
     commentcnt: { type: Number, min: 0, default: 0 },
     comments: [CommentSchema],
 });
