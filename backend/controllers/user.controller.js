@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const Post = require('../models/post.model');
 
@@ -33,10 +34,12 @@ async function updateUser(req, res, next) {
         let user = await User.findOne({ userid: curUser });
         if (!user) res.status(404).json({ error: "Users not found", done: false });
 
-        const checkPassword = await bcrypt.compare(user.password, oldpassword)
-        if (!checkPassword) res.status(404).json({ error: "Wrong password", done: false });
+        const pwdCheck = await bcrypt.compare(oldpassword, user.password)
+        if (!pwdCheck) res.status(401).json({ error: "Wrong password", done: false });
 
-        await user.updateOne({ useremail: useremail, password: password });
+        user.useremail = useremail;
+        user.password = password;
+        await user.save();
         post = await User.findOne({ userid: curUser });
         return res.status(200).json({ user: user, done: true });
     } catch (err) {
@@ -58,8 +61,8 @@ async function deleteUser(req, res, next) {
         const user = await User.findOne({ userid: curUser });
         if (!user) return res.status(404).json({ error: "Users not found", done: false });
 
-        const checkPassword = await bcrypt.compare(user.password, password)
-        if (!checkPassword) res.status(404).json({ error: "Wrong password", done: false });
+        const pwdCheck = await bcrypt.compare(password, user.password)
+        if (!pwdCheck) res.status(401).json({ error: "Wrong password", done: false });
 
         await User.updateMany({ followings: curUser }, { $pull: { followings: curUser }, $inc: { followingcnt: -1 } });
         await user.deleteOne();
@@ -129,8 +132,7 @@ async function toggleFollowing(req, res, next) {
         const curUserId = req.user.userid;
         const followingUserId = req.params.userid;
         const followingUser = await User.findOne({ userid: followingUserId });
-        if (!followingUser)
-            return res.status(404).json({ error: "Users not found", done: false });
+        if (!followingUser) return res.status(404).json({ error: "Users not found", done: false });
 
         const user = await User.findOne({ userid: curUserId, followings: followingUserId });
         if (!user) {

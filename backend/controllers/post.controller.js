@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Post = require("../models/post.model");
 const User = require("../models/user.model");
+const Comment = require("../models/comment.model");
 const pageUtils = require("../utils/page.utils");
 const { pagePosts, sortModes } = pageUtils;
 
@@ -35,15 +36,15 @@ id가 postid인 글의 정보를 받음
 async function readPost(req, res, next) {
     try {
         const curUser = req.user.userid;
-        const postId = req.params.postid;
+        const postID = req.params.postid;
 
-        const post = await Post.findById(postId);
+        const post = await Post.findById(postID);
         if (!post) return res.status(404).json({ error: "Posts not found" });
 
-        const user = await User.findOne({ userid: curUser, watched: postId });
+        const user = await User.findOne({ userid: curUser, watched: postID });
         if (!user) {
-            await User.findOneAndUpdate({ userid: curUser }, { $push: { watched: postId } });
-            await Post.findByIdAndUpdate(postId, { $inc: { viewcnt: 1 } });
+            await User.findOneAndUpdate({ userid: curUser }, { $push: { watched: postID } });
+            await Post.findByIdAndUpdate(postID, { $inc: { viewcnt: 1 } });
         }
 
         return res.status(200).json(post);
@@ -242,6 +243,8 @@ jwt 토큰 요구
 async function updatePost(req, res, next) {
     try {
         const postId = req.params.postid;
+        const { title, description, tags } = req.body;
+        const curtime = new Date().toISOString();
 
         let post = await Post.findById(postId);
         if (!post) return res.status(404).json({ error: "Posts not found", done: false });
@@ -262,8 +265,7 @@ async function updatePost(req, res, next) {
                 await post.updateOne({ $push: { files: obj } });
         }
 
-        const { title, description, tags } = req.body;
-        await post.updateOne({ title: title, description: description, tags: tags });
+        await post.updateOne({ title: title, description: description, tags: tags, modifytime: curtime });
         post = await Post.findById(postId);
         return res.status(200).json({ post: post, done: true });
     } catch (err) {
@@ -280,14 +282,15 @@ jwt 토큰 요구
 
 async function deletePost(req, res, next) {
     try {
-        const postID = req.params.postid;
+        const postId = req.params.postid;
         const curUser = req.user.userid;
 
-        const post = await Post.findById(postID);
+        const post = await Post.findById(postId);
         if (!post) return res.status(404).json({ error: "Posts not found", done: false });
         if (post.owner != curUser) return res.status(401).json({ error: "Unauthorized", done: false });
 
-        await User.updateMany({ favorites: postID }, { $pull: { favorites: curUser } });
+        await User.updateMany({ favorites: postId }, { $pull: { favorites: postId } });
+        await Comment.deleteMany({ post_id: postId });
         await post.deleteOne();
         return res.status(200).json({ done: true });
     } catch (err) {
