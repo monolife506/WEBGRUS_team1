@@ -7,6 +7,7 @@ import "../component/_slick-theme.css";
 
 //PostDetail 페이지의 해당 포스트 보여주기
 function ViewPostDetail({
+  postid,
   title,
   description,
   files,
@@ -14,8 +15,8 @@ function ViewPostDetail({
   posttime,
   likecnt,
   viewcnt,
+  commentcnt,
 }) {
-
   const slickSettings = {
     dots: true,
     infinite: false,
@@ -77,12 +78,12 @@ function ViewPostDetail({
         <div>{description}</div>
         <div>
           <div>
-            {tags ? tags.map((tag) => <div key={tag}>#{tag}</div>) : ""}
+            {tags ? tags.map((tag) => <div key={tag} style={{ display: "inline" }}>#{tag} </div>) : ""}
           </div>
         </div>
         <div>{posttime}</div>
         <div>
-          Like: {likecnt} View: {viewcnt}
+          Like: {likecnt} View: {viewcnt} comment: {commentcnt}
         </div>
       </div>
     </div>
