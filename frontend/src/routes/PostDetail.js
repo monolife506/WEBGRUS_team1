@@ -22,7 +22,7 @@ function PostDetail(props) {
 
   useEffect(() => {
     dispatch(getPostDetail(postid)).then((res) => {
-      console.log(res)
+      console.log(res);
       setPost(res.payload);
       setPosttime(res.payload.posttime);
       setComments(res.payload.comments);
@@ -69,17 +69,17 @@ function PostDetail(props) {
           <button
             name='delete'
             onClick={(e) => {
-              let Confirm = window.confirm('정말로 삭제하시겠습니까?')
-              if(Confirm){
+              let Confirm = window.confirm("정말로 삭제하시겠습니까?");
+              if (Confirm) {
                 e.preventDefault();
-              dispatch(postDelete(postid)).then((response) => {
-                //삭제 성공시 마이페이지로 이동
-                if (response) {
-                  history.push(`/mypage`);
-                } else {
-                  alert("게시물 삭제에 실패했습니다.");
-                }
-              });
+                dispatch(postDelete(postid)).then((response) => {
+                  //삭제 성공시 마이페이지로 이동
+                  if (response) {
+                    history.push(`/mypage`);
+                  } else {
+                    alert("게시물 삭제에 실패했습니다.");
+                  }
+                });
               }
             }}
           >
