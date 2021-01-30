@@ -57,5 +57,13 @@ router.delete(
     passport.authenticate('jwt', { session: false }),
     commentController.deleteComment
 );
+router.get(
+    "/:postid/comments/all",
+    commentController.readAllComment
+);
+router.get(
+    ":postid/comments/:commentid",
+    commentController.readComment
+);
 
 module.exports = router;
