@@ -4,6 +4,16 @@ const passport = require('passport');
 const userController = require('../controllers/user.controller');
 
 router.post("/", userController.createUser);
+router.put(
+    "/",
+    passport.authenticate('jwt', { session: false }),
+    userController.updateUser
+)
+router.delete(
+    "/",
+    passport.authenticate('jwt', { session: false }),
+    userController.deleteUser
+)
 
 router.put(
     "/favorites/:postid",
@@ -20,6 +30,11 @@ router.put(
     "/following/:userid",
     passport.authenticate('jwt', { session: false }),
     userController.toggleFollowing
+)
+router.get(
+    "/following/:userid",
+    passport.authenticate('jwt', { session: false }),
+    userController.checkFollowing
 )
 
 module.exports = router;

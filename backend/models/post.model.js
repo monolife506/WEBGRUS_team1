@@ -1,16 +1,8 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
+const Comment = require('./comment.model');
 const { Schema } = mongoose;
 const { model } = mongoose;
-
-const CommentSchema = new Schema({
-    index: { type: Number },
-    owner: { type: String, required: true },
-    posttime: { type: Date, default: Date.now },
-    modifytime: { type: Date, default: Date.now },
-    content: { type: String, required: true },
-});
-
 
 const FileSchema = new Schema({
     originalname: { type: String, required: true },
@@ -27,30 +19,18 @@ const PostSchema = new Schema({
     files: [FileSchema],
     viewcnt: { type: Number, min: 0, default: 0 },
     likecnt: { type: Number, min: 0, default: 0 },
+    likeusers: [String],
     commentcnt: { type: Number, min: 0, default: 0 },
-    comments: [CommentSchema],
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
 });
-
-PostSchema.pre('updateOne', { document: true }, async function (next) {
-    try {
-        this.modifytime = Date.now;
-        return next();
-    } catch (err) {
-        console.log(err);
-        return next(err);
-    }
-})
 
 PostSchema.pre('deleteOne', { document: true }, async function (next) {
     try {
-        for (let index = 0; index < this.files.length; index++) {
-            const fileName = 'uploads/' + this.files[index].filename;
-            console.log(fileName);
-            fs.unlink(fileName, (err) => {
-                console.log(err);
-                return next(err);
-            });
+        for (const file of this.files) {
+            let dir = 'public/images/' + file.filename;
+            fs.unlink(dir, (err) => { console.log(err); });
         }
+
         return next();
     } catch (err) {
         console.log(err);

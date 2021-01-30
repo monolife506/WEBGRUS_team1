@@ -1,30 +1,24 @@
 계정 관리
 =======
 
-## 1. 계정 만들기
+## 계정 만들기
 
 `POST /api/users`
-
-다음과 같은 json 형식으로 전송하면 DB에 계정 정보가 추가된다.
-형식이 다르거나 오류가 발생한 경우에는 status code 400을 return한다.
+다음과 같은 json 형식으로 전송하면 DB에 계정 정보가 추가되며 user 정보와 done: true를 return한다.
+형식이 다르거나 오류가 발생한 경우에는 {done: false}를 return한다.
 
 ```
 {
-    "username": {
-        "firstname": "first",
-        "lastname": "last"
-    },
     "userid": "sampleid",
     "useremail": "example@email.com",
     "password": "password"
 }
 ```
 
-## 2. 계정 정보로 jwt 토큰 발급
+## 계정 정보로 jwt 토큰 발급
 
-`POST /api/auth/login`
-
-다음과 같은 json 형식으로 전송하면 id와 password가 DB상에 존재할 경우 jwt 토큰을 발급하고, 아니면 status code 400으로 'undefined' 토큰을 return한다. 
+`POST /api/auth`
+다음과 같은 json 형식으로 전송하면 id와 password가 DB상에 존재할 경우 jwt 토큰을 발급하고 (done: true), 아니면 status code 400으로 'undefined' 토큰을 return한다. (done: false) 
 
 ```
 {
@@ -33,17 +27,46 @@
 }
 ```
 
-## 3. jwt 토큰의 유효성 검증
+## jwt 토큰의 유효성 검증
 
-`POST /api/auth/check`
-Bearer Token을 2에서 발급받은 토큰으로 하고 전송하면 유효한 토큰인 경우 status code 200을 return한다. 이 uri는 단순히 토큰 확인이 제대로 작동하는지 확인하기 위한 uri로, 실제로 쓰이지는 않는다.
+`GET /api/auth`
+Bearer Token을 2에서 발급받은 토큰으로 하고 전송하면 유효한 토큰인 경우 status code 200을 return한다.
 
-실제 백엔드에서 토큰을 검증하려면 controller fuction을 만들고 라우터에서 다음과 같이 middleware를 설정해주면 된다.
+## 계정 정보 수정
+
+`PUT /api/users`
+유효한 Bearer Token을 가지고 있을때 다음 api를 호출하면 다음과 같은 형식으로 원래 비밀번호를 제대로 입력한 경우 userid를 제외한 현재 계정의 정보를 수정할 수 있다.
+제대로 작동된 경우 {done: true}와 변경된 user의 정보를 return한다.
 
 ```
-router.post( // HTTP method에 따라 함수가 달라짐
-    "/check", // 라우팅할 uri
-    passport.authenticate('jwt', { session: false }), // middleware
-    authController.checkAuth // controller function
-);
+{
+    "oldpassword": "orginalpassword" // 원래 비밀번호
+    "useremail: "useremail", // 변경할 이메일
+    "password": "password", // 변경할 비밀번호
+}
 ```
+
+## 계정 삭제
+
+`DELETE /api/users`
+유효한 Bearer Token을 가지고 있을때 다음 api를 호출하면 다음과 같은 형식으로 현재 비밀번호를 제대로 입력한 경우 userid를 제외한 현재 계정의 정보를 삭제할 수 있다.
+제대로 작동된 경우 {done: true}를 return한다.
+
+```
+{
+    "password": "password" // 현재 비밀번호
+}
+```
+
+## 팔로잉과 팔로워
+
+`GET /api/users/following/:userid` : id가 `userid`인 유저에 대해 팔로잉 상태 확인
+`PUT /api/users/following/:userid` : id가 `userid`인 유저에 대해 팔로잉 상태 토글
+유효한 jwt 토큰을 가지고 있을 때 두 api를 호출하여 현재 유저의 팔로잉 유저 리스트를 수정할 수 있다.
+
+`GET /api/users/following/:userid`는 return하는 following의 true/false 여부로 `userid`의 팔로잉 상태를 확인한다.
+`PUT /api/users/following/:userid`는 return되는 json의 status가 add/del (add는 현재 팔로잉에 추가됨, del은 팔로잉에서 제거됨)인지 확인해 팔로잉 상태 토글을 확인할 수 있다.
+
+## 로그아웃
+
+프론트엔드에서 Bearer Token의 내용을 삭제하여 로그아웃을 구현할 수 있다.

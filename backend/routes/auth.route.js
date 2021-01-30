@@ -3,11 +3,9 @@ const passport = require('passport');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
 
-// 컨트롤러로 라우팅
-router.post("/login", authController.createAuth);
-router.post("/logout", authController.deleteAuth);
-router.post(
-    "/check",
+router.post("/", authController.createAuth);
+router.get(
+    "/",
     passport.authenticate('jwt', { session: false }),
     authController.checkAuth
 );

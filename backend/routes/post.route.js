@@ -12,28 +12,30 @@ router.post(
     fileUtils.uploadFile, // 사진 업로드 (최대 30개)
     postController.createPost // DB상에 글의 정보 추가
 );
+
 router.get(
     "/content/:postid",
     function (req, res, next) {
         passport.authenticate('jwt', function (err, user) {
             if (err) return next(err);
             if (!user) postController.readPostAnonymous(req, res, next);
-            postController.readPost(req, res, next);
+            else postController.readPost(req, res, next);
         })(req, res, next);
     }
 );
 router.get("/users/:userid", postController.readPostByUser);
 router.get("/favorites/:userid", postController.readPostsByFavorites);
 router.get("/all", postController.readAllPost);
+router.get("/search/:query", postController.readPostsBySearch);
 router.put(
-    "/:userid",
+    "/:postid",
     passport.authenticate('jwt', { session: false }),
+    fileUtils.uploadFile,
     postController.updatePost
 )
 router.delete(
     "/:postid",
     passport.authenticate('jwt', { session: false }),
-    fileUtils.uploadFile,
     postController.deletePost
 )
 
@@ -42,6 +44,10 @@ router.post(
     "/:postid/comments",
     passport.authenticate('jwt', { session: false }),
     commentController.createComment
+);
+router.get(
+    "/:postid/comments",
+    commentController.readComments
 );
 router.put(
     "/:postid/comments/:commentid",
