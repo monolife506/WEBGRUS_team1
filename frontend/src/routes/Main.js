@@ -21,11 +21,10 @@ function Main(props) {
   }, []);
   const PostSorting = (e, sort) => {
     console.log(sort);
-    Axios.get(`${SERVER_API}/api/posts/all?sortby=${sort}`)
-    .then((res) =>{
-      console.log(res)
-      setPosts(res.data)}
-    );
+    Axios.get(`${SERVER_API}/api/posts/all?sortby=${sort}`).then((res) => {
+      console.log(res);
+      setPosts(res.data);
+    });
   };
 
   //모든 포스트 가져오는 액션이 끝난 후 로드
@@ -109,7 +108,7 @@ function Main(props) {
 }
 
 const mapStateToProps = (state) => ({
-  auth:state.auth,
+  auth: state.auth,
   post: state.post,
 });
 
