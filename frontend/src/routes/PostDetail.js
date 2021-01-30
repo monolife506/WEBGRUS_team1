@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import ViewPostDetail from "../component/ViewPostDetail";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 
 import FollowComponent from "../component/FollowComponent";
 
@@ -12,10 +12,9 @@ import CommentComponent from "../component/CommentComponent";
 function PostDetail(props) {
   const history = useHistory();
   const param = useParams();
-  const dispatch = useDispatch();
-
   const postid = param.postid;
-  const auth = props.auth;
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
 
   const [Post, setPost] = useState([]);
   const [Posttime, setPosttime] = useState("");
@@ -23,32 +22,34 @@ function PostDetail(props) {
 
   useEffect(() => {
     dispatch(getPostDetail(postid)).then((res) => {
+      console.log(res)
       setPost(res.payload);
       setPosttime(res.payload.posttime);
       setComments(res.payload.comments);
     });
   }, []);
 
-  //포스트 시간 스트링
   let year = Posttime.substring(0, 4);
   let month = Posttime.substring(5, 7);
   let date = Posttime.substring(8, 10);
+
+  //포스트 시간 스트링
   const posttimeView = `Date: ${year}. ${month}. ${date}.`;
 
-  //댓글 리프레시
-  const commentRefresh = () => {
+  //댓글 추가 업데이트
+  const updateUploadComment = (newComment) => {
+    setComments(Comments.concat(newComment));
+  };
+
+  //댓글 수정 업데이트
+  const updateModifyComment = () => {
     dispatch(getPostDetail(postid)).then((res) => {
       setComments(res.payload.comments);
     });
   };
 
-  //댓글 업데이트
-  const updateCommentArray = (newComment) => {
-    setComments(Comments.concat(newComment));
-  };
-
   //댓글 삭제 업데이트
-  const updateDeleteCommentArray = (commentid) => {
+  const updateDeleteComment = (commentid) => {
     setComments(Comments.filter((comment) => comment._id !== commentid));
   };
 
@@ -68,15 +69,18 @@ function PostDetail(props) {
           <button
             name='delete'
             onClick={(e) => {
-              e.preventDefault();
+              let Confirm = window.confirm('정말로 삭제하시겠습니까?')
+              if(Confirm){
+                e.preventDefault();
               dispatch(postDelete(postid)).then((response) => {
                 //삭제 성공시 마이페이지로 이동
                 if (response) {
                   history.push(`/mypage`);
                 } else {
-                  alert("포스트 삭제에 실패했습니다.");
+                  alert("게시물 삭제에 실패했습니다.");
                 }
               });
+              }
             }}
           >
             삭제
@@ -101,44 +105,41 @@ function PostDetail(props) {
     }
   };
 
-  if (props.post.postDetail) {
-    return (
-      <>
-        {postButton()}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <ViewPostDetail
-            title={Post.title}
-            description={Post.description}
-            files={Post.files}
-            tags={Post.tags}
-            posttime={posttimeView}
-            likecnt={Post.likecnt}
-            viewcnt={Post.viewcnt}
-          />
-          <CommentComponent
-            postid={postid}
-            comments={Comments}
-            updateCommentArray={updateCommentArray}
-            updateDeleteCommentArray={updateDeleteCommentArray}
-            commentRefresh={commentRefresh}
-          />
-        </div>
-      </>
-    );
-  } else {
-    return <div>Loading...</div>;
-  }
+  return (
+    <>
+      {postButton()}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <ViewPostDetail
+          postid={Post._id}
+          title={Post.title}
+          description={Post.description}
+          files={Post.files}
+          tags={Post.tags}
+          posttime={posttimeView}
+          likecnt={Post.likecnt}
+          viewcnt={Post.viewcnt}
+          commentcnt={Post.commentcnt}
+        />
+        <CommentComponent
+          postid={postid}
+          comments={Comments}
+          updateUploadComment={updateUploadComment}
+          updateModifyComment={updateModifyComment}
+          updateDeleteComment={updateDeleteComment}
+        />
+      </div>
+    </>
+  );
 }
 
 const mapStateToProps = (state) => ({
   post: state.post,
-  auth: state.auth,
 });
 
 export default connect(mapStateToProps)(PostDetail);
