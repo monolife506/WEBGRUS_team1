@@ -12,6 +12,7 @@ API 문서
 - `POST /api/users` : 회원가입 (새로운 유저 생성)
 
 - `GET /api/posts/content/:postid` : 특정 글의 정보 표시 (로그인된 상태인 경우 조회수 증가)
+- `GET /api/posts/:postid/comments`: id가 `:postid`인 글에서 댓글들의 정보 받기
 
 아래 api들은 여러개의 글을 받아오므로, post.md를 반드시 참조할 것
 - `GET /api/posts/users/:userid` : 작성자가 `userid`인 유저가 작성한 글 표시

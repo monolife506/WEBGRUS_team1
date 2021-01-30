@@ -16,44 +16,40 @@
 
 ## 2. 댓글 열람하기
 
-현재로서는 댓글만을 읽는 방법은 없고, 글의 정보를 읽어올 때 다음과 같은 형식으로 된 댓글 정보를 확인할 수 있다.
+`GET /api/posts/:postid/comments`
+
+다음 api로 특정 글에 대한 댓글들의 정보를 확인할 수 있다.
 
 ```
-{
-    _id: ObjectId('5ffd786a29ede9409c831148'),
-    description: '',
-    tags: [],
-    viewcnt: 0,
-    likecnt: 0,
-    commentcnt: 1,
-    title: 'Sample Post',
-    files: [
-        {
-            _id: ObjectId('5ffd786a29ede9409c831149'),
-            originalname: '19119_en_1.jpg',
-            filename: '00b17d09aba2f3e4c4ec26eba9e44c4c'
-        },
-        {
-            _id: ObjectId('5ffd786a29ede9409c83114a'),
-            originalname: '19950_en_1.jpg',
-            filename: '066c35d6ca4aeedb653e2f1c7be51b4d'
-        }
-    ],
-    owner: 'sampleid',
-    posttime: ISODate('2021-01-12T10:22:34.116Z'),
-    modifytime: ISODate('2021-01-12T10:22:34.116Z'),
-    // 댓글의 정보가 담긴 array
-    comments: [
-        {
-            _id: ObjectId('5ffd794529ede9409c83114e'),
-            content: 'Placeholder',
-            owner: 'sampleid',
-            posttime: ISODate('2021-01-12T10:26:13.869Z'),
-            modifytime: ISODate('2021-01-12T10:26:13.869Z')
-        }
-    ],
-    __v: 0
-}
+[
+    {
+        "_id": "6014f5ace5c4dd2670604220",
+        "post_id": "6014f587e5c4dd267060421c",
+        "owner": "sampleid", // 댓글 작성자
+        "content": "ㅋㅋ", // 댓글 내용
+        "posttime": "2021-01-30T05:59:08.258Z", // 댓글 작성 시간
+        "modifytime": "2021-01-30T05:59:08.258Z", // 댓글 수정 시간
+        "__v": 0
+    },
+    {
+        "_id": "6014f5a9e5c4dd267060421f",
+        "post_id": "6014f587e5c4dd267060421c",
+        "owner": "sampleid",
+        "content": "응애",
+        "posttime": "2021-01-30T05:59:05.220Z",
+        "modifytime": "2021-01-30T05:59:05.220Z",
+        "__v": 0
+    },
+    {
+        "_id": "6014f5a3e5c4dd267060421e",
+        "post_id": "6014f587e5c4dd267060421c",
+        "owner": "sampleid",
+        "content": "댓글이에요",
+        "posttime": "2021-01-30T05:58:59.303Z",
+        "modifytime": "2021-01-30T05:58:59.303Z",
+        "__v": 0
+    }
+]
 ```
 
 ## 3. 댓글 수정하기
