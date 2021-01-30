@@ -29,7 +29,7 @@ async function createComment(req, res, next) {
 }
 
 /*
-GET /api/posts/:postid/comments/all
+GET /api/posts/:postid/comments
 특정 글에 대한 모든 댓글들의 정보를 받음
 
 다음과 같은 param 항목을 가질 수 있음
@@ -39,46 +39,25 @@ page: 현재 보여주는 페이지, 한 페이지는 글을 10개 표시 (maxPo
 추가로, page=0인 경우 페이지를 무시하고 모든 글들의 정보를 return함.
 */
 
-async function readAllComment(req, res, next) {
-    try{
+async function readComments(req, res, next) {
+    try {
         const postId = req.params.postid;
         const { page } = req.query;
-    
+
         let comments;
-    
-        if (page == 0) comments = await Comment.find({ post_id: postId });
+        if (page == 0) comments = await Comment.find({ post_id: postId }).sort({ posttime: -1 });
         else {
             const totalCnt = await Comment.countDocuments({ post_id: postId });
             if (totalCnt == 0) return res.status(404).json({ error: "Comments not found" });
-    
-            const { postCnt, curPage, pageCnt, skipCnt } = pagePosts(page, totalCnt);
+
+            const { postCnt, curPage, pageCnt, skipCnt } = pageComments(page, totalCnt);
             if (curPage > pageCnt) return res.status(400).json({ error: "Wrong page number - exceed maximum page number" });
             else if (curPage < 0) return res.status(400).json({ error: "Wrong page number - lower then 0" });
-    
-            comments = await Comment.find({ post_id: postId }).skip(skipCnt).limit(postCnt);
+
+            comments = await Comment.find({ post_id: postId }).sort({ posttime: -1 }).skip(skipCnt).limit(postCnt);
         }
-        
-        return res.status(200).json(posts);
-    } catch (err) {
-        console.log(err);
-        return res.status(400).json({ error: err, done: false });
-    }
-}
 
-/*
-GET /api/posts/:postid/comments/:commentid
-특정 글에서 특정 댓글의 정보를 받음
-*/
-
-async function readComment(req, res, next) {
-    try{
-        const postId = req.params.postid;
-        const commentId = req.params.commentid;
-
-        const comment = await Comment.findById(commentId);
-        if (!comment) res.status(404).json({ error: "Comments not found", done: false });
-
-        return res.status(200).json(post);
+        return res.status(200).json(comments);
     } catch (err) {
         console.log(err);
         return res.status(400).json({ error: err, done: false });
@@ -142,7 +121,6 @@ async function deleteComment(req, res, next) {
 }
 
 module.exports.createComment = createComment;
+module.exports.readComments = readComments;
 module.exports.updateComment = updateComment;
 module.exports.deleteComment = deleteComment;
-module.exports.readAllComment = readAllComment;
-module.exports.readComment = readComment;

@@ -11,14 +11,4 @@ const CommentSchema = new Schema({
     content: { type: String, required: true },
 });
 
-CommentSchema.pre('updateOne', { document: true }, async function (next) {
-    try {
-        this.modifytime = Date.now;
-        return next();
-    } catch (err) {
-        console.log(err);
-        return next(err);
-    }
-})
-
 module.exports = model('Comment', CommentSchema);

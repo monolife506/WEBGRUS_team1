@@ -27,14 +27,12 @@ router.get("/users/:userid", postController.readPostByUser);
 router.get("/favorites/:userid", postController.readPostsByFavorites);
 router.get("/all", postController.readAllPost);
 router.get("/search/:query", postController.readPostsBySearch);
-
 router.put(
     "/:postid",
     passport.authenticate('jwt', { session: false }),
     fileUtils.uploadFile,
     postController.updatePost
 )
-
 router.delete(
     "/:postid",
     passport.authenticate('jwt', { session: false }),
@@ -47,6 +45,10 @@ router.post(
     passport.authenticate('jwt', { session: false }),
     commentController.createComment
 );
+router.get(
+    "/:postid/comments",
+    commentController.readComments
+);
 router.put(
     "/:postid/comments/:commentid",
     passport.authenticate('jwt', { session: false }),
@@ -56,14 +58,6 @@ router.delete(
     "/:postid/comments/:commentid",
     passport.authenticate('jwt', { session: false }),
     commentController.deleteComment
-);
-router.get(
-    "/:postid/comments/all",
-    commentController.readAllComment
-);
-router.get(
-    ":postid/comments/:commentid",
-    commentController.readComment
 );
 
 module.exports = router;

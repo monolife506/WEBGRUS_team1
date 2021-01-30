@@ -289,6 +289,7 @@ async function deletePost(req, res, next) {
         if (!post) return res.status(404).json({ error: "Posts not found", done: false });
         if (post.owner != curUser) return res.status(401).json({ error: "Unauthorized", done: false });
 
+        await User.updateMany({ watched: postId }, { $pull: { watched: postId } });
         await User.updateMany({ favorites: postId }, { $pull: { favorites: postId } });
         await Comment.deleteMany({ post_id: postId });
         await post.deleteOne();

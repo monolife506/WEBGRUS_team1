@@ -24,22 +24,13 @@ const PostSchema = new Schema({
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
 });
 
-PostSchema.pre('updateOne', { document: true }, async function (next) {
-    try {
-        this.modifytime = Date.now;
-        return next();
-    } catch (err) {
-        console.log(err);
-        return next(err);
-    }
-})
-
 PostSchema.pre('deleteOne', { document: true }, async function (next) {
     try {
         for (const file of this.files) {
             let dir = 'public/images/' + file.filename;
             fs.unlink(dir, (err) => { console.log(err); });
         }
+
         return next();
     } catch (err) {
         console.log(err);

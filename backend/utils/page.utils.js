@@ -13,15 +13,8 @@ function pagePosts(page, totalCnt) {
     return { postCnt, curPage, pageCnt, skipCnt };
 }
 
-// post의 sort 조건들
-const sortModes = {
-    times: { posttime: -1 },
-    views: { viewcnt: -1 },
-    likes: { likecnt: -1 }
-}
-
 function pageComments(page, totalCnt) {
-    const postCnt = 10; // 한 페이지에 표시되는 댓글들의 개수
+    const postCnt = 50; // 한 페이지에 표시되는 댓글들의 개수
     const curPage = (page) ? parseInt(page) : 1; // 현재 페이지
     const pageCnt = Math.ceil(totalCnt / postCnt); // 모든 페이지의 개수
     const skipCnt = (curPage - 1) * postCnt; // 넘길 글들의 수
@@ -29,10 +22,13 @@ function pageComments(page, totalCnt) {
     return { postCnt, curPage, pageCnt, skipCnt };
 }
 
-const sortComments = {
-
+// post의 sort 조건들
+const sortModes = {
+    times: { posttime: -1 },
+    views: { viewcnt: -1 },
+    likes: { likecnt: -1 }
 }
 
 module.exports.pagePosts = pagePosts;
-module.exports.sortModes = sortModes;
 module.exports.pageComments = pageComments;
+module.exports.sortModes = sortModes;
