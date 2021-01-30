@@ -1,8 +1,7 @@
-import Axios from "axios";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, connect } from "react-redux";
 import {
-  updateComment,
+  uploadComment,
   modifyComment,
   deleteComment,
 } from "../_actions/commentAction";
@@ -10,15 +9,15 @@ import {
 import { getPostDetail } from "../_actions/postAction";
 
 function CommentComponent(props) {
+  const Comments = props.comments;
+  const [CommentValue, setCommentValue] = useState(""); //댓글 입력값
+  const [ModifyComment, setModifyComment] = useState(""); //수정하는 댓글 아이디
+  const [ModifyCommentValue, setModifyCommentValue] = useState(""); //수정하는 댓글 입력값
+  const [IsModify, setIsModify] = useState(false);
+
   const dispatch = useDispatch();
   const auth = props.auth;
   const postid = props.postid;
-  const Comments = props.comments;
-
-  const [CommentValue, setCommentValue] = useState(""); //댓글 입력값
-  const [ModifyCommentValue, setModifyCommentValue] = useState(""); //수정하는 댓글 입력값
-  const [ModifyComment, setModifyComment] = useState(""); //수정할 댓글 아이디 저장
-  const [IsModify, setIsModify] = useState(false);
 
   const onChangeComment = (e) => {
     setCommentValue(e.target.value);
@@ -28,19 +27,19 @@ function CommentComponent(props) {
     setModifyCommentValue(e.target.value);
   };
 
-  const onKeyPress = (e) => {
+  const onUploadKeyPress = (e) => {
     if (e.key === "Enter") onSubmit(e);
   };
 
-  const onModifyKeyPress = (e) => {
+  const onModifyPress = (e) => {
     if (e.key === "Enter") onModifySubmit(e);
   };
 
   //댓글 시간 스트링
-  const commentTime = (posttime) => {
-    let year = posttime.substring(0, 4);
-    let month = posttime.substring(5, 7);
-    let date = posttime.substring(8, 10);
+  const commentTime = (time) => {
+    let year = time.substring(0, 4);
+    let month = time.substring(5, 7);
+    let date = time.substring(8, 10);
 
     return `${year}. ${month}. ${date}.`;
   };
@@ -51,49 +50,47 @@ function CommentComponent(props) {
 
     //로그인 돼있을 때만 가능
     if (auth.isAuth) {
-      //댓글에 무언가 입력했을 때 가능
-      if (CommentValue) {
-        const body = { content: CommentValue };
-        console.log("댓글 올리기 실행");
-        dispatch(updateComment({ postid, body }))
-          .then((res) => {
-            props.updateCommentArray(res.payload.comment);
-            setCommentValue("");
-            console.log("댓글올리기 성공");
-          })
-          .catch((err) => {
-            // alert("댓글 입력에 실패했습니다");
-            console.log(err);
-          });
-      }else{
-        alert('내용을 입력하세요')
-      }
+      const body = { content: CommentValue };
+      dispatch(uploadComment({ postid, body }))
+        .then((res) => {
+          props.updateUploadComment(res.payload.comment);
+          setCommentValue("");
+        })
+        .catch((err) => {
+          alert("댓글 입력에 실패했습니다");
+          console.log(err);
+        });
     } else {
       alert("로그인 후 이용하실 수 있습니다");
     }
   };
 
-  //수정할 댓글 인풋창 열기
-  const onmodify = (e, commentid) => {
-    // 수정할 댓글 찾기
+  //댓글 수정칸 열기
+  const onmodify = (commentid) => {
+    console.log(commentid);
+    //수정할 댓글 찾기
     for (let i = 0; i < Comments.length; i++) {
+      // 수정할 댓글인 경우
       if (Comments[i]._id === commentid) {
-        setModifyCommentValue(Comments[i].content);
         setModifyComment(Comments[i]._id);
+        setModifyCommentValue(Comments[i].content);
         break;
       }
     }
+    console.log(ModifyComment);
     setIsModify(true);
   };
 
   //수정한 댓글 올리기
-  const onModifySubmit = (e, commentid) => {
+  const onModifySubmit = (e) => {
     e.preventDefault();
 
     const body = { content: ModifyCommentValue };
+    let commentid = ModifyComment;
+
     dispatch(modifyComment({ postid, commentid, body }))
       .then((res) => {
-        props.commentRefresh();
+        props.updateModifyComment();
         setIsModify(false);
       })
       .catch((err) => {
@@ -103,36 +100,38 @@ function CommentComponent(props) {
 
   //댓글 삭제 요청
   const ondelete = (e, commentid) => {
-    e.preventDefault();
+    let Confirm = window.confirm("정말로 삭제하시겠습니까?");
+    if (Confirm) {
+      e.preventDefault();
 
-    dispatch(deleteComment({ postid, commentid }))
-      .then((res) => {
-        props.updateDeleteCommentArray(commentid);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      dispatch(deleteComment({ postid, commentid }))
+        .then((res) => {
+          props.updateDeleteComment(commentid);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   //댓글 작성 창
   const writeComment = (
-    <>
+    <div>
       <input
         style={{ width: "900px", height: "100px" }}
         type='textarea'
         name='Comment'
         value={CommentValue}
         onChange={onChangeComment}
-        onKeyPress={onKeyPress}
+        onKeyPress={onUploadKeyPress}
       />
       {/* 댓글 올리기 버튼 */}
       <button type='button' onClick={onSubmit}>
         댓글
       </button>
-    </>
+    </div>
   );
 
-  //댓글들 보여주기
   const CommentsArray = () => {
     return (
       <div
@@ -147,8 +146,8 @@ function CommentComponent(props) {
                 style={{ borderStyle: "solid", margin: "5px" }}
                 key={comment._id}
               >
-                {/* 수정 중인 게시물일 경우 인풋창 띄움 */}
-                {IsModify && ModifyComment === comment._id ? (
+                {/* 수정할 댓글인 경우 수정창 로드 */}
+                {IsModify && comment._id === ModifyComment ? (
                   <>
                     <input
                       style={{ width: "900px", height: "100px" }}
@@ -156,13 +155,10 @@ function CommentComponent(props) {
                       name='Comment'
                       value={ModifyCommentValue}
                       onChange={onChangeModifyComment}
-                      onKeyPress={onModifyKeyPress}
+                      onKeyPress={onModifyPress}
                     />
                     {/* 댓글 올리기 버튼 */}
-                    <button
-                      type='button'
-                      onClick={(e) => onModifySubmit(e, ModifyComment)}
-                    >
+                    <button type='button' onClick={onModifySubmit}>
                       수정
                     </button>
                     <button
@@ -176,18 +172,17 @@ function CommentComponent(props) {
                     </button>
                   </>
                 ) : (
+                  // 수정하는 댓글이 아닐 경우 댓글 로드
                   <>
-                    {/* 수정중인 게시물이 아닌 댓글들 띄움 */}
                     <div>작성자: {comment.owner} </div>
                     <div>{comment.content} </div>
                     <div>{commentTime(comment.posttime)} </div>
-
-                    {/* 내가 작성한 댓글일 경우 수정, 삭제 버튼 나타남 */}
+                    {/* 내가 작성한 댓글일 때만 수정, 삭제 버튼 나타남 */}
                     {auth.userData && auth.userData.userid === comment.owner ? (
                       <div>
                         <button
                           type='button'
-                          onClick={(e) => onmodify(e, comment._id)}
+                          onClick={(e) => onmodify(comment._id)}
                         >
                           수정
                         </button>
@@ -210,24 +205,34 @@ function CommentComponent(props) {
     );
   };
 
-  if (props.comments && Comments !== []) {
-    return (
-      <>
+  return (
+    <>
+      <div
+        style={{
+          width: "1000px",
+          borderStyle: "solid",
+          margin: "0 5px 5px 10px",
+        }}
+      >
+        {writeComment}
+
+        {/* 댓글 정보가 준비됐을 경우 로드 */}
         <div
           style={{
-            width: "1000px",
-            borderStyle: "solid",
-            margin: "0 5px 5px 10px",
+            maxHeight: "400px",
+            overflowY: "auto",
           }}
         >
-          {writeComment}
-          <div>{CommentsArray()}</div>
+          {/* 댓글이 없을경우와 있을경우 다르게 로드 */}
+          {Comments.length === 0 ? (
+            <div>댓글이 없습니다...</div>
+          ) : (
+            CommentsArray()
+          )}
         </div>
-      </>
-    );
-  } else {
-    return <div>Loading...</div>;
-  }
+      </div>
+    </>
+  );
 }
 
 const mapStateToProps = (state) => ({
