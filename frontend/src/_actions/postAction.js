@@ -36,7 +36,7 @@ export const fileUpload = (formdata) => (dispatch) => {
 };
 
 // 해당 유저의 포스트 정보받기
-export function getUserposts(userid) {
+export function getUserposts({ userid }) {
   const request = axios
     .get(`${SERVER_API}/api/posts/users/${userid}`)
     .then((res) => res.data);
