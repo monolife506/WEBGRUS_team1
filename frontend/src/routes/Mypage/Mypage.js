@@ -14,22 +14,26 @@ function Mypage(props) {
 
   const [Menu, setMenu] = useState("myposts");
   const [MyPosts, setMyPosts] = useState([]);
+  const [MyPostsNum, setMyPostsNum] = useState();
   const [FavoritePosts, setFavoritePosts] = useState([]);
+  const [FavoritePostsNum, setFavoritePostsNum] = useState();
+  const [CurrentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     //auth action에서 userData를 가져올 때 까지 기다리기
     if (auth.status.auth === "SUCCESS" && auth.isAuth) {
       let userid = auth.userData.userid;
-
+      let page = 1;
       //해당 유저가 올린 게시물 가져오기
-      props.getUserposts(userid).then((res) => {
-        setMyPosts(res.payload);
+      props.getUserposts({ userid, page }).then((res) => {
+        setMyPosts(res.payload); //첫 10개만
+        setMyPostsNum(res.payload.length); //게시물 개수 저장
       });
 
       //해당 유저가 좋아한 게시물 가져오기
-      props.getFavoriteposts(userid).then((res) => {
+      props.getFavoriteposts({ userid, page }).then((res) => {
         setFavoritePosts(res.payload);
-        console.log("좋아하는 게시물 부름");
+        setFavoritePostsNum(res.payload.length);
       });
     }
   }, [auth.status.auth]);
@@ -54,23 +58,84 @@ function Mypage(props) {
     setMenu("deleteuser");
   };
 
+  //페이지 클릭 버튼 로드
+  const SelectPage = (menu) => {
+    let postNum;
+    if (menu === "myposts") {
+      postNum = MyPostsNum;
+    } else if (menu === "favoriteposts") {
+      postNum = FavoritePostsNum;
+    }
+    let array = [];
+
+    //페이지 개수만큼 배열 만들기 [1,2,3,...]
+    for (var i = 1; i < parseInt(postNum / 10) + 2; i++) {
+      array.push(i);
+    }
+    console.log(array);
+
+    return (
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {
+          // 페이지 개수만큼 버튼 만들기
+          array.map((page) => (
+            <button
+              type='button'
+              name={page}
+              onClick={(e) => {
+                ChangePage(page, menu);
+              }}
+            >
+              {page}
+            </button>
+          ))
+        }
+      </div>
+    );
+  };
+
+  //선택한 페이지 로드
+  const ChangePage = (page, menu) => {
+    //현재 페이지와 선택한 페이지가 같지 않을 때만 로드
+    if (CurrentPage !== page) {
+      let userid = auth.userData.userid;
+      if (menu === "myposts") {
+        props.getUserposts({ userid, page }).then((res) => {
+          setMyPosts(res.payload);
+          setCurrentPage(page);
+        });
+      } else if (menu === "favoriteposts") {
+        props.getFavoriteposts({ userid, page }).then((res) => {
+          setFavoritePosts(res.payload);
+          setCurrentPage(page);
+        });
+      }
+    }
+  };
+
   //선택한 메뉴에 따라 창 로드
   const LoadByMenu = () => {
     if (Menu === "myposts") {
       return (
-        <ViewPosts
-          posts={MyPosts}
-          userid={auth.userData.userid}
-          menu={"myposts"}
-        />
+        <>
+          <ViewPosts
+            posts={MyPosts}
+            userid={auth.userData.userid}
+            menu={"myposts"}
+          />
+          {SelectPage("myposts")}
+        </>
       );
     } else if (Menu === "favoriteposts") {
       return (
-        <ViewPosts
-          posts={FavoritePosts}
-          userid={auth.userData.userid}
-          menu={"favoriteposts"}
-        />
+        <>
+          <ViewPosts
+            posts={FavoritePosts}
+            userid={auth.userData.userid}
+            menu={"favoriteposts"}
+          />
+          {SelectPage("favoriteposts")}
+        </>
       );
     } else if (Menu === "modifyinform") {
       return <UserModify />;

@@ -36,9 +36,9 @@ export const fileUpload = (formdata) => (dispatch) => {
 };
 
 // 해당 유저의 포스트 정보받기
-export function getUserposts({ userid }) {
+export function getUserposts({ userid, page }) {
   const request = axios
-    .get(`${SERVER_API}/api/posts/users/${userid}`)
+    .get(`${SERVER_API}/api/posts/users/${userid}?page=${page}`)
     .then((res) => res.data);
   return {
     type: GET_USERPOSTS,
@@ -47,9 +47,9 @@ export function getUserposts({ userid }) {
 }
 
 // 해당 유저가 좋아요한 포스트 정보받기
-export function getFavoriteposts(userid) {
+export function getFavoriteposts({ userid, page }) {
   const request = axios
-    .get(`${SERVER_API}/api/posts/favorites/${userid}`)
+    .get(`${SERVER_API}/api/posts/favorites/${userid}?page=${page}`)
     .then((res) => res.data);
   return {
     type: GET_FAVORITEPOSTS,
