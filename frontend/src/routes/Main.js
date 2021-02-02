@@ -9,22 +9,38 @@ import useInfinteScroll from "../hoc/infiniteScroll";
 
 function Main(props) {
   const dispatch = useDispatch();
-  const [Posts, setPosts] = useState([]);
-  const [sortMode, setSortMode] = useState('times');
 
   const targetRef = useRef(null);
 
-  useEffect(() => {
-    dispatch(getAllpost.load('times', 0)).then((res) => {
-      setPosts(res.payload);
-    });
-  }, [sortMode, Posts]);
+  const [sortMode, setSortMode] = useState('times');
+  const [Posts, setPosts] = useState([]);
+  const [lastPage, setLastPage] = useState(0);
 
+  const changeSortMode = (sort) => {
+    setSortMode(sort);
+    dispatch(getAllpost(sortMode, 1)).then((res) => {
+      setPosts(res.payload);
+      setLastPage(1);
+    });
+  }
+
+  useEffect(() => {
+    dispatch(getAllpost('times', 1)).then((res) => {
+      setPosts(res.payload);
+      setLastPage(1);
+    });
+  }, []);
 
   useInfinteScroll({
     target: targetRef.current,
     onIntersect: ([{ isIntersecting }]) => {
-      if (isIntersecting) console.log("end!")
+      if (isIntersecting) {
+        dispatch(getAllpost(sortMode, lastPage + 1)).then((res) => {
+          const posts = Posts.concat(res.payload);
+          setPosts(posts);
+          setLastPage(lastPage + 1);
+        });
+      }
     }
   });
 
@@ -39,7 +55,7 @@ function Main(props) {
             type='button'
             name='times'
             onClick={() => {
-              setSortMode('times');
+              changeSortMode('times');
             }}
           >
             최신순
@@ -48,7 +64,7 @@ function Main(props) {
             type='button'
             name='views'
             onClick={() => {
-              setSortMode('views');
+              changeSortMode('views');
             }}
           >
             조회순
@@ -57,7 +73,7 @@ function Main(props) {
             type='button'
             name='likes'
             onClick={() => {
-              setSortMode('likes');
+              changeSortMode('likes');
             }}
           >
             인기순
