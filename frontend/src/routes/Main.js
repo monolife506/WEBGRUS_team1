@@ -9,36 +9,39 @@ import useInfinteScroll from "../hoc/infiniteScroll";
 
 function Main(props) {
   const dispatch = useDispatch();
-
   const targetRef = useRef(null);
 
   const [sortMode, setSortMode] = useState('times');
   const [Posts, setPosts] = useState([]);
-  const [lastPage, setLastPage] = useState(0);
+  const [curPage, setCurPage] = useState(0);
+  const [isLastPage, setLastPage] = useState(false);
 
   const changeSortMode = (sort) => {
+    setLastPage(false);
     setSortMode(sort);
-    dispatch(getAllpost(sortMode, 1)).then((res) => {
+    dispatch(getAllpost(sort, 1)).then((res) => {
       setPosts(res.payload);
-      setLastPage(1);
+      setCurPage(1);
     });
   }
 
   useEffect(() => {
+    setLastPage(false);
     dispatch(getAllpost('times', 1)).then((res) => {
       setPosts(res.payload);
-      setLastPage(1);
+      setCurPage(1);
     });
   }, []);
 
   useInfinteScroll({
     target: targetRef.current,
     onIntersect: ([{ isIntersecting }]) => {
-      if (isIntersecting) {
-        dispatch(getAllpost(sortMode, lastPage + 1)).then((res) => {
-          const posts = Posts.concat(res.payload);
-          setPosts(posts);
-          setLastPage(lastPage + 1);
+      if (isIntersecting && !isLastPage) {
+        dispatch(getAllpost(sortMode, curPage + 1)).then((res) => {
+          if (res.payload.length > 0) {
+            setPosts(Posts.concat(res.payload));
+            setCurPage(curPage + 1);
+          } else setLastPage(true);
         });
       }
     }

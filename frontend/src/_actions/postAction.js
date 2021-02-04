@@ -39,7 +39,7 @@ export const fileUpload = (formdata) => (dispatch) => {
 export function getUserposts(userid) {
   const request = axios
     .get(`${SERVER_API}/api/posts/users/${userid}`)
-    .then((res) => res.data);
+    .then((res) => res.data)
   return {
     type: GET_USERPOSTS,
     payload: request,
@@ -73,7 +73,11 @@ export function getPostDetail(postid) {
 export const getAllpost = (sort, page) => {
   const request = axios
     .get(`${SERVER_API}/api/posts/all?page=${page}&sortby=${sort}`)
-    .then((res) => res.data);
+    .then((res) => res.data)
+    .catch((res) => {
+      console.log(res);
+      return [];
+    });
   return {
     type: GET_ALLPOST,
     payload: request,
