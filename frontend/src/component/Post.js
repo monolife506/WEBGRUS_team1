@@ -51,13 +51,36 @@ function Post({
             <a href={`/userDetail/${owner}`}>{owner}</a>
           )}
 
-          <a href={`/postDetail/${postid}`}>
-            {/* 제일 첫번째 사진 보여주기 */}
-            <img
-              src={`${SERVER_API}/images/${files[0].filename}`}
-              style={{ width: 290, height: 290 }}
-            />
-          </a>
+<div
+          style={{
+            margin: "5vh 0 5vh 0",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: 300,
+            overflowX: "auto",
+            overflowY: "hidden",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: 300,
+              height: 300,
+              margin: "0 10px 0 10px",
+            }}
+          >
+            <a href={`/postDetail/${postid}`}>
+              {/* 제일 첫번째 사진 보여주기 */}
+              <img
+                src={`${SERVER_API}/images/${files[0].filename}`}
+                style={{ maxWidth: "100%", height: "auto" }}
+              />
+            </a>
+          </div>
+        </div>
           <div
             style={{
               width: "90%",
