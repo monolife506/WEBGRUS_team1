@@ -67,7 +67,7 @@ function Post({
               alignItems: "center",
               width: 300,
               height: 300,
-              margin: "0 10px 0 10px",
+              margin: "0 5px 0 5px",
             }}
           >
             <a href={`/postDetail/${postid}`}>
