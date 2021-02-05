@@ -47,33 +47,9 @@ function Post({
         {auth && auth.userid === owner ? (
           <a href={`/mypage`}>{owner}</a>
         ) : (
-            <a href={`/userDetail/${owner}`}>{owner}</a>
-          )}
-
-        <a href={`/postDetail/${postid}`}>
-          {/* 제일 첫번째 사진 보여주기 */}
-          <img
-            src={`${SERVER_API}/images/${files[0].filename}`}
-            style={{ width: 290, height: 290 }}
-          />
-        </a>
+          <a href={`/userDetail/${owner}`}>{owner}</a>
+        )}
         <div
-          style={{
-            width: "90%",
-            textOverflow: "ellipsis",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {/* 자신의 아이디 클릭시 마이페이지로,  */}
-          {/* 다른 유저의 아이디 클릭시 유저페이지로 */}
-          {auth && auth.userid === owner ? (
-            <a href={`/mypage`}>{owner}</a>
-          ) : (
-            <a href={`/userDetail/${owner}`}>{owner}</a>
-          )}
-
-<div
           style={{
             margin: "5vh 0 5vh 0",
             display: "flex",
@@ -103,6 +79,28 @@ function Post({
             </a>
           </div>
         </div>
+        <div
+          style={{
+            width: "90%",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <a href={`/postDetail/${postid}`}>
+            <div>{title}</div>
+          </a>
+          <div>{description}</div>
+          <div>
+            {tags
+              ? tags.map((tag) => (
+                  <div key={tag} style={{ display: "inline" }}>
+                    #{tag}{" "}
+                  </div>
+                ))
+              : ""}
+          </div>
+          {posttimeView(posttime)}
           <div
             style={{
               width: "60%",
