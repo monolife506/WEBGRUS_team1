@@ -88,7 +88,7 @@ function Main(props) {
               width: "80vw",
               display: "flex",
               flexWrap: "wrap",
-              justifyContent: "flex-start",
+              justifyContent: "center",
             }}
           >
             {Posts
