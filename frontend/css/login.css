@@ -1,0 +1,118 @@
+.logo {
+    position: absolute;
+    width: 68.81px;
+    height: 67px;
+    left: 31px;
+    top: 22px;
+}
+
+.CANDO {
+    position: absolute;
+    height: 92px;
+    left: 7.43%;
+    right: 68.75%;
+    top: 155px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 64px;
+    line-height: 104px;
+    /* or 162% */
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: -3px;
+    color: #FFFFFF;
+}
+
+.welcome {
+    position: absolute;
+    width: 439px;
+    height: 130px;
+    left: 64px;
+    top: 253px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 160%;
+    /* or 38px */
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.image {
+    /*standing girl */
+    position: absolute;
+    width: 1206px;
+    height: 1139px;
+    left: 857px;
+    top: 449px;
+    background: url(.png);
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+}
+
+.orange {
+    position: absolute;
+    width: 1034.1px;
+    height: 562.95px;
+    left: 568.08px;
+    bottom: -472.05px;
+    background: #FF9A3D;
+    transform: rotate(-90.12deg)
+}
+
+.loginin {
+    position: absolute;
+    left: 740px;
+    right: 412px;
+    top: 265px;
+    bottom: 722px;
+}
+
+.line {
+    position: absolute;
+    width: 385.5px;
+    height: 0px;
+    left: 809px;
+    top: 331px;
+    border: 1px solid #E3E3E3;
+}
+
+.UsernameOrEmailAddress {
+    position: absolute;
+    left: 794px;
+    right: 358px;
+    top: 383px;
+    bottom: 604px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 36px;
+    /* or 200% */
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.25px;
+    color: #0B0B0B;
+}
+
+.password {
+    position: absolute;
+    left: 703px;
+    right: 449px;
+    top: 523px;
+    bottom: 464px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 36px;
+    /* or 200% */
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.25px;
+    color: #0B0B0B;
+}
