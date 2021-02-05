@@ -1,7 +1,18 @@
 import axios from "axios";
 import { SERVER_API } from "./config";
-import { UPDATE_COMMENT, MODIFY_COMMENT, DELETE_COMMENT } from "./types";
+import { GET_COMMENT, UPDATE_COMMENT, MODIFY_COMMENT, DELETE_COMMENT } from "./types";
 
+
+//해당 포스트 댓글 불러오기
+export function getComment(postid) {
+  const request = axios
+    .get(`${SERVER_API}/api/posts/${postid}/comments`)
+    .then((res) => res.data);
+  return {
+    type: GET_COMMENT,
+    payload: request,
+  };
+}
 
 //포스트 댓글 추가
 export function uploadComment({postid, body}) {

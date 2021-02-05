@@ -35,26 +35,46 @@ function UserModify() {
       console.log(body);
       Axios.put(`${SERVER_API}/api/users`, body)
         .then((res) => {
-          console.log(res);
+          if (res.data.done) {
+            alert("변경이 완료되었습니다");
+            setOldPW("");
+            setNewPW("");
+            setNewPWcheck("");
+            setEmail("");
+          }
         })
         .catch((err) => {
-          console.log(err);
+          alert("변경에 실패하였습니다");
+          setOldPW("");
+          setNewPW("");
+          setNewPWcheck("");
+          setEmail("");
         });
     } else {
       alert("비밀번호 확인이 맞지 않습니다");
     }
   };
-  
+
   return (
     <div style={{ height: "100vh" }}>
       <div>
         현재 비밀번호:{" "}
-        <input type='password' name='oldpassword' onChange={changeOldPW} />
+        <input
+          type='password'
+          name='oldpassword'
+          value={OldPW}
+          onChange={changeOldPW}
+        />
       </div>
       <br />
       <div>
         변경할 비밀번호:{" "}
-        <input type='password' name='newpassword' onChange={changeNewPW} />
+        <input
+          type='password'
+          name='newpassword'
+          value={NewPW}
+          onChange={changeNewPW}
+        />
       </div>
       <br />
       <div>
@@ -62,13 +82,19 @@ function UserModify() {
         <input
           type='password'
           name='newpasswordcheck'
+          value={NewPWcheck}
           onChange={changeNewPWcheck}
         />
       </div>
       <br />
       <div>
         변경할 이메일:{" "}
-        <input type='text' name='useremail' onChange={changeEmail} />
+        <input
+          type='text'
+          name='useremail'
+          value={Email}
+          onChange={changeEmail}
+        />
       </div>
       <button type='submit' onClick={clickModify}>
         변경하기

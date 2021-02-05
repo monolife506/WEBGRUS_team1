@@ -31,5 +31,6 @@ export const IS_FAVORITE = "IS_FAVORITE";
 
 //commentAction
 export const UPDATE_COMMENT = "UPDATE_COMMENT";
+export const GET_COMMENT = "GET_COMMENT";
 export const MODIFY_COMMENT = "MODIFY_COMMENT";
 export const DELETE_COMMENT = "DELETE_COMMENT";

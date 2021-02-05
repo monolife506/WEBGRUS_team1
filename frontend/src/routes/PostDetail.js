@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import ViewPostDetail from "../component/ViewPostDetail";
 import { connect, useDispatch, useSelector } from "react-redux";
 
+import ViewPostDetail from "../component/ViewPostDetail";
 import FollowComponent from "../component/FollowComponent";
+import CommentComponent from "../component/CommentComponent";
 
 import { postDelete } from "../_actions/postAction";
 import { getPostDetail } from "../_actions/postAction";
-import CommentComponent from "../component/CommentComponent";
+import { getComment } from "../_actions/commentAction";
 
 function PostDetail(props) {
   const history = useHistory();
@@ -25,7 +26,10 @@ function PostDetail(props) {
       console.log(res);
       setPost(res.payload);
       setPosttime(res.payload.posttime);
-      setComments(res.payload.comments);
+    });
+    dispatch(getComment(postid)).then((res) => {
+      console.log(res)
+      setComments(res.payload);
     });
   }, []);
 
@@ -43,8 +47,9 @@ function PostDetail(props) {
 
   //댓글 수정 업데이트
   const updateModifyComment = () => {
-    dispatch(getPostDetail(postid)).then((res) => {
-      setComments(res.payload.comments);
+    dispatch(getComment(postid)).then((res) => {
+      console.log(res)
+      setComments(res.payload);
     });
   };
 
