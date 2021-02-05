@@ -39,7 +39,7 @@ export const fileUpload = (formdata) => (dispatch) => {
 export function getUserposts(userid) {
   const request = axios
     .get(`${SERVER_API}/api/posts/users/${userid}`)
-    .then((res) => res.data);
+    .then((res) => res.data)
   return {
     type: GET_USERPOSTS,
     payload: request,
@@ -70,16 +70,20 @@ export function getPostDetail(postid) {
 }
 
 //모든 포스트의 정보받기
-export function getAllpost() {
+export const getAllpost = (sort, page) => {
   const request = axios
-    .get(`${SERVER_API}/api/posts/all`)
-    .then((res) => res.data);
-
+    .get(`${SERVER_API}/api/posts/all?page=${page}&sortby=${sort}`)
+    .then((res) => res.data)
+    .catch((res) => {
+      console.log(res);
+      return [];
+    });
   return {
     type: GET_ALLPOST,
     payload: request,
   };
 }
+
 
 //해당 포스트의 수정
 export const postModify = ({ formdata, postid }) => (dispatch) => {
