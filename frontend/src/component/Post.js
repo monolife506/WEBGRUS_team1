@@ -65,9 +65,9 @@ function Post({
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              width: 300,
-              height: 300,
-              margin: "0 5px 0 5px",
+              width: 295,
+              height: 295,
+              margin: "0 auto",
             }}
           >
             <a href={`/postDetail/${postid}`}>
