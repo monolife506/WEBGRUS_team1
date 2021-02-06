@@ -15,17 +15,17 @@ function Newpost(props) {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  const [Files, setFiles] = useState([]);
-  const [Thumbnails, setThumbnails] = useState([]);
-  const [Title, setTitle] = useState("");
-  const [Description, setDescription] = useState("");
-  const [CurrentTag, setCurrentTag] = useState(""); //현재 작성중인 태그
-  const [Tags, setTags] = useState([]); //작성한 태그들 배열
+  const [files, setFiles] = useState([]);
+  const [thumbnails, setThumbnails] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [currentTag, setCurrentTag] = useState(""); //현재 작성중인 태그
+  const [tags, setTags] = useState([]); //작성한 태그들 배열
 
   useEffect(() => {
     //썸네일 주소 삭제
     return () => {
-      window.URL.revokeObjectURL(Thumbnails);
+      window.URL.revokeObjectURL(thumbnails);
     };
   }, []);
 
@@ -47,11 +47,11 @@ function Newpost(props) {
 
   //태그 추가하기
   const onTagClick = () => {
-    if (CurrentTag) {
-      if (Tags.length > 9) {
+    if (currentTag) {
+      if (tags.length > 9) {
         alert("태그는 10개까지 입력하실 수 있습니다.");
       } else {
-        setTags([...Tags, CurrentTag]);
+        setTags([...tags, currentTag]);
       }
       setCurrentTag("");
     }
@@ -68,7 +68,7 @@ function Newpost(props) {
   };
 
   //썸네일 보여주기
-  const ThumbnailView = Thumbnails.map((thumb) => (
+  const ThumbnailView = thumbnails.map((thumb) => (
     <div
       key={thumb}
       style={{
@@ -95,23 +95,23 @@ function Newpost(props) {
 
     //제목과 파일은 필수
     //설명과 태그는 선택
-    if (!Title) {
+    if (!title) {
       alert("제목이 필요합니다!");
-    } else if (Files.length === 0) {
+    } else if (files.length === 0) {
       alert("파일 업로드가 필요합니다!");
     } else {
       //FormData에 파일정보 저장하기
       const formdata = new FormData();
 
-      formdata.append("title", Title);
+      formdata.append("title", title);
 
-      Files.forEach((file) => {
+      files.forEach((file) => {
         formdata.append("photos", file);
       });
 
-      if (Description) formdata.append("description", Description);
-      if (Tags.length > 0) {
-        Tags.forEach((tag) => {
+      if (description) formdata.append("description", description);
+      if (tags.length > 0) {
+        tags.forEach((tag) => {
           formdata.append("tags", tag);
         });
       }
@@ -127,14 +127,14 @@ function Newpost(props) {
     }
   };
 
-  let DoubleSubmit = true;
+  let doubleSubmit = true;
 
   //중복 제출 방지
   const BlockDoubleSubmit = (e) => {
     //첫 제출
-    if (DoubleSubmit) {
+    if (doubleSubmit) {
       OnFileUpload(e);
-      DoubleSubmit = false;
+      doubleSubmit = false;
     } else {
       alert("제출 중 입니다");
       return false;
@@ -142,7 +142,7 @@ function Newpost(props) {
   };
 
   //input style
-  const textfield = {
+  const Textfield = {
     margin: "5px 0 10px 0",
     width: "40vw",
     minWidth: "400px",
@@ -158,7 +158,7 @@ function Newpost(props) {
     >
       <h1>UPLOAD</h1>
       <TextField
-        style={textfield}
+        style={Textfield}
         required
         id='standard-required'
         label='제목'
@@ -166,7 +166,7 @@ function Newpost(props) {
         onChange={onTitle}
       />
       <TextField
-        style={textfield}
+        style={Textfield}
         id='standard-multiline-static'
         label='작품소개'
         multiline
@@ -178,7 +178,7 @@ function Newpost(props) {
       <div>
         <TextField
           id='standard-multiline-static'
-          value={CurrentTag}
+          value={currentTag}
           name='tag'
           label='태그'
           variant='outlined'
@@ -194,8 +194,8 @@ function Newpost(props) {
           추가
         </Button>
         {/* 태그를 추가하면 태그 나타내기 */}
-        {Tags
-          ? Tags.map((tag) => (
+        {tags
+          ? tags.map((tag) => (
               <div key={tag}>
                 #{tag}
                 <button
@@ -203,7 +203,7 @@ function Newpost(props) {
                   onClick={(e) => {
                     e.preventDefault();
                     const deleteTag = tag;
-                    setTags(Tags.filter((tag) => tag !== deleteTag));
+                    setTags(tags.filter((tag) => tag !== deleteTag));
                   }}
                 >
                   삭제

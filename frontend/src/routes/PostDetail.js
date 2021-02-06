@@ -17,9 +17,9 @@ function PostDetail(props) {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
-  const [Post, setPost] = useState([]);
-  const [Posttime, setPosttime] = useState("");
-  const [Comments, setComments] = useState([]);
+  const [post, setPost] = useState([]);
+  const [posttime, setPosttime] = useState("");
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     dispatch(getPostDetail(postid)).then((res) => {
@@ -33,16 +33,16 @@ function PostDetail(props) {
     });
   }, []);
 
-  let year = Posttime.substring(0, 4);
-  let month = Posttime.substring(5, 7);
-  let date = Posttime.substring(8, 10);
+  let year = posttime.substring(0, 4);
+  let month = posttime.substring(5, 7);
+  let date = posttime.substring(8, 10);
 
   //포스트 시간 스트링
-  const posttimeView = `Date: ${year}. ${month}. ${date}.`;
+  const PosttimeView = `Date: ${year}. ${month}. ${date}.`;
 
   //댓글 추가 업데이트
   const updateUploadComment = (newComment) => {
-    setComments(Comments.concat(newComment));
+    setComments(comments.concat(newComment));
   };
 
   //댓글 수정 업데이트
@@ -55,12 +55,12 @@ function PostDetail(props) {
 
   //댓글 삭제 업데이트
   const updateDeleteComment = (commentid) => {
-    setComments(Comments.filter((comment) => comment._id !== commentid));
+    setComments(comments.filter((comment) => comment._id !== commentid));
   };
 
   const postButton = () => {
     //내가 올린 포스트인 경우 수정 및 삭제 버튼 나오게
-    if (auth.userData && auth.userData.userid === Post.owner) {
+    if (auth.userData && auth.userData.userid === post.owner) {
       return (
         <div style={{ marginLeft: "200px" }}>
           <button
@@ -101,8 +101,8 @@ function PostDetail(props) {
             <div style={{ height: "100vh" }}></div>
           ) : (
             <div style={{ marginLeft: "150px" }}>
-              <h2>{Post.owner}</h2>
-              <FollowComponent userid={Post.owner} />
+              <h2>{post.owner}</h2>
+              <FollowComponent userid={post.owner} />
             </div>
           )}
         </>
@@ -121,19 +121,19 @@ function PostDetail(props) {
         }}
       >
         <ViewPostDetail
-          postid={Post._id}
-          title={Post.title}
-          description={Post.description}
-          files={Post.files}
-          tags={Post.tags}
-          posttime={posttimeView}
-          likecnt={Post.likecnt}
-          viewcnt={Post.viewcnt}
-          commentcnt={Post.commentcnt}
+          postid={post._id}
+          title={post.title}
+          description={post.description}
+          files={post.files}
+          tags={post.tags}
+          posttime={PosttimeView}
+          likecnt={post.likecnt}
+          viewcnt={post.viewcnt}
+          commentcnt={post.commentcnt}
         />
         <CommentComponent
           postid={postid}
-          comments={Comments}
+          comments={comments}
           updateUploadComment={updateUploadComment}
           updateModifyComment={updateModifyComment}
           updateDeleteComment={updateDeleteComment}

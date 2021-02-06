@@ -10,10 +10,10 @@ import { getPostDetail } from "../_actions/postAction";
 
 function CommentComponent(props) {
   const Comments = props.comments;
-  const [CommentValue, setCommentValue] = useState(""); //댓글 입력값
-  const [ModifyComment, setModifyComment] = useState(""); //수정하는 댓글 아이디
-  const [ModifyCommentValue, setModifyCommentValue] = useState(""); //수정하는 댓글 입력값
-  const [IsModify, setIsModify] = useState(false);
+  const [commentValue, setCommentValue] = useState(""); //댓글 입력값
+  const [modifyComment, setModifyComment] = useState(""); //수정하는 댓글 아이디
+  const [modifyCommentValue, setModifyCommentValue] = useState(""); //수정하는 댓글 입력값
+  const [isModify, setIsModify] = useState(false);
 
   const dispatch = useDispatch();
   const auth = props.auth;
@@ -36,7 +36,7 @@ function CommentComponent(props) {
   };
 
   //댓글 시간 스트링
-  const commentTime = (time) => {
+  const CommentTime = (time) => {
     let year = time.substring(0, 4);
     let month = time.substring(5, 7);
     let date = time.substring(8, 10);
@@ -50,7 +50,7 @@ function CommentComponent(props) {
 
     //로그인 돼있을 때만 가능
     if (auth.isAuth) {
-      const body = { content: CommentValue };
+      const body = { content: commentValue };
       dispatch(uploadComment({ postid, body }))
         .then((res) => {
           props.updateUploadComment(res.payload.comment);
@@ -66,7 +66,7 @@ function CommentComponent(props) {
   };
 
   //댓글 수정칸 열기
-  const onmodify = (commentid) => {
+  const onModify = (commentid) => {
     console.log(commentid);
     //수정할 댓글 찾기
     for (let i = 0; i < Comments.length; i++) {
@@ -77,7 +77,7 @@ function CommentComponent(props) {
         break;
       }
     }
-    console.log(ModifyComment);
+    console.log(modifyComment);
     setIsModify(true);
   };
 
@@ -85,8 +85,8 @@ function CommentComponent(props) {
   const onModifySubmit = (e) => {
     e.preventDefault();
 
-    const body = { content: ModifyCommentValue };
-    let commentid = ModifyComment;
+    const body = { content: modifyCommentValue };
+    let commentid = modifyComment;
 
     dispatch(modifyComment({ postid, commentid, body }))
       .then((res) => {
@@ -115,13 +115,13 @@ function CommentComponent(props) {
   };
 
   //댓글 작성 창
-  const writeComment = (
+  const WriteComment = (
     <div>
       <input
         style={{ width: "900px", height: "100px" }}
         type='textarea'
         name='Comment'
-        value={CommentValue}
+        value={commentValue}
         onChange={onChangeComment}
         onKeyPress={onUploadKeyPress}
       />
@@ -147,13 +147,13 @@ function CommentComponent(props) {
                 key={comment._id}
               >
                 {/* 수정할 댓글인 경우 수정창 로드 */}
-                {IsModify && comment._id === ModifyComment ? (
+                {isModify && comment._id === modifyComment ? (
                   <>
                     <input
                       style={{ width: "900px", height: "100px" }}
                       type='textarea'
                       name='Comment'
-                      value={ModifyCommentValue}
+                      value={modifyCommentValue}
                       onChange={onChangeModifyComment}
                       onKeyPress={onModifyPress}
                     />
@@ -176,13 +176,13 @@ function CommentComponent(props) {
                   <>
                     <div>작성자: {comment.owner} </div>
                     <div>{comment.content} </div>
-                    <div>{commentTime(comment.posttime)} </div>
+                    <div>{CommentTime(comment.posttime)} </div>
                     {/* 내가 작성한 댓글일 때만 수정, 삭제 버튼 나타남 */}
                     {auth.userData && auth.userData.userid === comment.owner ? (
                       <div>
                         <button
                           type='button'
-                          onClick={(e) => onmodify(comment._id)}
+                          onClick={(e) => onModify(comment._id)}
                         >
                           수정
                         </button>
@@ -214,7 +214,7 @@ function CommentComponent(props) {
           margin: "0 5px 5px 10px",
         }}
       >
-        {writeComment}
+        {WriteComment}
 
         {/* 댓글 정보가 준비됐을 경우 로드 */}
         <div

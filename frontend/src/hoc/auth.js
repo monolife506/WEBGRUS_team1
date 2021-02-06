@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { authenticationCheck } from "../_actions/authAction";
-import { connect } from "react-redux";
 
 export default function (SpecificComponent, option) {
   //option
@@ -11,7 +10,6 @@ export default function (SpecificComponent, option) {
 
   function AuthenticationCheck(props) {
     const dispatch = useDispatch();
-    const auth = props.auth;
 
     useEffect(() => {
       //서버에서 토큰 검증하기
@@ -38,9 +36,5 @@ export default function (SpecificComponent, option) {
     return <SpecificComponent />;
   }
 
-  const mapStateToProps = (state) => ({
-    auth: state.auth,
-  });
-
-  return connect(mapStateToProps)(AuthenticationCheck);
+  return AuthenticationCheck;
 }

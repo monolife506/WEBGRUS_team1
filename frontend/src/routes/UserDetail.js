@@ -13,7 +13,7 @@ function UserDetail() {
 
   const userid = params.userid;
 
-  const [Posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     dispatch(getUserposts(userid)).then((res) => {
@@ -36,8 +36,8 @@ function UserDetail() {
             justifyContent: "flex-start",
           }}
         >
-          {Posts
-            ? Posts.map((post) => (
+          {posts
+            ? posts.map((post) => (
                 <div
                   style={{
                     display: "flex",

@@ -34,11 +34,11 @@ function SignUp(props) {
 
   const classes = useStyles();
 
-  const [Id, setId] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
-  const [Passwordcheck, setPasswordcheck] = useState("");
-  const [Passwordchecking, setPasswordchecking] = useState(true);
+  const [id, setId] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordcheck, setPasswordcheck] = useState("");
+  const [passwordchecking, setPasswordchecking] = useState(true);
 
   const onId = (e) => {
     setId(e.target.value);
@@ -51,7 +51,7 @@ function SignUp(props) {
   };
   const onPasswordcheck = async (e) => {
     await setPasswordcheck(e.target.value);
-    if (e.target.value !== Password) setPasswordchecking(false);
+    if (e.target.value !== password) setPasswordchecking(false);
     else setPasswordchecking(true);
   };
 
@@ -59,9 +59,9 @@ function SignUp(props) {
     e.preventDefault();
 
     let body = {
-      userid: Id,
-      useremail: Email,
-      password: Password,
+      userid: id,
+      useremail: email,
+      password: password,
     };
 
     //액션
@@ -94,7 +94,7 @@ function SignUp(props) {
                 required
                 fullWidth
                 id='id'
-                value={Id}
+                value={id}
                 label='아이디'
                 autoComplete='id'
                 onChange={onId}
@@ -107,7 +107,7 @@ function SignUp(props) {
                 fullWidth
                 id='email'
                 type='email'
-                value={Email}
+                value={email}
                 label='이메일'
                 autoComplete='email'
                 onChange={onEmail}
@@ -118,7 +118,7 @@ function SignUp(props) {
                 variant='outlined'
                 required
                 fullWidth
-                value={Password}
+                value={password}
                 type='password'
                 id='password'
                 label='비밀번호'
@@ -128,14 +128,14 @@ function SignUp(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                error={!Passwordchecking}
+                error={!passwordchecking}
                 helperText={
-                  !Passwordchecking ? "비밀번호와 일치하지 않습니다." : ""
+                  !passwordchecking ? "비밀번호와 일치하지 않습니다." : ""
                 }
                 variant='outlined'
                 required
                 fullWidth
-                value={Passwordcheck}
+                value={passwordcheck}
                 type='password'
                 id='passwordcheck'
                 label='비밀번호 확인'

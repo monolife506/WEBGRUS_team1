@@ -9,7 +9,7 @@ function SearchPage() {
   const location = useLocation();
   const query = queryString.parse(location.search);
 
-  const [Posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     Axios.get(`${SERVER_API}/api/posts/search/${query.q}?mode=${query.mode}`)
@@ -34,7 +34,7 @@ function SearchPage() {
                 justifyContent: "flex-start",
               }}
             >
-              {Posts.map((post) => (
+              {posts.map((post) => (
                 <Post
                   key={post._id}
                   postid={post._id}
@@ -55,7 +55,7 @@ function SearchPage() {
       },
     [query]
   );
-  if (Posts.length === 0) {
+  if (posts.length === 0) {
     return (
       <div style={{ height: "100vh" }}>
         "{query.q}"의 검색결과가 없습니다...

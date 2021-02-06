@@ -7,8 +7,8 @@ import Favorite from "@material-ui/icons/Favorite";
 import { useDispatch, useSelector } from "react-redux";
 
 function FavoriteComponent({ postid, postlikecnt }) {
-  const [FavoriteToggle, setFavoriteToggle] = useState(false);
-  const [FavoriteNum, setFavoriteNum] = useState(postlikecnt);
+  const [favoriteToggle, setFavoriteToggle] = useState(false);
+  const [favoriteNum, setFavoriteNum] = useState(postlikecnt);
   const auth = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
@@ -24,8 +24,8 @@ function FavoriteComponent({ postid, postlikecnt }) {
   }, []);
 
   //하트 아이콘 상태표시
-  const favoriteToggle = () => {
-    if (FavoriteToggle) {
+  const favoriteToggleChange = () => {
+    if (favoriteToggle) {
       return <Favorite />;
     } else {
       return <FavoriteBorder />;
@@ -38,11 +38,11 @@ function FavoriteComponent({ postid, postlikecnt }) {
       dispatch(postFavorite(postid))
         .then((res) => {
           if (res.payload.status === "add") {
-            setFavoriteNum(FavoriteNum + 1);
+            setFavoriteNum(favoriteNum + 1);
             setFavoriteToggle(true);
 
           } else if(res.payload.status === "del"){
-            setFavoriteNum(FavoriteNum - 1);
+            setFavoriteNum(favoriteNum - 1);
             setFavoriteToggle(false);
           }
         })
@@ -56,7 +56,7 @@ function FavoriteComponent({ postid, postlikecnt }) {
 
   return (
     <div onClick={favoriteClick}>
-      {favoriteToggle()} {FavoriteNum}
+      {favoriteToggleChange()} {favoriteNum}
     </div>
   );
 }

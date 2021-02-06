@@ -3,7 +3,7 @@ import { SERVER_API } from "./config";
 import { IS_FOLLOW, FOLLOW_TOGGLE } from "./types";
 
 //팔로우 여부 확인
-export function isFollow(userid) {
+export function followCheck(userid) {
   const token = localStorage.getItem("token");
   const config = {
     headers: { Authorization: `Bearer ${token}` },

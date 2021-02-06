@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { isFollow, followToggle } from "../_actions/followAction";
+import { followCheck, followToggle } from "../_actions/followAction";
 
 function FollowComponent({ userid }) {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
-  const [IsFollow, setIsFollow] = useState(false);
+  const [isFollow, setIsFollow] = useState(false);
 
   useEffect(() => {
     // 파라미터 오면 실행
     if (userid) {
-      dispatch(isFollow(userid))
+      dispatch(followCheck(userid))
         .then((res) => {
           setIsFollow(res.payload.following);
         })
@@ -38,7 +38,7 @@ function FollowComponent({ userid }) {
   return (
     <div>
       <button type='button' name='팔로우' onClick={onFollow}>
-        {IsFollow ? "팔로우취소" : "팔로우"}
+        {isFollow ? "팔로우취소" : "팔로우"}
       </button>
     </div>
   );
