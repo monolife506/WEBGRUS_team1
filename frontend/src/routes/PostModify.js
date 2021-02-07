@@ -102,7 +102,12 @@ function PostModify(props) {
       <img
         src={thumb}
         name='thumbnail'
-        style={{ maxWidth: "100%", height: "auto" }}
+        style={{
+          maxWidth: "150px",
+          maxHeight: "150px",
+          width: "auto",
+          height: "auto",
+        }}
       />
     </div>
   ));
