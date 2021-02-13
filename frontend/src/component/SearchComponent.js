@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import SearchIcon from "@material-ui/icons/Search";
 
 function SearchComponent() {
   const history = useHistory();
@@ -26,24 +27,51 @@ function SearchComponent() {
   };
 
   return (
-    <div>
-      <input
-        type='text'
-        name='search'
-        value={query}
-        onChange={onQueryChange}
-        onKeyPress={onKeyPress}
-      />
-      <select value={mode} onChange={onModeChange}>
+    <div style={{ display: "flex" }}>
+      <select
+        value={mode}
+        onChange={onModeChange}
+        style={{
+          width: 110,
+          height: 28,
+          fontFamily: "noto",
+          fontSize: "18px",
+          fontWeight: 300,
+          background: "#FFFFFF",
+          border: "2px solid #FFFFFF",
+        }}
+      >
         <option value='title'>제목</option>
         <option value='content'>내용</option>
         <option value='all'>제목+내용</option>
         <option value='owner'>글 작성자</option>
         <option value='tags'>태그</option>
       </select>
-      <button type='button' onClick={onSearchClick}>
-        검색
-      </button>
+      <input
+        type='text'
+        name='search'
+        value={query}
+        onChange={onQueryChange}
+        onKeyPress={onKeyPress}
+        style={{
+          width: 405,
+          height: 22,
+          backgroundColor: "#C4C4C4",
+          border: "2px solid #FFFFFF",
+          paddingLeft: 10,
+        }}
+      />
+
+      <SearchIcon
+        style={{
+          color: "white",
+          width: 30,
+          height: 30,
+          marginLeft: 10,
+        }}
+        alt='검색버튼'
+        onClick={onSearchClick}
+      />
     </div>
   );
 }
