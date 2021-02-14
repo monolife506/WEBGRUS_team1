@@ -9,8 +9,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { loginUser } from "../_actions/authAction";
 
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,14 +33,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SignIn(props) {
+function SignIn() {
+  const dispatch = useDispatch()
   const history = useHistory();
   const classes = useStyles();
 
-  const auth = props.auth;
-
-  const [Id, setId] = useState("");
-  const [Password, setPassword] = useState("");
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
 
   const onId = (e) => {
     setId(e.currentTarget.value);
@@ -51,12 +51,12 @@ function SignIn(props) {
     e.preventDefault();
 
     let body = {
-      userid: Id,
-      password: Password,
+      userid: id,
+      password: password,
     };
 
     //액션
-    await props.loginUser(body).then((res) => {
+    await dispatch(loginUser(body)).then((res) => {
       //로그인 성공시 홈으로 이동
       if (res) {
         history.push("/");
@@ -83,7 +83,7 @@ function SignIn(props) {
             fullWidth
             id='id'
             label='아이디'
-            value={Id}
+            value={id}
             autoComplete='id'
             autoFocus
             onChange={onId}
@@ -93,7 +93,7 @@ function SignIn(props) {
             margin='normal'
             required
             fullWidth
-            value={Password}
+            value={password}
             label='비밀번호'
             type='password'
             id='password'
@@ -127,8 +127,5 @@ function SignIn(props) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-});
 
-export default connect(mapStateToProps, { loginUser })(SignIn);
+export default SignIn;

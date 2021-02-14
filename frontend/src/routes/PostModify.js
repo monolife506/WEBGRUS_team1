@@ -21,14 +21,14 @@ function PostModify(props) {
   const postid = param.postid;
   const post = props.post;
 
-  const [Title, setTitle] = useState("");
-  const [Files, setFiles] = useState([]); //원래 올려져있던 사진파일
-  const [NewFiles, setNewFiles] = useState([]); //새롭게 올릴 사진파일
-  const [DeleteFiles, setDeleteFiles] = useState([]); //지울 사진파일
-  const [Description, setDescription] = useState("");
-  const [CurrentTag, setCurrentTag] = useState(""); //현재 작성중인 태그
-  const [Tags, setTags] = useState([]); //작성한 태그들 배열
-  const [Thumbnails, setThumbnails] = useState([]);
+  const [title, setTitle] = useState("");
+  const [files, setFiles] = useState([]); //원래 올려져있던 사진파일
+  const [newFiles, setNewFiles] = useState([]); //새롭게 올릴 사진파일
+  const [deleteFiles, setDeleteFiles] = useState([]); //지울 사진파일
+  const [description, setDescription] = useState("");
+  const [currentTag, setCurrentTag] = useState(""); //현재 작성중인 태그
+  const [tags, setTags] = useState([]); //작성한 태그들 배열
+  const [thumbnails, setThumbnails] = useState([]);
 
   useEffect(() => {
     dispatch(getPostDetail(postid)).then((res) => {
@@ -41,7 +41,7 @@ function PostModify(props) {
 
     //썸네일 주소 삭제
     return () => {
-      window.URL.revokeObjectURL(Thumbnails);
+      window.URL.revokeObjectURL(thumbnails);
     };
   }, []);
 
@@ -64,11 +64,11 @@ function PostModify(props) {
   //태그 추가하기
   const onTagClick = (e) => {
     e.preventDefault();
-    if (CurrentTag) {
-      if (Tags.length > 9) {
+    if (currentTag) {
+      if (tags.length > 9) {
         alert("태그는 10개까지 입력하실 수 있습니다.");
       } else {
-        setTags([...Tags, CurrentTag]);
+        setTags([...tags, currentTag]);
       }
       setCurrentTag("");
     }
@@ -77,7 +77,7 @@ function PostModify(props) {
   //파일저장 및 썸네일 생성
   const onDrop = (files) => {
     //원래 올렸었던 파일 포함 최대 업로드개수 제한
-    if (files.length + Files.length > 6) {
+    if (files.length + files.length > 6) {
       alert("파일은 최대 6개까지 업로드 할 수 있습니다.");
     } else {
       setNewFiles(files);
@@ -86,7 +86,7 @@ function PostModify(props) {
   };
 
   //썸네일 보여주기
-  const ThumbnailView = Thumbnails.map((thumb) => (
+  const ThumbnailView = thumbnails.map((thumb) => (
     <div
       key={thumb}
       style={{
@@ -102,39 +102,44 @@ function PostModify(props) {
       <img
         src={thumb}
         name='thumbnail'
-        style={{ maxWidth: "100%", height: "auto" }}
+        style={{
+          maxWidth: "150px",
+          maxHeight: "150px",
+          width: "auto",
+          height: "auto",
+        }}
       />
     </div>
   ));
 
   //파일들 서버로 보내기
-  const OnFileUpload = (e) => {
+  const onFileUpload = (e) => {
     e.preventDefault();
 
-    const allFiles = [...Files, ...NewFiles];
+    const allFiles = [...files, ...newFiles];
 
-    if (!Title) {
+    if (!title) {
       alert("제목이 필요합니다!");
     } else if (allFiles.length === 0) {
       alert("파일 업로드가 필요합니다!");
     } else {
       const formdata = new FormData();
 
-      formdata.append("title", Title);
+      formdata.append("title", title);
 
       allFiles.forEach((file) => {
         formdata.append("photos", file);
       });
 
       //지울 파일이름들 추가
-      if (DeleteFiles)
-        DeleteFiles.forEach((files) => {
+      if (deleteFiles)
+        deleteFiles.forEach((files) => {
           formdata.append("deletedFiles", files);
         });
 
-      if (Description) formdata.append("description", Description);
-      if (Tags.length > 0) {
-        Tags.forEach((tag) => {
+      if (description) formdata.append("description", description);
+      if (tags.length > 0) {
+        tags.forEach((tag) => {
           formdata.append("tags", tag);
         });
       }
@@ -151,14 +156,14 @@ function PostModify(props) {
     }
   };
 
-  let DoubleSubmit = true;
+  let doubleSubmit = true;
 
   //중복 제출 방지
   const BlockDoubleSubmit = (e) => {
     //첫 제출
-    if (DoubleSubmit) {
-      OnFileUpload(e);
-      DoubleSubmit = false;
+    if (doubleSubmit) {
+      onFileUpload(e);
+      doubleSubmit = false;
     } else {
       alert("제출 중 입니다");
       return false;
@@ -184,7 +189,7 @@ function PostModify(props) {
               style={{ width: 500, height: 20 }}
               type='text'
               name='title'
-              value={Title}
+              value={title}
               onChange={onTitle}
             />
             <br />
@@ -193,14 +198,14 @@ function PostModify(props) {
               style={{ width: 500, height: 200 }}
               type='textarea'
               name='Description'
-              value={Description}
+              value={description}
               onChange={onDescription}
             />
             {/* 태그입력창 */}
             <div>
               <input
                 type='text'
-                value={CurrentTag}
+                value={currentTag}
                 name='tag'
                 onChange={onCurrentTag}
                 onKeyPress={onTagKeyPress}
@@ -209,8 +214,8 @@ function PostModify(props) {
                 추가
               </button>
               {/* 태그를 추가하면 태그 나타내기 */}
-              {Tags
-                ? Tags.map((tag) => (
+              {tags
+                ? tags.map((tag) => (
                     <div key={tag}>
                       #{tag}{" "}
                       <button
@@ -218,7 +223,7 @@ function PostModify(props) {
                         onClick={(e) => {
                           e.preventDefault();
                           const deleteTag = tag;
-                          setTags(Tags.filter((tag) => tag !== deleteTag));
+                          setTags(tags.filter((tag) => tag !== deleteTag));
                         }}
                       >
                         삭제
@@ -235,8 +240,8 @@ function PostModify(props) {
               }}
             >
               {/* 사진들 보여주기 */}
-              {Files
-                ? Files.map((photo) => (
+              {files
+                ? files.map((photo) => (
                     <div
                       style={{
                         display: "flex",
@@ -260,9 +265,9 @@ function PostModify(props) {
                         onClick={(e) => {
                           e.preventDefault();
                           const deleteId = photo._id;
-                          setDeleteFiles([...DeleteFiles, photo.filename]);
+                          setDeleteFiles([...deleteFiles, photo.filename]);
                           setFiles(
-                            Files.filter((photos) => photos._id !== deleteId)
+                            files.filter((photos) => photos._id !== deleteId)
                           );
                         }}
                       >

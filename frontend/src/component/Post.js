@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
+import { useHistory } from "react-router-dom";
 import { SERVER_API } from "../_actions/config";
 
 import Comment from "@material-ui/icons/Comment";
 import Visibility from "@material-ui/icons/Visibility";
 import FavoriteComponent from "../component/FavoriteComponent";
-import Loading from "./Loading";
 
 function Post({
   postid,
@@ -19,104 +19,108 @@ function Post({
   commentcnt,
   auth,
 }) {
-  const [Likecnt, setLikecnt] = useState(likecnt);
+  const history = useHistory();
 
   const posttimeView = (posttime) => {
-    const year = posttime.substring(0, 4);
-    const month = posttime.substring(5, 7);
-    const date = posttime.substring(8, 10);
+    const Year = posttime.substring(0, 4);
+    const Month = posttime.substring(5, 7);
+    const Date = posttime.substring(8, 10);
     return (
       <div>
-        Date: {year}. {month}. {date}.
+        Date: {Year}. {Month}. {Date}.
       </div>
     );
   };
 
   return (
-    <div>
-      <div
-        style={{
-          borderStyle: "solid",
-          width: 300,
-          margin: "5px 5px 0 10px",
-          padding: "5px",
+    <div
+      style={{
+        borderStyle: "solid",
+        height: 480,
+        margin: "5px 5px 0 5px",
+        padding: "7px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "flex-start",
+      }}
+    >
+      {/* 자신의 아이디 클릭시 마이페이지로,  */}
+      {/* 다른 유저의 아이디 클릭시 유저페이지로 */}
+      <button
+        type='button'
+        style={{ border: "none", background: "none", cursor:'pointer' }}
+        onClick={() => {
+          if (auth && auth.userid === owner) {
+            history.push("/mypage");
+          } else {
+            history.push(`/userDetail/${owner}`);
+          }
         }}
       >
-        {/* 자신의 아이디 클릭시 마이페이지로,  */}
-        {/* 다른 유저의 아이디 클릭시 유저페이지로 */}
-        {auth && auth.userid === owner ? (
-          <a href={`/mypage`}>{owner}</a>
-        ) : (
-          <a href={`/userDetail/${owner}`}>{owner}</a>
-        )}
-        <div
-          style={{
-            margin: "5vh 0 5vh 0",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: 300,
-            overflowX: "auto",
-            overflowY: "hidden",
-          }}
-        >
-          <div
+        {owner}
+      </button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: 295,
+          height: 295,
+          margin: "8px 5px",
+        }}
+      >
+        <a href={`/postDetail/${postid}`}>
+          {/* 제일 첫번째 사진 보여주기 */}
+          <img
+            src={`${SERVER_API}/images/${files[0].filename}`}
             style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 295,
-              height: 295,
-              margin: "0 auto",
+              maxWidth: 295,
+              maxHeight: 295,
+              width: "auto",
+              height: "auto",
             }}
-          >
-            <a href={`/postDetail/${postid}`}>
-              {/* 제일 첫번째 사진 보여주기 */}
-              <img
-                src={`${SERVER_API}/images/${files[0].filename}`}
-                style={{ maxWidth: "100%", height: "auto" }}
-              />
-            </a>
-          </div>
+          />
+        </a>
+      </div>
+      <div
+        style={{
+          width: "90%",
+          height: 114,
+          textOverflow: "ellipsis",
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <a href={`/postDetail/${postid}`}>
+          <div>{title}</div>
+        </a>
+        <div>{description}</div>
+        <div>
+          {tags
+            ? tags.map((tag) => (
+                <div key={tag} style={{ display: "inline" }}>
+                  #{tag}{" "}
+                </div>
+              ))
+            : ""}
         </div>
+        {posttimeView(posttime)}
         <div
           style={{
-            width: "90%",
-            textOverflow: "ellipsis",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
+            width: "60%",
+            display: "flex",
+            justifyContent: "space-between",
           }}
         >
-          <a href={`/postDetail/${postid}`}>
-            <div>{title}</div>
-          </a>
-          <div>{description}</div>
+          <FavoriteComponent postid={postid} postlikecnt={likecnt} />
           <div>
-            {tags
-              ? tags.map((tag) => (
-                  <div key={tag} style={{ display: "inline" }}>
-                    #{tag}{" "}
-                  </div>
-                ))
-              : ""}
+            <Visibility /> {viewcnt}
           </div>
-          {posttimeView(posttime)}
-          <div
-            style={{
-              width: "60%",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <FavoriteComponent postid={postid} postlikecnt={Likecnt} />
-            <div>
-              <Visibility /> {viewcnt}
-            </div>
 
-            <div>
-              <Comment />
-              {commentcnt}
-            </div>
+          <div>
+            <Comment />
+            {commentcnt}
           </div>
         </div>
       </div>

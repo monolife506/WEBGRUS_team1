@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { SERVER_API } from "../../_actions/config";
 
 function UserModify() {
-  const [OldPW, setOldPW] = useState(""); //변경하기 전 비번
-  const [NewPW, setNewPW] = useState(""); //변경할 비번
-  const [NewPWcheck, setNewPWcheck] = useState(""); //변경할 비번 체크
-  const [Email, setEmail] = useState(""); //변경할 이메일
+  const [oldPW, setOldPW] = useState(""); //변경하기 전 비번
+  const [newPW, setNewPW] = useState(""); //변경할 비번
+  const [newPWcheck, setNewPWcheck] = useState(""); //변경할 비번 체크
+  const [email, setEmail] = useState(""); //변경할 이메일
 
   const changeOldPW = (e) => {
     setOldPW(e.target.value);
@@ -25,14 +25,13 @@ function UserModify() {
   };
 
   const clickModify = (e) => {
-    if (NewPW === NewPWcheck) {
+    if (newPW === newPWcheck) {
       e.preventDefault();
       let body = {
-        oldpassword: OldPW,
-        useremail: Email,
-        password: NewPW,
+        oldpassword: oldPW,
+        useremail: email,
+        password: newPW,
       };
-      console.log(body);
       Axios.put(`${SERVER_API}/api/users`, body)
         .then((res) => {
           if (res.data.done) {
@@ -62,7 +61,7 @@ function UserModify() {
         <input
           type='password'
           name='oldpassword'
-          value={OldPW}
+          value={oldPW}
           onChange={changeOldPW}
         />
       </div>
@@ -72,7 +71,7 @@ function UserModify() {
         <input
           type='password'
           name='newpassword'
-          value={NewPW}
+          value={newPW}
           onChange={changeNewPW}
         />
       </div>
@@ -82,7 +81,7 @@ function UserModify() {
         <input
           type='password'
           name='newpasswordcheck'
-          value={NewPWcheck}
+          value={newPWcheck}
           onChange={changeNewPWcheck}
         />
       </div>
@@ -92,7 +91,7 @@ function UserModify() {
         <input
           type='text'
           name='useremail'
-          value={Email}
+          value={email}
           onChange={changeEmail}
         />
       </div>

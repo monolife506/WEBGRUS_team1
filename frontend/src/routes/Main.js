@@ -11,8 +11,8 @@ function Main(props) {
   const dispatch = useDispatch();
   const targetRef = useRef(null);
 
-  const [sortMode, setSortMode] = useState('times');
-  const [Posts, setPosts] = useState([]);
+  const [sortMode, setSortMode] = useState("times");
+  const [posts, setPosts] = useState([]);
   const [curPage, setCurPage] = useState(0);
   const [isLastPage, setLastPage] = useState(false);
 
@@ -23,11 +23,11 @@ function Main(props) {
       setPosts(res.payload);
       setCurPage(1);
     });
-  }
+  };
 
   useEffect(() => {
     setLastPage(false);
-    dispatch(getAllpost('times', 1)).then((res) => {
+    dispatch(getAllpost("times", 1)).then((res) => {
       setPosts(res.payload);
       setCurPage(1);
     });
@@ -39,14 +39,13 @@ function Main(props) {
       if (isIntersecting && !isLastPage) {
         dispatch(getAllpost(sortMode, curPage + 1)).then((res) => {
           if (res.payload.length > 0) {
-            setPosts(Posts.concat(res.payload));
+            setPosts(posts.concat(res.payload));
             setCurPage(curPage + 1);
           } else setLastPage(true);
         });
       }
-    }
+    },
   });
-
 
   //모든 포스트 가져오는 액션이 끝난 후 로드
   if (props.post.allpost) {
@@ -58,7 +57,7 @@ function Main(props) {
             type='button'
             name='times'
             onClick={() => {
-              changeSortMode('times');
+              changeSortMode("times");
             }}
           >
             최신순
@@ -67,7 +66,7 @@ function Main(props) {
             type='button'
             name='views'
             onClick={() => {
-              changeSortMode('views');
+              changeSortMode("views");
             }}
           >
             조회순
@@ -76,7 +75,7 @@ function Main(props) {
             type='button'
             name='likes'
             onClick={() => {
-              changeSortMode('likes');
+              changeSortMode("likes");
             }}
           >
             인기순
@@ -85,22 +84,15 @@ function Main(props) {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div
             style={{
-              width: "80vw",
+              width: "80%",
               display: "flex",
               flexWrap: "wrap",
-              justifyContent: "center",
+              justifyContent: "flex-start",
+              padding: 5
             }}
           >
-            {Posts
-              ? Posts.map((post) => (
-                <div
-                  key={post._id}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                  }}
-                >
+            {posts
+              ? posts.map((post) => (
                   <Post
                     key={post._id}
                     postid={post._id}
@@ -115,8 +107,7 @@ function Main(props) {
                     commentcnt={post.commentcnt}
                     auth={props.auth.userData}
                   />
-                </div>
-              ))
+                ))
               : ""}
           </div>
         </div>
