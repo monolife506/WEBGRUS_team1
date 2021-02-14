@@ -52,12 +52,19 @@ function ViewPostDetail({
             > */}
         {files
           ? files.map((file) => (
-              <div key={file._id}>
+              <div
+                key={file._id}
+                style={{
+                  margin: 10,
+                }}
+              >
                 <img
                   src={`${SERVER_API}/images/${file.filename}`}
                   style={{
-                    width: 500,
-                    height: 500,
+                    maxWidth: 700,
+                    maxHeight: 700,
+                    width: "auto",
+                    height: "auto",
                   }}
                 />
               </div>
@@ -78,7 +85,13 @@ function ViewPostDetail({
         <div>{description}</div>
         <div>
           <div>
-            {tags ? tags.map((tag) => <div key={tag} style={{ display: "inline" }}>#{tag} </div>) : ""}
+            {tags
+              ? tags.map((tag) => (
+                  <div key={tag} style={{ display: "inline" }}>
+                    #{tag}{" "}
+                  </div>
+                ))
+              : ""}
           </div>
         </div>
         <div>{posttime}</div>

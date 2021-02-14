@@ -25,7 +25,15 @@ function SearchPage() {
     () =>
       function Results() {
         return (
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            "{query.q}"의 검색결과 입니다...
             <div
               style={{
                 width: "80%",

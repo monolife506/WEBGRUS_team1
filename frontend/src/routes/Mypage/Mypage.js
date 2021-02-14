@@ -12,12 +12,12 @@ import ViewPosts from "./ViewPosts";
 function Mypage(props) {
   const auth = props.auth;
 
-  const [Menu, setMenu] = useState("myposts");
-  const [MyPosts, setMyPosts] = useState([]);
-  const [MyPostsNum, setMyPostsNum] = useState();
-  const [FavoritePosts, setFavoritePosts] = useState([]);
-  const [FavoritePostsNum, setFavoritePostsNum] = useState();
-  const [CurrentPage, setCurrentPage] = useState(1);
+  const [menu, setMenu] = useState("myposts");
+  const [myPosts, setMyPosts] = useState([]);
+  const [myPostsNum, setMyPostsNum] = useState();
+  const [favoritePosts, setFavoritePosts] = useState([]);
+  const [favoritePostsNum, setFavoritePostsNum] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     //auth action에서 userData를 가져올 때 까지 기다리기
@@ -62,9 +62,9 @@ function Mypage(props) {
   const SelectPage = (menu) => {
     let postNum;
     if (menu === "myposts") {
-      postNum = MyPostsNum;
+      postNum = myPostsNum;
     } else if (menu === "favoriteposts") {
-      postNum = FavoritePostsNum;
+      postNum = favoritePostsNum;
     }
     let array = [];
 
@@ -72,7 +72,6 @@ function Mypage(props) {
     for (var i = 1; i < parseInt(postNum / 10) + 2; i++) {
       array.push(i);
     }
-    console.log(array);
 
     return (
       <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -97,7 +96,7 @@ function Mypage(props) {
   //선택한 페이지 로드
   const ChangePage = (page, menu) => {
     //현재 페이지와 선택한 페이지가 같지 않을 때만 로드
-    if (CurrentPage !== page) {
+    if (currentPage !== page) {
       let userid = auth.userData.userid;
       if (menu === "myposts") {
         props.getUserposts({ userid, page }).then((res) => {
@@ -115,31 +114,31 @@ function Mypage(props) {
 
   //선택한 메뉴에 따라 창 로드
   const LoadByMenu = () => {
-    if (Menu === "myposts") {
+    if (menu === "myposts") {
       return (
         <>
           <ViewPosts
-            posts={MyPosts}
+            posts={myPosts}
             userid={auth.userData.userid}
             menu={"myposts"}
           />
           {SelectPage("myposts")}
         </>
       );
-    } else if (Menu === "favoriteposts") {
+    } else if (menu === "favoriteposts") {
       return (
         <>
           <ViewPosts
-            posts={FavoritePosts}
+            posts={favoritePosts}
             userid={auth.userData.userid}
             menu={"favoriteposts"}
           />
           {SelectPage("favoriteposts")}
         </>
       );
-    } else if (Menu === "modifyinform") {
+    } else if (menu === "modifyinform") {
       return <UserModify />;
-    } else if (Menu === "deleteuser") {
+    } else if (menu === "deleteuser") {
       return <UserDelete />;
     }
   };
