@@ -8,6 +8,10 @@ import {
 
 import { getPostDetail } from "../_actions/postAction";
 
+import "./CommentComponent.scss";
+import "../index.css";
+import "../reset.css";
+
 function CommentComponent(props) {
   const Comments = props.comments;
   const [commentValue, setCommentValue] = useState(""); //댓글 입력값
@@ -142,36 +146,36 @@ function CommentComponent(props) {
       >
         {Comments
           ? Comments.map((comment) => (
-              <div
-                style={{ borderStyle: "solid", margin: "5px" }}
-                key={comment._id}
-              >
-                {/* 수정할 댓글인 경우 수정창 로드 */}
-                {isModify && comment._id === modifyComment ? (
-                  <>
-                    <input
-                      style={{ width: "900px", height: "100px" }}
-                      type='textarea'
-                      name='Comment'
-                      value={modifyCommentValue}
-                      onChange={onChangeModifyComment}
-                      onKeyPress={onModifyPress}
-                    />
-                    {/* 댓글 올리기 버튼 */}
-                    <button type='button' onClick={onModifySubmit}>
-                      수정
+            <div
+              style={{ borderStyle: "solid", margin: "5px" }}
+              key={comment._id}
+            >
+              {/* 수정할 댓글인 경우 수정창 로드 */}
+              {isModify && comment._id === modifyComment ? (
+                <>
+                  <input
+                    style={{ width: "900px", height: "100px" }}
+                    type='textarea'
+                    name='Comment'
+                    value={modifyCommentValue}
+                    onChange={onChangeModifyComment}
+                    onKeyPress={onModifyPress}
+                  />
+                  {/* 댓글 올리기 버튼 */}
+                  <button type='button' onClick={onModifySubmit}>
+                    수정
                     </button>
-                    <button
-                      type='button'
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsModify(false);
-                      }}
-                    >
-                      취소
+                  <button
+                    type='button'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsModify(false);
+                    }}
+                  >
+                    취소
                     </button>
-                  </>
-                ) : (
+                </>
+              ) : (
                   // 수정하는 댓글이 아닐 경우 댓글 로드
                   <>
                     <div>작성자: {comment.owner} </div>
@@ -194,12 +198,12 @@ function CommentComponent(props) {
                         </button>
                       </div>
                     ) : (
-                      ""
-                    )}
+                        ""
+                      )}
                   </>
                 )}
-              </div>
-            ))
+            </div>
+          ))
           : ""}
       </div>
     );
@@ -227,8 +231,8 @@ function CommentComponent(props) {
           {Comments.length === 0 ? (
             <div>댓글이 없습니다...</div>
           ) : (
-            CommentsArray()
-          )}
+              CommentsArray()
+            )}
         </div>
       </div>
     </>

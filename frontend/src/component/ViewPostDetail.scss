@@ -1,0 +1,77 @@
+@mixin light-text {
+    font-family: "Noto Serif KR";
+    font-style: normal;
+    font-weight: 200;
+    font-size: 16px;
+    color: #4B4B4B;
+};
+
+.post {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    background: #FFFFFF;
+    border: {
+        style: solid;
+        color: #000000;
+        width: 3px;
+    };
+
+    .photo-container {
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .photo {
+            margin: {
+                left: 20px;
+                right: 20px;
+                top: 10px;
+                bottom: 10px;
+            };
+        };
+    };
+
+    .info-container {
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        width: 90%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+
+        .left-text {
+            .title-text {
+      
+            };
+      
+            .description-text {
+      
+            };
+        };
+      
+        .right-text {
+            .tag-text {
+                @include light-text;
+            };
+          
+            .date-text {
+                @include light-text;
+            };
+          
+            .info-text {
+                @include light-text;
+            };
+        };
+    };
+    
+    .bottom-box {
+
+    }
+};
