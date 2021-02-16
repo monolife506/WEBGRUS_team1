@@ -33,11 +33,12 @@ function ViewPostDetail({
   };
 
   return (
-    <div className="post">
-      <div className="photo-container">
+    <div>
+      <div className="post">
+        <div className="photo-container">
 
-        {/* 사진들 보여주기 - 사진 여러개면 slick사용 */}
-        {/* <Slider
+          {/* 사진들 보여주기 - 사진 여러개면 slick사용 */}
+          {/* <Slider
               {...slickSettings}
               style={{
                 borderStyle: "solid",
@@ -45,44 +46,42 @@ function ViewPostDetail({
               }}
             > */}
 
-        {files
-          ? files.map((file) => (
-            <div key={file._id} className="photo">
-              <img
-                src={`${SERVER_API}/images/${file.filename}`}
-                style={{
-                  maxWidth: 700,
-                  maxHeight: 700,
-                  width: "auto",
-                  height: "auto",
-                }}
-              />
-            </div>
-          ))
-          : ""}
+          {files
+            ? files.map((file) => (
+              <div key={file._id} className="photos">
+                <img
+                  src={`${SERVER_API}/images/${file.filename}`}
+                  alt={title}
+                  download={files.originalname}
+                />
+              </div>
+            ))
+            : ""}
 
-        {/* </Slider> */}
-      </div>
-
-      <div className="info-container">
-        <div>
-          <p>{title}</p>
-          <div>{description}</div>
+          {/* </Slider> */}
         </div>
-        <div>
-          <div>
-            {tags
-              ? tags.map((tag) => (
-                <div key={tag} style={{ display: "inline" }}>
-                  #{tag}{" "}
-                </div>
-              ))
-              : ""}
+
+        <div className="info-container">
+          <div className="left-text">
+            <div className="title-text">{title}</div>
+            <div className="description-text">{description}</div>
           </div>
-          <div>{posttime}</div>
-          <div>Like: {likecnt} View: {viewcnt} comment: {commentcnt}</div>
+          <div className="right-text">
+            <div className="tag-text">
+              {tags
+                ? tags.map((tag) => (
+                  <div key={tag} style={{ display: "inline" }}>
+                    #{tag}{" "}
+                  </div>
+                ))
+                : ""}
+            </div>
+            <div className="date-text">{posttime}</div>
+            <div className="info-text">Like: {likecnt} View: {viewcnt} comment: {commentcnt}</div>
+          </div>
         </div>
       </div>
+      <div className="bottom-box"></div>
     </div>
   );
 }
