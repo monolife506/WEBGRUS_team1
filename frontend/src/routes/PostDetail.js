@@ -100,11 +100,11 @@ function PostDetail(props) {
           {!props.post.postDetail ? (
             <div style={{ height: "100vh" }}></div>
           ) : (
-            <div style={{ marginLeft: "150px" }}>
-              <h2>{post.owner}</h2>
-              <FollowComponent userid={post.owner} />
-            </div>
-          )}
+              <div style={{ marginLeft: "150px" }}>
+                <h2>{post.owner}</h2>
+                <FollowComponent userid={post.owner} />
+              </div>
+            )}
         </>
       );
     }

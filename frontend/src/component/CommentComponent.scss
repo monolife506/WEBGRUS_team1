@@ -1,0 +1,107 @@
+
+@mixin comment-font {
+    font-family: "noto";
+    font-style: normal;
+    font-weight: 900;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.btn {
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    box-sizing: border-box;
+
+    width: 60px;
+    height: 30px;
+
+    margin-top: 5px;
+    margin-left: 10px;
+
+    @include comment-font;
+
+    transition: 0.3s;
+
+    &:hover {
+        background: #A7A7A7;
+    }
+};
+
+.comments {
+
+    display: flex;
+    flex-direction: column;
+
+    width: 50vw;
+    min-width: 400px;
+    max-width: 1000px;
+
+    .write-container {
+        
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        width: auto;
+
+        input {
+            flex-grow: 6;
+            border: {
+                style: solid;
+                width: 5px;
+            }
+        }
+
+        button {
+            flex-grow: 1;
+        }
+    }
+
+    .comments-container {
+        height: auto;
+
+        .comment {
+            display: flex;
+            flex-direction: column;
+            overflow: visible;
+
+            @media ( min-width: 1024px ) {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+            }
+            
+            background: #A7A7A7;
+            border: 2px solid #000000;
+
+            margin-top: 15px;
+            padding: 5px;
+
+            .content {
+                @include comment-font;
+
+                .bold {
+                    font-family: "notoBold";
+                }
+            }
+
+            .time {
+                @include comment-font;
+                
+                padding-top: 5px;
+
+                @media ( min-width: 1024px ) {
+                    padding-top: 0;
+                    min-width: 85px;
+                    align-self: center;
+                }
+            }
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+    }
+};
