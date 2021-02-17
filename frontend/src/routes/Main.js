@@ -53,6 +53,7 @@ function Main(props) {
       <>
         {/* 정렬버튼 */}
         <div>
+          <div style={{fontSize:16}}>
           <button
             type='button'
             name='times'
@@ -80,6 +81,7 @@ function Main(props) {
           >
             인기순
           </button>
+          </div>
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div
