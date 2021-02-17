@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const Post = require('../models/post.model');
+const Comment = require('../models/comment.model');
 
 /*
 POST /api/users
@@ -61,9 +62,22 @@ async function deleteUser(req, res, next) {
         const user = await User.findOne({ userid: curUser });
         if (!user) return res.status(404).json({ error: "Users not found", done: false });
 
-        const pwdCheck = await bcrypt.compare(password, user.password)
+        const pwdCheck = await bcrypt.compare(password, user.password);
         if (!pwdCheck) res.status(401).json({ error: "Wrong password", done: false });
 
+        // 작성한 글들 지우기
+        const posts = await Post.find({});
+        if (posts) {
+            for (const post of posts) {
+                const postId = post._id;
+                await User.updateMany({ watched: postId }, { $pull: { watched: postId } });
+                await User.updateMany({ favorites: postId }, { $pull: { favorites: postId } });
+                await Comment.deleteMany({ post_id: postId });
+                await post.deleteOne();
+            }
+        }
+
+        await Comment.deleteMany({ owner: curUser });
         await User.updateMany({ followings: curUser }, { $pull: { followings: curUser }, $inc: { followingcnt: -1 } });
         await user.deleteOne();
         return res.status(200).json({ done: true });
