@@ -120,19 +120,22 @@ function CommentComponent(props) {
 
   //댓글 작성 창
   const WriteComment = (
-    <div>
-      <input
-        className="write-container"
-        type='textarea'
-        name='Comment'
-        value={commentValue}
-        onChange={onChangeComment}
-        onKeyPress={onUploadKeyPress}
-      />
+    <div className="write-container">
+      <div className='textarea-container'>
+        <textarea
+          name='Comment'
+          value={commentValue}
+          onChange={onChangeComment}
+          onKeyPress={onUploadKeyPress}
+        />
+      </div>
+
       {/* 댓글 올리기 버튼 */}
-      <button type='button' onClick={onSubmit}>
-        댓글
-      </button>
+      <div className='btn-container'>
+        <button className='btn-submit' type='button' onClick={onSubmit}>댓글</button>
+        <div className='btn-submit-bottom' />
+      </div>
+
     </div>
   );
 
@@ -141,44 +144,48 @@ function CommentComponent(props) {
       <div className="comments-container">
         {Comments ? Comments.map((comment) => (
           <div>
-            <div className="comment" key={comment._id}>
-              {/* 수정할 댓글인 경우 수정창 로드 */}
-              {isModify && comment._id === modifyComment ? (
-                <>
-                  <input
-                    style={{ width: "900px", height: "100px" }}
-                    type='textarea'
-                    name='Comment'
-                    value={modifyCommentValue}
-                    onChange={onChangeModifyComment}
-                    onKeyPress={onModifyPress}
-                  />
-                  {/* 댓글 올리기 버튼 */}
-                  <button type='button' onClick={onModifySubmit}>수정</button>
-                  <button
-                    type='button'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsModify(false);
-                    }}
-                  >
-                    취소
-                </button>
-                </>
-              ) : (
-                  // 수정하는 댓글이 아닐 경우 댓글 로드
-                  <>
-                    <div className="content"><span className="bold">{comment.owner} : </span>{comment.content}</div>
-                    <div className="time">{CommentTime(comment.posttime)}</div>
-                  </>
-                )}
-            </div>
-
+            {/* 수정할 댓글인 경우 수정창 로드 */}
+            {isModify && comment._id === modifyComment ? (
+              <div className="input" key={comment._id}>
+                <textarea
+                  key={comment._id}
+                  type='textarea'
+                  name='Comment'
+                  rows='4'
+                  value={modifyCommentValue}
+                  onChange={onChangeModifyComment}
+                  onKeyPress={onModifyPress}
+                />
+              </div>
+            ) : (
+                // 수정하는 댓글이 아닐 경우 댓글 로드
+                <div className="comment" key={comment._id}>
+                  <div className="content"><span className="bold">{comment.owner} : </span>{comment.content}</div>
+                  <div className="time">{CommentTime(comment.posttime)}</div>
+                </div>
+              )}
             {/* 내가 작성한 댓글일 때만 수정, 삭제 버튼 나타남 */}
             {auth.userData && auth.userData.userid === comment.owner ? (
               <div className='btn-container'>
-                <button className='btn' type='button' onClick={(e) => onModify(comment._id)}>수정</button>
-                <button className='btn' type='button' onClick={(e) => ondelete(e, comment._id)}>삭제</button>
+                {(isModify && comment._id === modifyComment) ? (
+                  <>
+                    <button
+                      className='btn'
+                      type='button'
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsModify(false);
+                      }}>
+                      취소
+                    </button>
+                    <button className='btn' type='button' onClick={onModifySubmit}>수정</button>
+                  </>
+                ) : (
+                    <>
+                      <button className='btn' type='button' onClick={(e) => ondelete(e, comment._id)}>삭제</button>
+                      <button className='btn' type='button' onClick={(e) => onModify(comment._id)}>수정</button>
+                    </>
+                  )}
               </div>
             ) : ("")}
           </div>
