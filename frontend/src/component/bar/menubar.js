@@ -25,15 +25,16 @@ function SimpleMenu(props) {
     dispatch(logoutUser());
     history.push("/login");
   };
-  if (props.auth.status !== "LOADING")
+
+  if (props.auth.status.auth === "SUCCESS") {
     return (
       <div className='nav'>
-        <button
+        <button className='mymenu'
           aria-controls='menubar'
           aria-haspopup='true'
           onClick={handleClick}
         >
-          {props.auth.userData}
+          {props.auth.userData.userid} 님
         </button>
         <Menu
           id='menubar'
@@ -42,7 +43,6 @@ function SimpleMenu(props) {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-
           <MenuItem>
             <Link to={{ pathname: "/newpost" }}> 디자인올리기</Link>
           </MenuItem>
@@ -57,10 +57,12 @@ function SimpleMenu(props) {
           </MenuItem>
 
           <MenuItem onClick={onLogout}>로그아웃</MenuItem>
-          
         </Menu>
       </div>
     );
+  } else {
+    return <></>;
+  }
 }
 
 const mapStateToProps = (state) => ({
