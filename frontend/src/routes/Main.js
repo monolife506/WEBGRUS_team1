@@ -8,18 +8,18 @@ import Loading from "../component/Loading";
 import useInfinteScroll from "../hoc/infiniteScroll";
 import styled from "styled-components";
 
-const SortButton=styled.button`
+const SortButton = styled.button`
   &:before {
-    content : "|  ";
-    color: #6E933E;
-    font-weight : 900;
+    content: "|  ";
+    color: #6e933e;
+    font-weight: 900;
     position: relative;
-    right:3px
+    right: 3px;
   }
   &:first-child:before {
-    content : ''
+    content: "";
   }
-`
+`;
 
 function Main(props) {
   const dispatch = useDispatch();
@@ -66,7 +66,7 @@ function Main(props) {
     return (
       <>
         {/* 정렬버튼 */}
-        <div style={{fontSize:16}}>
+        <div style={{ fontSize: 16 }}>
           <SortButton
             type='button'
             name='times'
@@ -98,11 +98,11 @@ function Main(props) {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div
             style={{
-              width: "80%",
+              width: "85%",
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "flex-start",
-              padding: 5
+              padding: 5,
             }}
           >
             {posts

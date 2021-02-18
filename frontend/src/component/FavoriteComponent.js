@@ -26,9 +26,9 @@ function FavoriteComponent({ postid, postlikecnt }) {
   //하트 아이콘 상태표시
   const favoriteToggleChange = () => {
     if (favoriteToggle) {
-      return <Favorite />;
+      return <Favorite fontSize='small' color='secondary' />;
     } else {
-      return <FavoriteBorder />;
+      return <FavoriteBorder fontSize='small' color='action' />;
     }
   };
 
@@ -40,8 +40,7 @@ function FavoriteComponent({ postid, postlikecnt }) {
           if (res.payload.status === "add") {
             setFavoriteNum(favoriteNum + 1);
             setFavoriteToggle(true);
-
-          } else if(res.payload.status === "del"){
+          } else if (res.payload.status === "del") {
             setFavoriteNum(favoriteNum - 1);
             setFavoriteToggle(false);
           }
