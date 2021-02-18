@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { followCheck, followToggle } from "../_actions/followAction";
 
+import "../routes/PostDetail.scss";
+
 function FollowComponent({ userid }) {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
@@ -36,10 +38,11 @@ function FollowComponent({ userid }) {
   };
 
   return (
-    <div>
-      <button type='button' name='팔로우' onClick={onFollow}>
+    <div className='btn-container'>
+      <button className='top-btn' type='button' name='팔로우' onClick={onFollow}>
         {isFollow ? "팔로우취소" : "팔로우"}
       </button>
+      <div className='btn-bottom' />
     </div>
   );
 }
