@@ -87,6 +87,26 @@ textarea {
     min-width: 400px;
     max-width: 1000px;
 
+    .no-comment {
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+
+        @media ( min-width: 1024px ) {
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+        }
+        
+        background: #A7A7A7;
+        border: 2px solid #000000;
+
+        margin-top: 15px;
+        padding: 5px;
+
+        @include comment-font;
+    }
+
     .write-container {
         
         display: flex;

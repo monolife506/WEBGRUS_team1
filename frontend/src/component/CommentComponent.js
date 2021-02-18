@@ -202,7 +202,7 @@ function CommentComponent(props) {
         <div>
           {/* 댓글이 없을경우와 있을경우 다르게 로드 */}
           {Comments.length === 0 ? (
-            <div>댓글이 없습니다...</div>
+            <div className='no-comment'>댓글이 없습니다...</div>
           ) : (
               CommentsArray()
             )}
