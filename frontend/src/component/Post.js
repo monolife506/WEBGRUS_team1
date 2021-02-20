@@ -2,8 +2,8 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { SERVER_API } from "../_actions/config";
 
-import Comment from "@material-ui/icons/Comment";
-import Visibility from "@material-ui/icons/Visibility";
+import SmsIconOutlined from "@material-ui/icons/SmsOutlined";
+import VisibilityOutlined from "@material-ui/icons/VisibilityOutlined";
 import FavoriteComponent from "../component/FavoriteComponent";
 
 function Post({
@@ -26,8 +26,15 @@ function Post({
     const Month = posttime.substring(5, 7);
     const Date = posttime.substring(8, 10);
     return (
-      <div>
-        Date: {Year}. {Month}. {Date}.
+      <div
+        style={{
+          marginRight: 10,
+          color: "#4B4B4B",
+          fontWeight: 200,
+          fontSize: 12,
+        }}
+      >
+        {Year}. {Month}. {Date}.
       </div>
     );
   };
@@ -35,31 +42,58 @@ function Post({
   return (
     <div
       style={{
-        borderStyle: "solid",
         height: 480,
-        margin: "5px 5px 0 5px",
-        padding: "7px",
+        width: 317,
+        position: "relative",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "flex-start",
+        alignItems: "center",
+        margin: "10px 15px 10px 15px",
+        padding: "3px",
+        backgroundColor: "white",
       }}
     >
-      {/* 자신의 아이디 클릭시 마이페이지로,  */}
-      {/* 다른 유저의 아이디 클릭시 유저페이지로 */}
-      <button
-        type='button'
-        style={{ border: "none", background: "none", cursor:'pointer' }}
-        onClick={() => {
-          if (auth && auth.userid === owner) {
-            history.push("/mypage");
-          } else {
-            history.push(`/userDetail/${owner}`);
-          }
+      <div
+        style={{
+          height: 30,
+          width: "100%",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          fontWeight: 500,
+          fontSize: 14,
+          backgroundColor: "#DDDDDD",
         }}
       >
-        {owner}
-      </button>
+        {/* 자신의 아이디 클릭시 마이페이지로,  */}
+        {/* 다른 유저의 아이디 클릭시 유저페이지로 */}
+        <button
+          type='button'
+          style={{
+            marginLeft: 10,
+            backgroundColor: "#DDDDDD",
+          }}
+          onClick={() => {
+            if (auth && auth.userid === owner) {
+              history.push("/mypage");
+            } else {
+              history.push(`/userDetail/${owner}`);
+            }
+          }}
+        >
+          {owner}
+        </button>
+        {posttimeView(posttime)}
+      </div>
+      {/* 한줄데코 */}
+      <div
+        style={{
+          backgroundColor: "#white",
+          height: "4px",
+          width: "100%",
+          borderBottom: "2px solid #BBBBBB",
+        }}
+      ></div>
       <div
         style={{
           display: "flex",
@@ -83,45 +117,67 @@ function Post({
           />
         </a>
       </div>
+
+      {/* 제목, 작품설명, 태그 */}
       <div
         style={{
-          width: "90%",
+          width: "85%",
           height: 114,
+          position: "relative",
           textOverflow: "ellipsis",
           overflow: "hidden",
           whiteSpace: "nowrap",
         }}
       >
         <a href={`/postDetail/${postid}`}>
-          <div>{title}</div>
+          <div style={{ fontWeight: 600, marginBottom: 2 }}>{title}</div>
         </a>
-        <div>{description}</div>
+        <div style={{ fontWeight: 300, fontSize: "15px", marginBottom: 2 }}>
+          {description}
+        </div>
         <div>
           {tags
             ? tags.map((tag) => (
-                <div key={tag} style={{ display: "inline" }}>
+                <div
+                  key={tag}
+                  style={{
+                    display: "inline",
+                    position: "absolute",
+                    right: 5,
+                    fontWeight: 200,
+                    fontSize: "13px",
+                    color: "#4B4B4B",
+                  }}
+                >
                   #{tag}{" "}
                 </div>
               ))
             : ""}
         </div>
-        {posttimeView(posttime)}
-        <div
-          style={{
-            width: "60%",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <FavoriteComponent postid={postid} postlikecnt={likecnt} />
-          <div>
-            <Visibility /> {viewcnt}
-          </div>
+      </div>
 
-          <div>
-            <Comment />
-            {commentcnt}
-          </div>
+      {/* 좋아요, 뷰수, 댓글수 */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 13,
+          width: "85%",
+          display: "flex",
+          justifyContent: "space-between",
+          borderTop: "2px solid #BBBBBB",
+          paddingTop: 15,
+          marginTop: 10,
+          fontWeight: 200,
+          fontSize: 12,
+        }}
+      >
+        <FavoriteComponent postid={postid} postlikecnt={likecnt} />
+        <div>
+          <VisibilityOutlined fontSize='small' color='action' /> {viewcnt}
+        </div>
+
+        <div>
+          <SmsIconOutlined fontSize='small' color='action' /> {commentcnt}
         </div>
       </div>
     </div>

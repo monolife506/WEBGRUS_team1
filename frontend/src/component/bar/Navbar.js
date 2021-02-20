@@ -6,20 +6,23 @@ import Searchbar from "./Searchbar";
 
 function Navbar() {
   return (
-    <>
+    <div>
       <div
         style={{
-          backgroundColor: "#B2B2B2",
           height: "67px",
+          position: "relative",
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: "center",
           alignItems: "center",
+          backgroundColor: "#B2B2B2",
           borderBottom: "1px solid black",
         }}
       >
         <div
           style={{
+            position: "absolute",
+            left: 10,
             marginLeft: "20px",
             fontFamily: "notoBold",
             fontSize: "46px",
@@ -34,10 +37,12 @@ function Navbar() {
         <div>
           <Searchbar />
         </div>
-        <div style={{ marginRight: "10px" }}>
+        <div style={{ position: "absolute", right: 20, marginRight: "10px" }}>
           <Right />
         </div>
       </div>
+
+      {/* 한줄데코 */}
       <div
         style={{
           backgroundColor: "#EEEEEE",
@@ -45,7 +50,7 @@ function Navbar() {
           borderBottom: "2px solid black",
         }}
       ></div>
-    </>
+    </div>
   );
 }
 

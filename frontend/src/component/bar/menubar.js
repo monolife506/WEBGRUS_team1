@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Link, useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { logoutUser } from "../../_actions/authAction";
 import "./bar.scss";
 
@@ -26,44 +26,47 @@ function SimpleMenu(props) {
     history.push("/login");
   };
 
-  return (
-    <div className='nav'>
-      <button
-        aria-controls='menubar'
-        aria-haspopup='true'
-        onClick={handleClick}
-      >
-        마이페이지
-      </button>
-      <Menu
-        id='menubar'
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        {/* <MenuItem>
-          <Link
-            to={{ pathname: "" }}
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            내 계정
-          </Link>
-        </MenuItem> */}
+  if (props.auth.status.auth === "SUCCESS") {
+    return (
+      <div className='nav'>
+        <button className='mymenu'
+          aria-controls='menubar'
+          aria-haspopup='true'
+          onClick={handleClick}
+        >
+          {props.auth.userData.userid} 님
+        </button>
+        <Menu
+          id='menubar'
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem>
+            <Link to={{ pathname: "/newpost" }}> 디자인올리기</Link>
+          </MenuItem>
 
-        <MenuItem>
-          <Link
-            to={{ pathname: "/mypage" }}
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            마이페이지
-          </Link>
-        </MenuItem>
+          <MenuItem>
+            <Link
+              to={{ pathname: "/mypage" }}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              마이페이지
+            </Link>
+          </MenuItem>
 
-        <MenuItem onClick={onLogout}>로그아웃</MenuItem>
-      </Menu>
-    </div>
-  );
+          <MenuItem onClick={onLogout}>로그아웃</MenuItem>
+        </Menu>
+      </div>
+    );
+  } else {
+    return <></>;
+  }
 }
 
-export default SimpleMenu;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps)(SimpleMenu);

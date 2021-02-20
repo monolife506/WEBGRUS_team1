@@ -6,6 +6,20 @@ import { getAllpost } from "../_actions/postAction";
 import Post from "../component/Post";
 import Loading from "../component/Loading";
 import useInfinteScroll from "../hoc/infiniteScroll";
+import styled from "styled-components";
+
+const SortButton = styled.button`
+  &:before {
+    content: "|  ";
+    color: #6e933e;
+    font-weight: 900;
+    position: relative;
+    right: 3px;
+  }
+  &:first-child:before {
+    content: "";
+  }
+`;
 
 function Main(props) {
   const dispatch = useDispatch();
@@ -52,8 +66,8 @@ function Main(props) {
     return (
       <>
         {/* 정렬버튼 */}
-        <div>
-          <button
+        <div style={{ fontSize: 16 }}>
+          <SortButton
             type='button'
             name='times'
             onClick={() => {
@@ -61,8 +75,8 @@ function Main(props) {
             }}
           >
             최신순
-          </button>
-          <button
+          </SortButton>
+          <SortButton
             type='button'
             name='views'
             onClick={() => {
@@ -70,8 +84,8 @@ function Main(props) {
             }}
           >
             조회순
-          </button>
-          <button
+          </SortButton>
+          <SortButton
             type='button'
             name='likes'
             onClick={() => {
@@ -79,16 +93,16 @@ function Main(props) {
             }}
           >
             인기순
-          </button>
+          </SortButton>
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div
             style={{
-              width: "80%",
+              width: "85%",
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "flex-start",
-              padding: 5
+              padding: 5,
             }}
           >
             {posts

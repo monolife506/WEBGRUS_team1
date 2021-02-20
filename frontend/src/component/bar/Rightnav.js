@@ -10,18 +10,9 @@ function Rightnav(props) {
   if (props.auth.isAuth) {
     return (
       <div className='nav'>
-        <ul>
-          <li>
-            <div>
-              <Link to={{ pathname: "/newpost" }}> 디자인올리기</Link>
-            </div>
-          </li>
-          <li>
-            <div>
-              <Menubar />
-            </div>
-          </li>
-        </ul>
+        <div>
+          <Menubar />
+        </div>
       </div>
     );
   } else {
