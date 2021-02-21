@@ -42,13 +42,14 @@ function Post({
   return (
     <div
       style={{
-        height: 480,
-        width: 317,
+        minHeight: 390,
+        minWidth: 250,
+        height: 420,
+        width: '100%',
         position: "relative",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        margin: "10px 15px 10px 15px",
         padding: "3px",
         backgroundColor: "white",
       }}
@@ -99,8 +100,9 @@ function Post({
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          width: 295,
-          height: 295,
+          width: "95%",
+          height: "55%",
+          overflow: "hidden",
           margin: "8px 5px",
         }}
       >
@@ -109,8 +111,8 @@ function Post({
           <img
             src={`${SERVER_API}/images/${files[0].filename}`}
             style={{
-              maxWidth: 295,
-              maxHeight: 295,
+              maxWidth: 230,
+              maxHeight: '100%',
               width: "auto",
               height: "auto",
             }}
@@ -123,7 +125,8 @@ function Post({
         style={{
           width: "85%",
           height: 114,
-          position: "relative",
+          position: "absolute",
+          bottom: 13,
           textOverflow: "ellipsis",
           overflow: "hidden",
           whiteSpace: "nowrap",
@@ -135,15 +138,19 @@ function Post({
         <div style={{ fontWeight: 300, fontSize: "15px", marginBottom: 2 }}>
           {description}
         </div>
-        <div>
+        <div
+          style={{
+            position: "absolute",
+            right: 5,
+          }}
+        >
           {tags
             ? tags.map((tag) => (
                 <div
                   key={tag}
                   style={{
                     display: "inline",
-                    position: "absolute",
-                    right: 5,
+                    marginLeft: 2,
                     fontWeight: 200,
                     fontSize: "13px",
                     color: "#4B4B4B",
@@ -160,12 +167,12 @@ function Post({
       <div
         style={{
           position: "absolute",
-          bottom: 13,
+          bottom: 11,
           width: "85%",
           display: "flex",
           justifyContent: "space-between",
           borderTop: "2px solid #BBBBBB",
-          paddingTop: 15,
+          paddingTop: 13,
           marginTop: 10,
           fontWeight: 200,
           fontSize: 12,
