@@ -1,11 +1,11 @@
 import React from 'react'
 import SearchComponent from '../SearchComponent'
 
-function Searchbar() {
+function Searchbar({small}) {
     return (
         <div>
              {/* 검색창 */}
-             <SearchComponent />
+             <SearchComponent small={small} />
         </div>
     )
 }
