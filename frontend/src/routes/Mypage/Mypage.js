@@ -9,6 +9,8 @@ import UserModify from "./UserModify";
 import UserDelete from "./UserDelete";
 import ViewPosts from "./ViewPosts";
 
+import "./Mypage.scss";
+
 function Mypage(props) {
   const auth = props.auth;
 
@@ -146,16 +148,8 @@ function Mypage(props) {
   // 나의 계정이 확인 된 후 로드
   if (auth.status.auth === "SUCCESS") {
     return (
-      <div style={{ marginLeft: "100px" }}>
-        <div
-          style={{
-            position: "absolute",
-            left: 10,
-            top: 150,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+      <div className="mypage-container">
+        <div className="top-menu">
           <button type='button' onClick={onMyPost}>
             내 게시물
           </button>
@@ -171,14 +165,10 @@ function Mypage(props) {
         </div>
 
         {/* 메뉴 */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
+        <div className="main">
           {LoadByMenu()}
+          <div className="bottom">
+          </div>
         </div>
       </div>
     );

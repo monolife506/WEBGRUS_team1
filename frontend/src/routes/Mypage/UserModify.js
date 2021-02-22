@@ -2,6 +2,9 @@ import Axios from "axios";
 import React, { useState } from "react";
 import { SERVER_API } from "../../_actions/config";
 
+import "./Mypage.scss";
+import "./UserModify.scss";
+
 function UserModify() {
   const [oldPW, setOldPW] = useState(""); //변경하기 전 비번
   const [newPW, setNewPW] = useState(""); //변경할 비번
@@ -55,9 +58,9 @@ function UserModify() {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
-      <div>
-        현재 비밀번호:{" "}
+    <div className="mypage-content">
+      <div className="text-field">
+        <div className="field-name">현재 비밀번호</div>
         <input
           type='password'
           name='oldpassword'
@@ -65,9 +68,8 @@ function UserModify() {
           onChange={changeOldPW}
         />
       </div>
-      <br />
-      <div>
-        변경할 비밀번호:{" "}
+      <div className="text-field">
+        <div className="field-name">변경할 비밀번호</div>
         <input
           type='password'
           name='newpassword'
@@ -75,9 +77,8 @@ function UserModify() {
           onChange={changeNewPW}
         />
       </div>
-      <br />
-      <div>
-        변경할 비밀번호 확인:{" "}
+      <div className="text-field">
+        <div className="field-name">변경할 비밀번호 확인</div>
         <input
           type='password'
           name='newpasswordcheck'
@@ -85,9 +86,8 @@ function UserModify() {
           onChange={changeNewPWcheck}
         />
       </div>
-      <br />
-      <div>
-        변경할 이메일:{" "}
+      <div className="text-field">
+        <div className="field-name">변경할 이메일</div>
         <input
           type='text'
           name='useremail'
@@ -95,9 +95,14 @@ function UserModify() {
           onChange={changeEmail}
         />
       </div>
-      <button type='submit' onClick={clickModify}>
-        변경하기
-      </button>
+      <div className="btn-container">
+        <div className="btn-wrapper">
+          <button type='submit' onClick={clickModify}>
+            변경하기
+          </button>
+          <div className='btn-bottom' />
+        </div>
+      </div>
     </div>
   );
 }

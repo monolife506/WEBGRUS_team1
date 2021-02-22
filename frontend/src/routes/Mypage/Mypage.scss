@@ -1,0 +1,49 @@
+.mypage-container {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .top-menu {
+
+        .left {
+            
+        }
+
+        .right {
+
+        }
+    }
+
+    .main {
+        .mypage-content {
+            width: 60vw;
+            min-width: 400px;
+            max-width: 1200px;
+
+            min-height: 400px;
+            height: fit-content;
+
+            background: #FFFFFF;
+            border: {
+                style: solid;
+                color: #000000;
+                width: 3px;
+            }
+        }
+
+        .bottom {
+            width: 60vw;
+            min-width: 400px;
+            max-width: 1200px;
+            height: 9px;
+    
+            border: {
+                style: solid;
+                color: #000000;
+                width: 3px;
+                top-width: 0;
+            }
+        }
+    }
+}
