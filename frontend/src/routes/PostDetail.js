@@ -10,6 +10,10 @@ import { postDelete } from "../_actions/postAction";
 import { getPostDetail } from "../_actions/postAction";
 import { getComment } from "../_actions/commentAction";
 
+import "./PostDetail.scss";
+import "../index.css";
+import "../reset.css";
+
 function PostDetail(props) {
   const history = useHistory();
   const param = useParams();
@@ -62,34 +66,42 @@ function PostDetail(props) {
     //내가 올린 포스트인 경우 수정 및 삭제 버튼 나오게
     if (auth.userData && auth.userData.userid === post.owner) {
       return (
-        <div style={{ marginLeft: "200px" }}>
-          <button
-            name='modify'
-            onClick={() => {
-              history.push(`/postModify/${postid}`);
-            }}
-          >
-            수정
-          </button>
-          <button
-            name='delete'
-            onClick={(e) => {
-              let Confirm = window.confirm("정말로 삭제하시겠습니까?");
-              if (Confirm) {
-                e.preventDefault();
-                dispatch(postDelete(postid)).then((response) => {
-                  //삭제 성공시 마이페이지로 이동
-                  if (response) {
-                    history.push(`/mypage`);
-                  } else {
-                    alert("게시물 삭제에 실패했습니다.");
-                  }
-                });
-              }
-            }}
-          >
-            삭제
-          </button>
+        <div className='top-container'>
+          <div className='btn-container btn-container-top'>
+            <button
+              name='modify'
+              className='top-btn'
+              onClick={() => {
+                history.push(`/postModify/${postid}`);
+              }}
+            >
+              수정
+            </button>
+            <div className='btn-bottom' />
+          </div>
+          <div className='btn-container btn-container-top'>
+            <button
+              name='delete'
+              className='top-btn'
+              onClick={(e) => {
+                let Confirm = window.confirm("정말로 삭제하시겠습니까?");
+                if (Confirm) {
+                  e.preventDefault();
+                  dispatch(postDelete(postid)).then((response) => {
+                    //삭제 성공시 마이페이지로 이동
+                    if (response) {
+                      history.push(`/mypage`);
+                    } else {
+                      alert("게시물 삭제에 실패했습니다.");
+                    }
+                  });
+                }
+              }}
+            >
+              삭제
+            </button>
+            <div className='btn-bottom' />
+          </div>
         </div>
       );
     }
@@ -100,11 +112,14 @@ function PostDetail(props) {
           {!props.post.postDetail ? (
             <div style={{ height: "100vh" }}></div>
           ) : (
-            <div style={{ marginLeft: "150px" }}>
-              <h2>{post.owner}</h2>
-              <FollowComponent userid={post.owner} />
-            </div>
-          )}
+              <div className='top-container'>
+                <h2>{post.owner}</h2>
+
+                <div className='follow'>
+                  <FollowComponent userid={post.owner} />
+                </div>
+              </div>
+            )}
         </>
       );
     }
@@ -112,7 +127,6 @@ function PostDetail(props) {
 
   return (
     <>
-      {postButton()}
       <div
         style={{
           display: "flex",
@@ -120,6 +134,7 @@ function PostDetail(props) {
           alignItems: "center",
         }}
       >
+        {postButton()}
         <ViewPostDetail
           postid={post._id}
           title={post.title}
