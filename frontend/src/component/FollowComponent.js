@@ -40,7 +40,7 @@ function FollowComponent({ userid }) {
   return (
     <div className='btn-container'>
       <button className='top-btn' type='button' name='팔로우' onClick={onFollow}>
-        {isFollow ? "팔로우취소" : "팔로우"}
+        {isFollow ? "팔로우 취소" : "팔로우"}
       </button>
       <div className='btn-bottom' />
     </div>

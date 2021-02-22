@@ -33,7 +33,7 @@ function ViewPostDetail({
   };
 
   return (
-    <div>
+    <div className="post-container">
       <div className="post">
         <div className="photo-container">
 

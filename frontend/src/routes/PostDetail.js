@@ -128,6 +128,7 @@ function PostDetail(props) {
   return (
     <>
       <div
+        className='post-detail'
         style={{
           display: "flex",
           flexDirection: "column",
