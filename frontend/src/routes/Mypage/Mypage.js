@@ -145,30 +145,42 @@ function Mypage(props) {
     }
   };
 
+  const RenderBottom = () => {
+    if (menu === "modifyinform" || menu === "deleteuser")
+      return <div className='bottom'></div>
+    else
+      return <div />
+  }
+
   // 나의 계정이 확인 된 후 로드
   if (auth.status.auth === "SUCCESS") {
     return (
       <div className="mypage-container">
         <div className="top-menu">
-          <button type='button' onClick={onMyPost}>
-            내 게시물
-          </button>
-          <button type='button' onClick={onFavoritePost}>
-            내가 좋아하는 게시물
-          </button>
-          <button type='button' onClick={onModifyInform}>
-            개인정보 수정
-          </button>
-          <button type='button' onClick={onDeleteUser}>
-            회원 탈퇴
-          </button>
+          <div className="left">
+            <button type='button' onClick={onMyPost}>
+              {(menu === "myposts") ? <span style={{ fontFamily: "notoBold" }}>내 게시물</span> : <>내 게시물</>}
+            </button>
+            <span className="separator" />
+            <button type='button' onClick={onFavoritePost}>
+              {(menu === "favoriteposts") ? <span style={{ fontFamily: "notoBold" }}>좋아한 게시물</span> : <>좋아한 게시물</>}
+            </button>
+          </div>
+          <div className="right">
+            <button type='button' onClick={onModifyInform}>
+              {(menu === "modifyinform") ? <span style={{ fontFamily: "notoBold" }}>개인정보 수정</span> : <>개인정보 수정</>}
+            </button>
+            <span className="separator" />
+            <button type='button' onClick={onDeleteUser}>
+              {(menu === "deleteuser") ? <span style={{ fontFamily: "notoBold" }}>회원 탈퇴</span> : <>회원 탈퇴</>}
+            </button>
+          </div>
         </div>
 
         {/* 메뉴 */}
         <div className="main">
           {LoadByMenu()}
-          <div className="bottom">
-          </div>
+          {RenderBottom()}
         </div>
       </div>
     );
