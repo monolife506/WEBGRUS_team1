@@ -29,7 +29,8 @@ function SimpleMenu(props) {
   if (props.auth.status.auth === "SUCCESS") {
     return (
       <div className='nav'>
-        <button className='mymenu'
+        <button
+          className='mymenu'
           aria-controls='menubar'
           aria-haspopup='true'
           onClick={handleClick}
@@ -56,7 +57,9 @@ function SimpleMenu(props) {
             </Link>
           </MenuItem>
 
-          <MenuItem onClick={onLogout}>로그아웃</MenuItem>
+          <MenuItem onClick={onLogout}>
+            <div>로그아웃</div>
+          </MenuItem>
         </Menu>
       </div>
     );
