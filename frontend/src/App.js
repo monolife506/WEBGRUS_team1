@@ -11,7 +11,7 @@ import PostDetail from "./routes/PostDetail";
 import PostModify from "./routes/PostModify";
 import UserDetail from "./routes/UserDetail";
 import SearchPage from "./routes/SearchPage";
-import Auth from './hoc/auth'
+import Auth from "./hoc/auth";
 
 function App() {
   return (
@@ -19,18 +19,34 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <div
-          style={{ minHeight: "calc(100vh-80px)", padding: "20px 0 20px 0" }}
+          style={{ minHeight: `calc(100vh-80px)`, padding: "20px 0 20px 0" }}
         >
           <Switch>
-            <Route exact path='/' component={Auth(Main,null)} />
-            <Route exact path='/login' component={Auth(LoginPage,false)} />
-            <Route exact path='/register' component={Auth(RegisterPage,false)} />
-            <Route exact path='/mypage' component={Auth(Mypage,true)} />
-            <Route exact path='/newpost' component={Auth(Newpost,true)} />
-            <Route exact path='/postDetail/:postid' component={Auth(PostDetail,null)} />
-            <Route exact path='/postModify/:postid' component={Auth(PostModify,true)} />
-            <Route exact path='/userDetail/:userid' component={Auth(UserDetail,null)} />
-            <Route exact path='/search' component={Auth(SearchPage,null)} />
+            <Route exact path='/' component={Auth(Main, null)} />
+            <Route exact path='/login' component={Auth(LoginPage, false)} />
+            <Route
+              exact
+              path='/register'
+              component={Auth(RegisterPage, false)}
+            />
+            <Route exact path='/mypage' component={Auth(Mypage, true)} />
+            <Route exact path='/newpost' component={Auth(Newpost, true)} />
+            <Route
+              exact
+              path='/postDetail/:postid'
+              component={Auth(PostDetail, null)}
+            />
+            <Route
+              exact
+              path='/postModify/:postid'
+              component={Auth(PostModify, true)}
+            />
+            <Route
+              exact
+              path='/userDetail/:userid'
+              component={Auth(UserDetail, null)}
+            />
+            <Route exact path='/search' component={Auth(SearchPage, null)} />
           </Switch>
         </div>
         <Footer />
