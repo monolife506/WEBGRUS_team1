@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import SearchIcon from "@material-ui/icons/Search";
 
-function SearchComponent() {
+function SearchComponent({ small }) {
   const history = useHistory();
 
   const [query, setQuery] = useState("");
@@ -26,16 +26,18 @@ function SearchComponent() {
     setMode("title");
   };
 
+  console.log(small);
+
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", margin: 5 }}>
       <select
         value={mode}
         onChange={onModeChange}
         style={{
-          width: 110,
-          height: 28,
+          width: small ? "15vw" : "7vw",
+          height: 30,
           fontFamily: "noto",
-          fontSize: "18px",
+          fontSize: small ? "2vw" : "1.3vw",
           fontWeight: 300,
           background: "#FFFFFF",
           border: "2px solid #FFFFFF",
@@ -54,11 +56,12 @@ function SearchComponent() {
         onChange={onQueryChange}
         onKeyPress={onKeyPress}
         style={{
-          width: 405,
-          height: 22,
+          width: small ? "45vw" : "35vw",
+          height: 24,
           backgroundColor: "#C4C4C4",
           border: "2px solid #FFFFFF",
           paddingLeft: 10,
+          marginLeft: -2,
         }}
       />
 
