@@ -5,7 +5,7 @@ page.utils.js
 
 // 글의 pagination을 위한 함수
 function pagePosts(page, totalCnt) {
-    const postCnt = 10; // 한 페이지에 표시되는 글들의 개수
+    const postCnt = 12; // 한 페이지에 표시되는 글들의 개수
     const curPage = (page) ? parseInt(page) : 1; // 현재 페이지
     const pageCnt = Math.ceil(totalCnt / postCnt); // 모든 페이지의 개수
     const skipCnt = (curPage - 1) * postCnt; // 넘길 글들의 수
