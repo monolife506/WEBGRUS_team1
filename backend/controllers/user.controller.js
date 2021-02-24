@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const Post = require('../models/post.model');
+const Comment = require('../models/comment.model');
 
 /*
 POST /api/users
@@ -61,8 +62,30 @@ async function deleteUser(req, res, next) {
         const user = await User.findOne({ userid: curUser });
         if (!user) return res.status(404).json({ error: "Users not found", done: false });
 
-        const pwdCheck = await bcrypt.compare(password, user.password)
+        const pwdCheck = await bcrypt.compare(password, user.password);
         if (!pwdCheck) res.status(401).json({ error: "Wrong password", done: false });
+
+        // 작성한 글들 지우기
+        const posts = await Post.find({ owner: curUser });
+        if (posts) {
+            for (const post of posts) {
+                const postId = post._id;
+                await User.updateMany({ watched: postId }, { $pull: { watched: postId } });
+                await User.updateMany({ favorites: postId }, { $pull: { favorites: postId } });
+                await Comment.deleteMany({ post_id: postId });
+                await post.deleteOne();
+            }
+        }
+
+        // 작성한 댓글들 지우기
+        const comments = await Comment.find({ owner: curUser });
+        if (comments) {
+            for (const comment of comments) {
+                const post = await Post.findById(comment.post_id);
+                await post.updateOne({ $pull: { comments: comment._id }, $inc: { commentcnt: -1 } });
+                await comment.deleteOne();
+            }
+        }
 
         await User.updateMany({ followings: curUser }, { $pull: { followings: curUser }, $inc: { followingcnt: -1 } });
         await user.deleteOne();
