@@ -34,7 +34,7 @@ function SearchComponent({ small }) {
         value={mode}
         onChange={onModeChange}
         style={{
-          width: small ? "15vw" : "7vw",
+          width: small ? "15vw" : "9vw",
           height: 30,
           fontFamily: "noto",
           fontSize: small ? "2vw" : "1.3vw",

@@ -15,8 +15,8 @@ import "../reset.css";
 function CommentComponent(props) {
   const Comments = props.comments;
   const [commentValue, setCommentValue] = useState(""); //댓글 입력값
-  const [modifyComment, setModifyComment] = useState(""); //수정하는 댓글 아이디
-  const [modifyCommentValue, setModifyCommentValue] = useState(""); //수정하는 댓글 입력값
+  const [wantToModify, setModifyComment] = useState(""); //수정하는 댓글 아이디
+  const [wantToModifyValue, setModifyCommentValue] = useState(""); //수정하는 댓글 입력값
   const [isModify, setIsModify] = useState(false);
 
   const dispatch = useDispatch();
@@ -81,7 +81,7 @@ function CommentComponent(props) {
         break;
       }
     }
-    console.log(modifyComment);
+    console.log(wantToModify);
     setIsModify(true);
   };
 
@@ -89,8 +89,8 @@ function CommentComponent(props) {
   const onModifySubmit = (e) => {
     e.preventDefault();
 
-    const body = { content: modifyCommentValue };
-    let commentid = modifyComment;
+    const body = { content: wantToModifyValue };
+    let commentid = wantToModify;
 
     dispatch(modifyComment({ postid, commentid, body }))
       .then((res) => {
@@ -120,7 +120,7 @@ function CommentComponent(props) {
 
   //댓글 작성 창
   const WriteComment = (
-    <div className="write-container">
+    <div className='write-container'>
       <div className='textarea-container'>
         <textarea
           name='Comment'
@@ -132,71 +132,98 @@ function CommentComponent(props) {
 
       {/* 댓글 올리기 버튼 */}
       <div className='btn-container'>
-        <button className='btn-submit' type='button' onClick={onSubmit}>댓글</button>
+        <button className='btn-submit' type='button' onClick={onSubmit}>
+          댓글
+        </button>
         <div className='btn-submit-bottom' />
       </div>
-
     </div>
   );
 
   const CommentsArray = () => {
     return (
-      <div className="comments-container">
-        {Comments ? Comments.map((comment) => (
-          <div>
-            {/* 수정할 댓글인 경우 수정창 로드 */}
-            {isModify && comment._id === modifyComment ? (
-              <div className="input" key={comment._id}>
-                <textarea
-                  key={comment._id}
-                  type='textarea'
-                  name='Comment'
-                  rows='4'
-                  value={modifyCommentValue}
-                  onChange={onChangeModifyComment}
-                  onKeyPress={onModifyPress}
-                />
-              </div>
-            ) : (
-                // 수정하는 댓글이 아닐 경우 댓글 로드
-                <div className="comment" key={comment._id}>
-                  <div className="content"><span className="bold">{comment.owner} : </span>{comment.content}</div>
-                  <div className="time">{CommentTime(comment.posttime)}</div>
-                </div>
-              )}
-            {/* 내가 작성한 댓글일 때만 수정, 삭제 버튼 나타남 */}
-            {auth.userData && auth.userData.userid === comment.owner ? (
-              <div className='btn-container'>
-                {(isModify && comment._id === modifyComment) ? (
-                  <>
-                    <button
-                      className='btn'
-                      type='button'
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsModify(false);
-                      }}>
-                      취소
-                    </button>
-                    <button className='btn' type='button' onClick={onModifySubmit}>수정</button>
-                  </>
+      <div className='comments-container'>
+        {Comments
+          ? Comments.map((comment) => (
+              <div>
+                {/* 수정할 댓글인 경우 수정창 로드 */}
+                {isModify && comment._id === wantToModify ? (
+                  <div className='input' key={comment._id}>
+                    <textarea
+                      key={comment._id}
+                      type='textarea'
+                      name='Comment'
+                      rows='4'
+                      value={wantToModifyValue}
+                      onChange={onChangeModifyComment}
+                      onKeyPress={onModifyPress}
+                    />
+                  </div>
                 ) : (
-                    <>
-                      <button className='btn' type='button' onClick={(e) => ondelete(e, comment._id)}>삭제</button>
-                      <button className='btn' type='button' onClick={(e) => onModify(comment._id)}>수정</button>
-                    </>
-                  )}
+                  // 수정하는 댓글이 아닐 경우 댓글 로드
+                  <div className='comment' key={comment._id}>
+                    <div className='content'>
+                      <span className='bold'>{comment.owner} : </span>
+                      {comment.content}
+                    </div>
+                    <div className='time'>{CommentTime(comment.posttime)}</div>
+                  </div>
+                )}
+                {/* 내가 작성한 댓글일 때만 수정, 삭제 버튼 나타남 */}
+                {auth.userData && auth.userData.userid === comment.owner ? (
+                  <div className='btn-container'>
+                    {isModify && comment._id === wantToModify ? (
+                      <>
+                        <button
+                          className='btn'
+                          type='button'
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsModify(false);
+                          }}
+                        >
+                          취소
+                        </button>
+                        <button
+                          className='btn'
+                          type='button'
+                          onClick={onModifySubmit}
+                        >
+                          수정
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className='btn'
+                          type='button'
+                          onClick={(e) => ondelete(e, comment._id)}
+                        >
+                          삭제
+                        </button>
+                        <button
+                          className='btn'
+                          type='button'
+                          onClick={(e) => onModify(comment._id)}
+                        >
+                          수정
+                        </button>
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
-            ) : ("")}
-          </div>
-        )) : ""}
+            ))
+          : ""}
       </div>
     );
   };
 
   return (
     <>
-      <div className="comments">
+      <div className='comments'>
         {WriteComment}
         {/* 댓글 정보가 준비됐을 경우 로드 */}
         <div>
@@ -204,8 +231,8 @@ function CommentComponent(props) {
           {Comments.length === 0 ? (
             <div className='no-comment'>댓글이 없습니다...</div>
           ) : (
-              CommentsArray()
-            )}
+            CommentsArray()
+          )}
         </div>
       </div>
     </>
