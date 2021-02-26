@@ -38,7 +38,7 @@ export const fileUpload = (formdata) => (dispatch) => {
 // 해당 유저의 포스트 정보받기
 export function getUserposts({ userid, page }) {
   const request = axios
-    .get(`${SERVER_API}/api/posts/users/${userid}?page=${page}`)
+    .get(`${SERVER_API}/api/posts/users/${userid}?page=${page}&sortby=times`)
     .then((res) => res.data);
   return {
     type: GET_USERPOSTS,
@@ -82,8 +82,7 @@ export const getAllpost = (sort, page) => {
     type: GET_ALLPOST,
     payload: request,
   };
-}
-
+};
 
 //해당 포스트의 수정
 export const postModify = ({ formdata, postid }) => (dispatch) => {
