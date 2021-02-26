@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { SERVER_API } from "../../_actions/config";
 
+import "./Mypage.scss";
+import "./UserDelete.scss";
+
 function UserDelete() {
   const history = useHistory();
 
@@ -43,11 +46,12 @@ function UserDelete() {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
-      탈퇴하면 모든 게시물이 삭제됩니다...
-      <br />
-      <div>
-        비밀번호:{" "}
+    <div className='mypage-content'>
+      <div className='danger-message'>
+        [탈퇴하면 작성한 모든 댓글과 게시글이 삭제됩니다.]
+      </div>
+      <div className='text-field'>
+        <div className='field-name'>비밀번호</div>
         <input
           type='password'
           name='oldpassword'
@@ -55,9 +59,14 @@ function UserDelete() {
           onKeyPress={onKeyPress}
         />
       </div>
-      <button type='submit' onClick={clickDelete}>
-        탈퇴하기
-      </button>
+      <div className='btn-container'>
+        <div className='btn-wrapper'>
+          <button type='submit' onClick={clickDelete}>
+            탈퇴하기
+          </button>
+          <div className='btn-bottom' />
+        </div>
+      </div>
     </div>
   );
 }

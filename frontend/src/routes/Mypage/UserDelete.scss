@@ -4,6 +4,17 @@
     flex-direction: column;
     align-items: center;
 
+    .danger-message {
+
+        font-family: "notoBold";
+        font-style: normal;
+        font-weight: 300;
+        font-size: 18px;
+
+        margin: 15px;
+        padding: 15px;
+    }
+
     .text-field {
         
         margin-top: 40px;
@@ -82,9 +93,7 @@
                 &:hover {
                     background: #A7A7A7;
                 }
-            }
-
-            
+            }  
         }
     }
 }
