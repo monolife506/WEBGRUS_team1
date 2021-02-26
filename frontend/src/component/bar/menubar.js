@@ -44,11 +44,11 @@ function SimpleMenu(props) {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem>
+          <MenuItem onClick={handleClose}>
             <Link to={{ pathname: "/newpost" }}> 디자인올리기</Link>
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem onClick={handleClose}>
             <Link
               to={{ pathname: "/mypage" }}
               style={{ textDecoration: "none", color: "black" }}

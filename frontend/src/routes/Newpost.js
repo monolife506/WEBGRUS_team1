@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Dropzone from "react-dropzone";
 import { withRouter } from "react-router-dom";
+
+import Dropzone from "react-dropzone";
 
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/CloseOutlined";
@@ -238,8 +239,9 @@ function Newpost(props) {
             margin: "0 auto",
           }}
         >
+          {/* 썸네일 보여주기 */}
           <StyleDiv>
-            <StyleLabel style={{ height: 0 }}></StyleLabel>
+            <StyleLabel style={{ height: 0 }} />
             <div
               style={{
                 margin: "3vh 2vw",
@@ -255,16 +257,26 @@ function Newpost(props) {
               {ThumbnailView}
             </div>
           </StyleDiv>
+
+          {/* 드랍존: 이미지 올리기 */}
           <StyleDiv>
-            <StyleLabel style={{ height: 0 }}></StyleLabel>
+            <StyleLabel style={{ height: 0 }} />
             {dropZone}
           </StyleDiv>
+
           <StyleDiv>
-            <StyleLabel>제목</StyleLabel> <StyleInput onChange={onTitle} />
+            <StyleLabel>제목</StyleLabel>
+            <StyleInput type='text' name='title' onChange={onTitle} />
           </StyleDiv>
+
           <StyleDiv>
             <StyleLabel>작품소개</StyleLabel>
-            <StyleInput style={{ height: "30vh" }} onChange={onDescription} />
+            <StyleInput
+              style={{ height: "30vh" }}
+              type='textarea'
+              name='Description'
+              onChange={onDescription}
+            />
           </StyleDiv>
 
           {/* 태그입력창 */}
@@ -279,7 +291,6 @@ function Newpost(props) {
                 }}
                 value={currentTag}
                 name='tag'
-                label='태그'
                 onChange={onCurrentTag}
                 onKeyPress={onTagKeyPress}
               />
@@ -294,40 +305,65 @@ function Newpost(props) {
             {/* 태그를 추가하면 태그 나타내기 */}
             {tags
               ? tags.map((tag) => (
-                  <div key={tag}>
-                    #{tag}
-                    <button
+                  <div
+                    key={tag}
+                    style={{
+                      height: 20,
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: 3,
+                    }}
+                  >
+                    <div> #{tag}</div>
+                    <CloseIcon
                       type='button'
+                      fontSize='small'
+                      color='action'
                       onClick={(e) => {
                         e.preventDefault();
                         const deleteTag = tag;
                         setTags(tags.filter((tag) => tag !== deleteTag));
                       }}
-                      style={{backgroundColor:'#FFFFFF', textAlign:32}}
-                    >
-                      <CloseIcon fontSize='small' color='action' />
-                    </button>
+                      style={{ backgroundColor: "#FFFFFF" }}
+                    ></CloseIcon>
                   </div>
                 ))
               : ""}
           </div>
         </div>
 
-        <StyleButton
-          type='submit'
-          variant='contained'
-          color='primary'
-          onClick={BlockDoubleSubmit}
-          style={{
-            width: 70,
-            position: "absolute",
-            display: "block",
-            right: 30,
-            bottom: 20,
-          }}
-        >
-          올리기
-        </StyleButton>
+        <div>
+          <div
+            style={{
+              position: "absolute",
+              right: 30,
+              bottom: 20,
+              width: 70,
+              height: 30,
+              border: "2px solid black",
+              borderRadius: 4,
+              backgroundColor: "#FFFFFF",
+              boxSizing: "border-box",
+            }}
+          />
+          <StyleButton
+            type='submit'
+            variant='contained'
+            color='primary'
+            onClick={BlockDoubleSubmit}
+            style={{
+              position: "absolute",
+              right: 30,
+              bottom: 25,
+              width: 70,
+              height: 24,
+              display: "block",
+              borderRadius: 4,
+            }}
+          >
+            올리기
+          </StyleButton>
+        </div>
       </div>
     </div>
   );
