@@ -1,18 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { SERVER_API } from "../_actions/config";
-import AddIcon from "@material-ui/icons/Add";
-
-import { postModify } from "../_actions/postAction";
-import { getPostDetail } from "../_actions/postAction";
 
 import Dropzone from "react-dropzone";
 
-// import Chip from "@material-ui/core/Chip";
-// import Autocomplete from "@material-ui/lab/Autocomplete";
+import AddIcon from "@material-ui/icons/Add";
+import CloseIcon from "@material-ui/icons/CloseOutlined";
+
+import styled from "styled-components";
 
 import { useDispatch, connect } from "react-redux";
+import { postModify } from "../_actions/postAction";
+import { getPostDetail } from "../_actions/postAction";
 import { fileUpload } from "../_actions/postAction";
+
+const StyleDiv = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  align-items: flex-start;
+  min-width: 380px;
+  width: 55vw;
+`;
+
+const StyleLabel = styled.div`
+  display: inline-block;
+  margin: 5px 0 10px 0;
+  width: 5vw;
+  min-width: 70px;
+  text-align: center;
+  font-family: "notoBold";
+`;
+
+const StyleInput = styled.input`
+  margin: 5px 2vw 10px 2vw;
+  width: 40vw;
+  min-width: 360px;
+`;
+
+const StyleButton = styled.button`
+  width: 50px;
+  height: 25px;
+  background-color: black;
+  color: white;
+`;
 
 function PostModify(props) {
   const dispatch = useDispatch();
@@ -75,15 +106,104 @@ function PostModify(props) {
   };
 
   //파일저장 및 썸네일 생성
-  const onDrop = (files) => {
+  const onDrop = (newfiles) => {
     //원래 올렸었던 파일 포함 최대 업로드개수 제한
-    if (files.length + files.length > 6) {
+    if (newfiles.length + files.length > 6) {
       alert("파일은 최대 6개까지 업로드 할 수 있습니다.");
     } else {
-      setNewFiles(files);
-      setThumbnails(files.map((file) => URL.createObjectURL(file)));
+      setNewFiles(newfiles);
+      setThumbnails(newfiles.map((newfile) => URL.createObjectURL(newfile)));
     }
   };
+
+  //드랍존
+  const dropZone = (
+    <Dropzone accept='image/*' onDrop={onDrop}>
+      {({ getRootProps, getInputProps }) => (
+        <section
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            margin: "2vh 2vw 2vh 2vw",
+          }}
+        >
+          <div
+            {...getRootProps()}
+            style={{
+              width: `calc(40vw + 4px)`,
+              height: "30vh",
+              minWidth: 360,
+              minHeight: 100,
+              backgroundColor: "lightgray",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              border: "dashed 3px gray",
+            }}
+          >
+            <input {...getInputProps()} />
+            <AddIcon />
+            <p style={{ margin: "3vh 0 3vh 0" }}>
+              이미지 파일을 선택하거나 끌어다 놓으세요
+            </p>
+            <p style={{ fontSize: "12px", margin: 0 }}>
+              (파일은 최대 6개까지 업로드 할 수 있습니다.)
+            </p>
+          </div>
+        </section>
+      )}
+    </Dropzone>
+  );
+
+  //원래 파일들 보여주기
+  const UploadedFiles = files.map((photo) => (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <div
+        key={photo._id}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "150px",
+          height: "150px",
+          border: "dashed 1px gray",
+        }}
+      >
+        <img
+          src={`${SERVER_API}/images/${photo.filename}`}
+          name='thumbnail'
+          style={{
+            maxWidth: "150px",
+            maxHeight: "150px",
+            width: "auto",
+            height: "auto",
+          }}
+        />
+      </div>
+      {/* 파일 삭제버튼 */}
+      <CloseIcon
+        type='button'
+        name='deleteButton'
+        fontSize='small'
+        color='action'
+        onClick={(e) => {
+          e.preventDefault();
+          const deleteId = photo._id;
+          setDeleteFiles([...deleteFiles, photo.filename]);
+          setFiles(files.filter((photos) => photos._id !== deleteId));
+        }}
+        style={{ backgroundColor: "#FFFFFF" }}
+      ></CloseIcon>
+    </div>
+  ));
 
   //썸네일 보여주기
   const ThumbnailView = thumbnails.map((thumb) => (
@@ -96,7 +216,6 @@ function PostModify(props) {
         width: "150px",
         height: "150px",
         border: "dashed 1px gray",
-        margin: "0 10px 0 10px",
       }}
     >
       <img
@@ -171,169 +290,198 @@ function PostModify(props) {
   };
 
   return (
-    <>
+    <div
+      style={{ display: "flex", alignItems: "center", flexDirection: "column" }}
+    >
       {!post.postDetail ? (
         <div style={{ height: "100vh" }}></div>
       ) : (
-        <div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <h1 style={{ fontFamily: "notoBold" }}>MODIFY</h1>
           <div
             style={{
+              position: "relative",
               display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
+              justifyContent: "center",
+              width: "80vw",
+              padding: "4vh 0 50px 0",
+              backgroundColor: "#FFFFFF",
             }}
           >
-            <h1>MODIFY</h1>
-            제목
-            <input
-              style={{ width: 500, height: 20 }}
-              type='text'
-              name='title'
-              value={title}
-              onChange={onTitle}
-            />
-            <br />
-            작품소개
-            <input
-              style={{ width: 500, height: 200 }}
-              type='textarea'
-              name='Description'
-              value={description}
-              onChange={onDescription}
-            />
-            {/* 태그입력창 */}
-            <div>
-              <input
-                type='text'
-                value={currentTag}
-                name='tag'
-                onChange={onCurrentTag}
-                onKeyPress={onTagKeyPress}
-              />
-              <button type='button' onClick={onTagClick}>
-                추가
-              </button>
-              {/* 태그를 추가하면 태그 나타내기 */}
-              {tags
-                ? tags.map((tag) => (
-                    <div key={tag}>
-                      #{tag}{" "}
-                      <button
-                        type='button'
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const deleteTag = tag;
-                          setTags(tags.filter((tag) => tag !== deleteTag));
-                        }}
-                      >
-                        삭제
-                      </button>
-                    </div>
-                  ))
-                : ""}
-            </div>
             <div
               style={{
                 display: "flex",
-                justifyContent: "space-around",
-                flexWrap: "wrap",
+                flexDirection: "column",
+                alignItems: "left",
+                margin: "0 auto",
               }}
             >
               {/* 사진들 보여주기 */}
-              {files
-                ? files.map((photo) => (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        margin: "5px 5px 5px 5px",
-                      }}
-                      key={photo._id}
-                    >
-                      <img
-                        src={`${SERVER_API}/images/${photo.filename}`}
-                        style={{ width: 290, height: 290 }}
-                      />
-
-                      {/* 파일 삭제버튼 */}
-                      <button
-                        style={{ width: 50 }}
-                        type='button'
-                        name='deleteButton'
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const deleteId = photo._id;
-                          setDeleteFiles([...deleteFiles, photo.filename]);
-                          setFiles(
-                            files.filter((photos) => photos._id !== deleteId)
-                          );
-                        }}
-                      >
-                        삭제
-                      </button>
-                    </div>
-                  ))
-                : ""}
-            </div>
-            {/* 이미지 업로드 */}
-            <Dropzone accept='image/*' onDrop={onDrop}>
-              {({ getRootProps, getInputProps }) => (
-                <section
+              <StyleDiv>
+                <StyleLabel style={{ height: 0 }} />
+                <div
                   style={{
+                    margin: "3vh 2vw",
+                    minWidth: 360,
+                    width: "40vw",
                     display: "flex",
-                    justifyContent: "center",
-                    marginTop: "5vh",
+                    justifyContent: "left",
+                    alignItems: "center",
+                    overflowX: "auto",
+                    overflowY: "hidden",
                   }}
                 >
-                  <div
-                    {...getRootProps()}
+                  {UploadedFiles}
+                </div>
+              </StyleDiv>
+
+              {/* 썸네일 보여주기 */}
+              <StyleDiv>
+                <StyleLabel style={{ height: 0 }} />
+                <div
+                  style={{
+                    margin: "3vh 2vw",
+                    minWidth: 360,
+                    width: "40vw",
+                    display: "flex",
+                    justifyContent: "left",
+                    alignItems: "center",
+                    overflowX: "auto",
+                    overflowY: "hidden",
+                  }}
+                >
+                  {ThumbnailView}
+                </div>
+              </StyleDiv>
+
+              {/* 드랍존: 이미지 올리기 */}
+              <StyleDiv>
+                <StyleLabel style={{ height: 0 }} />
+                {dropZone}
+              </StyleDiv>
+
+              <StyleDiv>
+                <StyleLabel>제목</StyleLabel>
+                <StyleInput
+                  style={{ width: 500, height: 20 }}
+                  type='text'
+                  name='title'
+                  value={title}
+                  onChange={onTitle}
+                />
+              </StyleDiv>
+
+              <StyleDiv>
+                <StyleLabel>작품소개</StyleLabel>
+                <StyleInput
+                  style={{ width: 500, height: 200 }}
+                  type='textarea'
+                  name='Description'
+                  value={description}
+                  onChange={onDescription}
+                />
+              </StyleDiv>
+
+              {/* 태그입력창 */}
+              <StyleDiv>
+                <StyleLabel>태그</StyleLabel>
+                <div style={{ margin: "5px 2vw 10px 2vw" }}>
+                  <StyleInput
                     style={{
-                      width: "40vw",
-                      height: "30vh",
-                      minWidth: "400px",
-                      minHeight: "100px",
-                      backgroundColor: "lightgray",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      border: "dashed 3px gray",
+                      width: `calc(38vw - 50px)`,
+                      minWidth: `calc(310px - 2vw)`,
+                      margin: "0 2vw 0 0",
                     }}
-                  >
-                    <input {...getInputProps()} />
-                    <AddIcon />
-                    <p style={{ margin: "3vh 0 3vh 0" }}>
-                      이미지 파일을 선택하거나 끌어다 놓으세요
-                    </p>
-                    <p style={{ fontSize: "12px", margin: 0 }}>
-                      (파일은 최대 6개까지 업로드 할 수 있습니다.)
-                    </p>
-                  </div>
-                </section>
-              )}
-            </Dropzone>
-            <div
-              style={{
-                margin: "5vh 0 5vh 0",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "1000px",
-                overflowX: "auto",
-                overflowY: "hidden",
-              }}
-            >
-              {ThumbnailView}
+                    type='text'
+                    value={currentTag}
+                    name='tag'
+                    onChange={onCurrentTag}
+                    onKeyPress={onTagKeyPress}
+                  />
+                  <StyleButton type='button' onClick={onTagClick}>
+                    추가
+                  </StyleButton>
+                </div>
+              </StyleDiv>
+              <div
+                style={{
+                  display: "flex",
+                  flexdirection: "wrap",
+                  marginLeft: 70,
+                }}
+              >
+                {/* 태그를 추가하면 태그 나타내기 */}
+                {tags
+                  ? tags.map((tag) => (
+                      <div
+                        key={tag}
+                        style={{
+                          height: 20,
+                          display: "flex",
+                          alignItems: "center",
+                          marginRight: 3,
+                        }}
+                      >
+                        <div> #{tag}</div>
+                        <CloseIcon
+                          type='button'
+                          fontSize='small'
+                          color='action'
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const deleteTag = tag;
+                            setTags(tags.filter((tag) => tag !== deleteTag));
+                          }}
+                          style={{ backgroundColor: "#FFFFFF" }}
+                        ></CloseIcon>
+                      </div>
+                    ))
+                  : ""}
+              </div>
             </div>
-            <button type='submit' type='button' onClick={BlockDoubleSubmit}>
-              올리기
-            </button>
+
+            <div>
+              <div
+                style={{
+                  position: "absolute",
+                  right: 30,
+                  bottom: 20,
+                  width: 70,
+                  height: 30,
+                  border: "2px solid black",
+                  borderRadius: 4,
+                  backgroundColor: "#FFFFFF",
+                  boxSizing: "border-box",
+                }}
+              />
+              <StyleButton
+                type='submit'
+                variant='contained'
+                color='primary'
+                onClick={BlockDoubleSubmit}
+                style={{
+                  position: "absolute",
+                  right: 30,
+                  bottom: 25,
+                  width: 70,
+                  height: 24,
+                  display: "block",
+                  borderRadius: 4,
+                }}
+              >
+                올리기
+              </StyleButton>
+            </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 const mapStateToProps = (state) => ({
