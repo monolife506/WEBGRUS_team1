@@ -71,6 +71,7 @@ function SearchComponent({ small }) {
           width: 30,
           height: 30,
           marginLeft: 10,
+          cursor:'pointer'
         }}
         alt='검색버튼'
         onClick={onSearchClick}

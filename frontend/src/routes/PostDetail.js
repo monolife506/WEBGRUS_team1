@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { connect, useDispatch, useSelector } from "react-redux";
 
 import ViewPostDetail from "../component/ViewPostDetail";
@@ -32,7 +32,7 @@ function PostDetail(props) {
       setPosttime(res.payload.posttime);
     });
     dispatch(getComment(postid)).then((res) => {
-      console.log(res)
+      console.log(res);
       setComments(res.payload);
     });
   }, []);
@@ -52,7 +52,7 @@ function PostDetail(props) {
   //댓글 수정 업데이트
   const updateModifyComment = () => {
     dispatch(getComment(postid)).then((res) => {
-      console.log(res)
+      console.log(res);
       setComments(res.payload);
     });
   };
@@ -112,14 +112,15 @@ function PostDetail(props) {
           {!props.post.postDetail ? (
             <div style={{ height: "100vh" }}></div>
           ) : (
-              <div className='top-container'>
+            <div className='top-container'>
+              <Link to={`/userDetail/${post.owner}`}>
                 <h2>{post.owner}</h2>
-
-                <div className='follow'>
-                  <FollowComponent userid={post.owner} />
-                </div>
+              </Link>
+              <div className='follow'>
+                <FollowComponent userid={post.owner} />
               </div>
-            )}
+            </div>
+          )}
         </>
       );
     }

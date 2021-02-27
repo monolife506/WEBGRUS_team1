@@ -45,13 +45,14 @@ function Post({
         minHeight: 390,
         minWidth: 250,
         height: 420,
-        width: '100%',
+        width: "100%",
         position: "relative",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         padding: "3px",
         backgroundColor: "white",
+        border:'solid 2px #8C8C8C'
       }}
     >
       <div
@@ -63,7 +64,7 @@ function Post({
           alignItems: "center",
           fontWeight: 500,
           fontSize: 14,
-          backgroundColor: "#DDDDDD",
+          backgroundColor: "#C4C4C4",
         }}
       >
         {/* 자신의 아이디 클릭시 마이페이지로,  */}
@@ -72,7 +73,7 @@ function Post({
           type='button'
           style={{
             marginLeft: 10,
-            backgroundColor: "#DDDDDD",
+            backgroundColor: "#C4C4C4",
           }}
           onClick={() => {
             if (auth && auth.userid === owner) {
@@ -92,7 +93,7 @@ function Post({
           backgroundColor: "#white",
           height: "4px",
           width: "100%",
-          borderBottom: "2px solid #BBBBBB",
+          borderBottom: "2px solid #C4C4C4",
         }}
       ></div>
       <div
@@ -112,7 +113,7 @@ function Post({
             src={`${SERVER_API}/images/${files[0].filename}`}
             style={{
               maxWidth: 230,
-              maxHeight: '100%',
+              maxHeight: "100%",
               width: "auto",
               height: "auto",
             }}

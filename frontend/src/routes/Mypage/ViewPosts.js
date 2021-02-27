@@ -22,14 +22,14 @@ function ViewPosts({ posts, userid, menu }) {
   const ViewMyPosts = (
     <>
       {/* 내가 올린 게시물이 있을 경우 */}
-      {posts.length !== 0 ? (
+      {posts ? (
         posts.map((post) => (
           <Grid item xl={3} lg={4} md={6} sm={12}>
             <Paper
               spacing={3}
               style={{
                 maxWidth: 300,
-                margin: '0 auto'
+                margin: "0 auto",
               }}
             >
               <Post
@@ -49,8 +49,8 @@ function ViewPosts({ posts, userid, menu }) {
           </Grid>
         ))
       ) : (
-          <></>
-        )}
+        <></>
+      )}
     </>
   );
 
@@ -66,13 +66,15 @@ function ViewPosts({ posts, userid, menu }) {
 
   return (
     <>
-      <div className="mypage-posts">
+      <div className='mypage-posts'>
         <MuiThemeProvider theme={theme}>
           <Grid container spacing={3}>
             {ViewMyPosts}
           </Grid>
         </MuiThemeProvider>
-        {posts.length !== 0 ? (<></>) : (
+        {posts ? (
+          <></>
+        ) : (
           <div className='empty'>[게시글이 존재하지 않습니다.]</div>
         )}
       </div>

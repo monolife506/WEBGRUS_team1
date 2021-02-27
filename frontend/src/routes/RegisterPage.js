@@ -64,7 +64,8 @@ function SignUp(props) {
   return (
     <>
       <Container
-        component='main' maxWidth='sm'
+        component='main'
+        maxWidth='sm'
         style={{
           border: "2px solid black",
           width: "100%",
@@ -87,7 +88,9 @@ function SignUp(props) {
             fontWeight: "700",
             textShadow: "-2px 0 black, 2px 0 black, 0 2px black, 0 -2px black",
           }}
-        >회원가입</h3>
+        >
+          회원가입
+        </h3>
         <div
           style={{
             borderTop: "2px solid black",
@@ -186,14 +189,17 @@ function SignUp(props) {
               fontFamily: "noto",
               fontSize: "20px",
               fontWeight: "700",
-              textShadow: "-2px 0 black, 2px 0 black, 0 2px black, 0 -2px black",
+              textShadow:
+                "-2px 0 black, 2px 0 black, 0 2px black, 0 -2px black",
               border: "2px solid black",
               borderRadius: "3px",
               marginBottom: "20px",
               padding: "10px 0 10px 0",
               boxShadow: "0 5px 2px lightgray",
             }}
-          >확인</button>
+          >
+            확인
+          </button>
           <Grid container justify='flex-end'>
             <Grid item>
               <Link
@@ -208,6 +214,13 @@ function SignUp(props) {
             </Grid>
           </Grid>
         </form>
+        <div
+          style={{
+            borderTop: "2px solid black",
+            height: "7px",
+            width: "100%",
+          }}
+        />
       </Container>
     </>
   );
