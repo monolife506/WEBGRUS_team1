@@ -133,7 +133,7 @@ function Main(props) {
                         spacing={3}
                         style={{
                           maxWidth: 300,
-                          margin:'0 auto'
+                          margin: "0 auto",
                         }}
                       >
                         <Post

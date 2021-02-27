@@ -33,6 +33,8 @@ const StyleInput = styled.input`
   margin: 5px 2vw 10px 2vw;
   width: 40vw;
   min-width: 360px;
+  min-height: 27px;
+  border: 2px solid black;
 `;
 
 const StyleButton = styled.button`
@@ -121,7 +123,7 @@ function Newpost(props) {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              border: "dashed 3px gray",
+              border: "dashed 3px black",
             }}
           >
             <input {...getInputProps()} />
@@ -229,6 +231,7 @@ function Newpost(props) {
           width: "80vw",
           padding: "4vh 0 50px 0",
           backgroundColor: "#FFFFFF",
+          border: "solid 3px black",
         }}
       >
         <div
@@ -331,8 +334,8 @@ function Newpost(props) {
               : ""}
           </div>
         </div>
-
         <div>
+          {/* 버튼 한줄 데코 */}
           <div
             style={{
               position: "absolute",
@@ -364,6 +367,18 @@ function Newpost(props) {
             올리기
           </StyleButton>
         </div>
+
+        {/* 한줄데코 */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            width: "100%",
+            height: "7px",
+            borderTop: "3px solid black",
+            backgroundColor: "#EEEEEE",
+          }}
+        />
       </div>
     </div>
   );

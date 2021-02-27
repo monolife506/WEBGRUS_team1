@@ -36,6 +36,8 @@ const StyleInput = styled.input`
   margin: 5px 2vw 10px 2vw;
   width: 40vw;
   min-width: 360px;
+  min-height: 27px;
+  border: 2px solid black;
 `;
 
 const StyleButton = styled.button`
@@ -139,7 +141,7 @@ function PostModify(props) {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              border: "dashed 3px gray",
+              border: "dashed 3px black",
             }}
           >
             <input {...getInputProps()} />
@@ -312,6 +314,7 @@ function PostModify(props) {
               width: "80vw",
               padding: "4vh 0 50px 0",
               backgroundColor: "#FFFFFF",
+              border: "solid 3px black",
             }}
           >
             <div

@@ -48,7 +48,24 @@ function SearchPage() {
               alignItems: "center",
             }}
           >
-            "{query.q}"의 검색결과 입니다...
+            <div
+              style={{
+                fontFamily: "notoBold",
+                fontWeight: 900,
+                color: "white",
+                textShadow:
+                  "-1px 0 black, 1px 0 black, 0 1px black, 0 -1px black",
+              }}
+            >
+              <span
+                style={{
+                  color: "#9CC567",
+                }}
+              >
+                "{query.q}"
+              </span>
+              의 검색결과 입니다...
+            </div>
             <div
               style={{
                 width: "90%",
@@ -99,9 +116,24 @@ function SearchPage() {
   } else {
     return (
       <div
-        style={{ height: "100vh", display: "flex", justifyContent: "center" }}
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          fontFamily: "notoBold",
+          fontWeight: 900,
+          color: "white",
+          textShadow: "-1px 0 black, 1px 0 black, 0 1px black, 0 -1px black",
+        }}
       >
-        <div> "{query.q}"의 검색결과가 없습니다...</div>
+        <span
+          style={{
+            color: "#9CC567",
+          }}
+        >
+          "{query.q}"
+        </span>
+        의 검색결과가 없습니다...
       </div>
     );
   }
