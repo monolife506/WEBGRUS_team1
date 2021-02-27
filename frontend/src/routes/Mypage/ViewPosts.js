@@ -49,8 +49,8 @@ function ViewPosts({ posts, userid, menu }) {
           </Grid>
         ))
       ) : (
-        <></>
-      )}
+          <></>
+        )}
     </>
   );
 
@@ -75,8 +75,8 @@ function ViewPosts({ posts, userid, menu }) {
         {posts ? (
           <></>
         ) : (
-          <div className='empty'>[게시글이 존재하지 않습니다.]</div>
-        )}
+            <div className='empty'>[게시글이 존재하지 않습니다.]</div>
+          )}
       </div>
     </>
   );

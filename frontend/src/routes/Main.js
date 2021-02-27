@@ -123,36 +123,36 @@ function Main(props) {
           </div>
         </div>
 
-        <div style={{ marginTop: 30, padding: 5, width: "90%", minWidth: 500 }}>
+        <div style={{ marginTop: 30, padding: 5, width: "90vw", minWidth: 500 }}>
           <MuiThemeProvider theme={theme}>
             <Grid container spacing={3}>
               {posts
                 ? posts.map((post) => (
-                    <Grid item xl={3} lg={4} md={6} sm={12}>
-                      <Paper
-                        spacing={3}
-                        style={{
-                          maxWidth: 300,
-                          margin: "0 auto",
-                        }}
-                      >
-                        <Post
-                          key={post._id}
-                          postid={post._id}
-                          owner={post.owner}
-                          title={post.title}
-                          description={post.description}
-                          files={post.files}
-                          tags={post.tags}
-                          posttime={post.posttime}
-                          likecnt={post.likecnt}
-                          viewcnt={post.viewcnt}
-                          commentcnt={post.commentcnt}
-                          auth={props.auth.userData}
-                        />
-                      </Paper>
-                    </Grid>
-                  ))
+                  <Grid item xl={3} lg={4} md={6} sm={12}>
+                    <Paper
+                      spacing={3}
+                      style={{
+                        maxWidth: 300,
+                        margin: "0 auto",
+                      }}
+                    >
+                      <Post
+                        key={post._id}
+                        postid={post._id}
+                        owner={post.owner}
+                        title={post.title}
+                        description={post.description}
+                        files={post.files}
+                        tags={post.tags}
+                        posttime={post.posttime}
+                        likecnt={post.likecnt}
+                        viewcnt={post.viewcnt}
+                        commentcnt={post.commentcnt}
+                        auth={props.auth.userData}
+                      />
+                    </Paper>
+                  </Grid>
+                ))
                 : ""}
             </Grid>
           </MuiThemeProvider>

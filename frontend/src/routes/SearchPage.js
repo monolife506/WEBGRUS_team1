@@ -68,7 +68,7 @@ function SearchPage() {
             </div>
             <div
               style={{
-                width: "90%",
+                width: "90vw",
                 display: "flex",
                 flexWrap: "wrap",
                 justifyContent: "flex-start",

@@ -66,7 +66,7 @@ function UserDetail() {
           <FollowComponent userid={userid} />
         </div>
       </div>
-      <div style={{ marginTop: 30, padding: 5, width: "90%", minWidth: 500 }}>
+      <div style={{ marginTop: 30, padding: 5, width: "90vw", minWidth: 500 }}>
         <MuiThemeProvider theme={theme}>
           <Grid container spacing={3}>
             {posts
