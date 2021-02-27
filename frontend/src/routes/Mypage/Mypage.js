@@ -58,17 +58,22 @@ function Mypage(props) {
   };
 
   //해당 유저가 좋아한 게시물 보여주기
-  const onFavoritePost = () => {
+  const onFavoritePost = async () => {
     setMenu("favoriteposts");
 
     let userid = auth.userData.userid;
 
     //해당 유저가 좋아한 게시물 가져오기
-    props.getFavoriteposts({ userid, page: 1 }).then((res) => {
-      setFavoritePosts(res.payload);
-      setCurPage(1);
-      setLastPage(false);
-    });
+    await props
+      .getFavoriteposts({ userid, page: 1 })
+      .then((res) => {
+        setFavoritePosts(res.payload);
+        setCurPage(1);
+        setLastPage(false);
+      })
+      .catch((err) => {
+        setFavoritePosts(null);
+      });
   };
 
   //개인 정보 수정하기
@@ -93,8 +98,7 @@ function Mypage(props) {
               setCurPage(curPage + 1);
             } else setLastPage(true);
           });
-        }
-        else if (menu === "favoriteposts") {
+        } else if (menu === "favoriteposts") {
           props.getFavoriteposts({ userid, page: curPage + 1 }).then((res) => {
             if (res.payload.length > 0) {
               setFavoritePosts(favoritePosts.concat(res.payload));
@@ -139,38 +143,53 @@ function Mypage(props) {
 
   const RenderBottom = () => {
     if (menu === "modifyinform" || menu === "deleteuser")
-      return <div className='bottom'></div>
-    else
-      return <div />
-  }
+      return <div className='bottom'></div>;
+    else return <div />;
+  };
 
   // 나의 계정이 확인 된 후 로드
   if (auth.status.auth === "SUCCESS") {
     return (
-      <div className="mypage-container">
-        <div className="top-menu">
-          <div className="left">
+      <div className='mypage-container'>
+        <div className='top-menu'>
+          <div className='left'>
             <button type='button' onClick={onMyPost}>
-              {(menu === "myposts") ? <span style={{ fontFamily: "notoBold" }}>내 게시물</span> : <>내 게시물</>}
+              {menu === "myposts" ? (
+                <span style={{ fontFamily: "notoBold" }}>내 게시물</span>
+              ) : (
+                <>내 게시물</>
+              )}
             </button>
-            <span className="separator" />
+            <span className='separator' />
             <button type='button' onClick={onFavoritePost}>
-              {(menu === "favoriteposts") ? <span style={{ fontFamily: "notoBold" }}>좋아한 게시물</span> : <>좋아한 게시물</>}
+              {menu === "favoriteposts" ? (
+                <span style={{ fontFamily: "notoBold" }}>좋아한 게시물</span>
+              ) : (
+                <>좋아한 게시물</>
+              )}
             </button>
           </div>
-          <div className="right">
+          <div className='right'>
             <button type='button' onClick={onModifyInform}>
-              {(menu === "modifyinform") ? <span style={{ fontFamily: "notoBold" }}>개인정보 수정</span> : <>개인정보 수정</>}
+              {menu === "modifyinform" ? (
+                <span style={{ fontFamily: "notoBold" }}>개인정보 수정</span>
+              ) : (
+                <>개인정보 수정</>
+              )}
             </button>
-            <span className="separator" />
+            <span className='separator' />
             <button type='button' onClick={onDeleteUser}>
-              {(menu === "deleteuser") ? <span style={{ fontFamily: "notoBold" }}>회원 탈퇴</span> : <>회원 탈퇴</>}
+              {menu === "deleteuser" ? (
+                <span style={{ fontFamily: "notoBold" }}>회원 탈퇴</span>
+              ) : (
+                <>회원 탈퇴</>
+              )}
             </button>
           </div>
         </div>
 
         {/* 메뉴 */}
-        <div className="main">
+        <div className='main'>
           {LoadByMenu()}
           {RenderBottom()}
         </div>
