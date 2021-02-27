@@ -21,6 +21,26 @@ async function createUser(req, res, next) {
 }
 
 /*
+GET /api/users/:userid
+특정 유저의 팔로우/팔로잉, id, 이메일 정보 얻기
+*/
+
+async function getUserInfo(req, res, next) {
+    try {
+        const { userid } = req.params;
+
+        let user = await User.findOne({ userid });
+        if (!user) res.status(404).json({ error: "Users not found", done: false });
+
+        const { useremail, followercnt, followers, followingcnt, followings } = user;
+        return res.status(200).json({ userid, useremail, followercnt, followers, followingcnt, followings, done: true });
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json({ error: err, done: false });
+    }
+}
+
+/*
 PUT /api/users
 현재 유저의 정보 수정 (이메일, 비밀번호만 변경할 수 있음)
 oldpassword로 비밀번호를 한번 더 확인함
@@ -192,6 +212,7 @@ async function checkFollowing(req, res, next) {
 }
 
 module.exports.createUser = createUser;
+module.exports.getUserInfo = getUserInfo;
 module.exports.updateUser = updateUser;
 module.exports.deleteUser = deleteUser;
 module.exports.toggleFavorite = toggleFavorite;

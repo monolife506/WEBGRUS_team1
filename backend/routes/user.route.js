@@ -4,6 +4,7 @@ const passport = require('passport');
 const userController = require('../controllers/user.controller');
 
 router.post("/", userController.createUser);
+router.get("/:userid", userController.getUserInfo);
 router.put(
     "/",
     passport.authenticate('jwt', { session: false }),
