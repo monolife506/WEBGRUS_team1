@@ -8,6 +8,7 @@ import { applyMiddleware, createStore } from "redux";
 import promiseMiddleware from "redux-promise";
 import ReduxThunk from "redux-thunk";
 import Reducer from "./_reducers/rootReducer";
+import "./reset.css";
 
 //객체형식 뿐 아니랑 function과 promise형태도 받을 수 있게 해줌
 const createStoreWithMiddleware = applyMiddleware(

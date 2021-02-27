@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { SERVER_API } from "../../_actions/config";
-import { withRouter } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { connect, useDispatch } from "react-redux";
+import { logoutUser } from "../../_actions/authAction";
 import "./bar.scss";
 
 function SimpleMenu(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -19,52 +21,55 @@ function SimpleMenu(props) {
   };
 
   const onLogout = () => {
-    axios.post(`${SERVER_API}/auth/logout`).then((res) => {
-      if (res.status === 200) {
-        props.history.push("/login");
-      } else {
-        alert("로그아웃에 실패했습니다.");
-      }
-    });
+    //action
+    dispatch(logoutUser());
+    history.push("/login");
   };
 
-  return (
-    <div className='nav'>
-      <button
-        aria-controls='menubar'
-        aria-haspopup='true'
-        onClick={handleClick}
-      >
-        마이페이지
-      </button>
-      <Menu
-        id='menubar'
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem>
-          <Link
-            to={{ pathname: "" }}
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            내 계정
-          </Link>
-        </MenuItem>
+  if (props.auth.status.auth === "SUCCESS") {
+    return (
+      <div className='nav'>
+        <button
+          className='mymenu'
+          aria-controls='menubar'
+          aria-haspopup='true'
+          onClick={handleClick}
+        >
+          {props.auth.userData.userid} 님
+        </button>
+        <Menu
+          id='menubar'
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={handleClose}>
+            <Link to={{ pathname: "/newpost" }}> 디자인올리기</Link>
+          </MenuItem>
 
-        <MenuItem>
-          <Link
-            to={{ pathname: "/mypage" }}
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            마이페이지
-          </Link>
-        </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link
+              to={{ pathname: "/mypage" }}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              마이페이지
+            </Link>
+          </MenuItem>
 
-        <MenuItem onClick={onLogout}>로그아웃</MenuItem>
-      </Menu>
-    </div>
-  );
+          <MenuItem onClick={onLogout}>
+            <div>로그아웃</div>
+          </MenuItem>
+        </Menu>
+      </div>
+    );
+  } else {
+    return <></>;
+  }
 }
-export default withRouter(SimpleMenu);
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps)(SimpleMenu);
